@@ -25,3 +25,6 @@ target/
 **/*.log
 **/*.out 
 **/*.pdf
+
+# Trunk output files 
+**/dist
