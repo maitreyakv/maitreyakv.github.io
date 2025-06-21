@@ -54,9 +54,9 @@ Last Updated: \today
 \hfill
 \DatestampYMD{2024}{11}{13} -- Present
 \SubBulletItem
-  Contributed to the development of Keynome Cloud, our cloud platform for bacteria species identification and antimicrobial resistant profiling from genomic data. Worked primarily on development of the data processing pipelines in Python in the backend (deployed on GCP w/Kubernetes), and secondarily on reporting components of the frontend in React.
+  Contributed to development of Keynome Cloud, a cloud platform for bacteria species ID and AMR (anti-microbial resistance) profiling from sequenced DNA. Worked primarily on development of backend data processing pipelines in Python deployed on GCP w/Kubernetes, and secondarily on the frontend in React.
 \SubBulletItem
-Led development of a CLI program in Rust for uploading large amounts of sequencing data to our cloud analytics platform. Distributed the tool to clients of our early access program and improved usability and compatibility using feedback and requirements from clients and partners. 
+Led development of a CLI program in Rust for uploading sequencing data to our cloud platform. Distributed the tool to clients of the platform's early access program and improved ergonomics, performane, and compatibility of the tool using feedback and requirements from clients and partners. 
 
 \Gap
 
@@ -64,7 +64,7 @@ Led development of a CLI program in Rust for uploading large amounts of sequenci
 \hfill
 \DatestampYMD{2023}{11}{13} -- \DatestampYMD{2024}{11}{13}
 \SubBulletItem
-Curated a dataset of genomic data and antimicrobial testing data for 90K+ bacteria isolates, the largest of its kind. Developed parsing and ingestion pipelines in Python for cleaning and transforming raw sequencing data and AMR test results (from dozens of different hospitals, biobanks, public research data sources, etc.) into standardized formats for use in training machine learning models for predicting AMR profiles from bacteria DNA sequences.
+Curated a dataset of sequenced DNA and AMR data for 90K+ bacteria isolates, the largest of its kind. Developed ETL pipelines in Python for cleaning and transforming raw sequencing data and AMR test results (from dozens of hospitals, biobanks, public research data sources, etc.) into standardized formats for use in training machine learning models for predicting AMR profiles from bacteria genetics.
 
 \BigGap
 
@@ -78,11 +78,11 @@ Curated a dataset of genomic data and antimicrobial testing data for 90K+ bacter
 \SubBulletItem
 Trained machine learning and deep learning models to predict battery State-of-Charge and State-of-Health using ultrasound signal data. Developed signal processing software to prepare ultrasound features for ML.
 \SubBulletItem
-Participated in the development of data pipelines using Prefect, AWS, and Snowflake to collect ultrasound and battery cycling data from multiple long-running data collection campaigns.
+Contributed to the development of data pipelines using Prefect, AWS, and Snowflake to collect ultrasound and battery cycling data from multiple long-running data collection campaigns.
 \SubBulletItem
 Built and maintained data validation components of the data pipelines to identify issues with ultrasound captures and send alerts to the battery lab team through Slack. Reduced resolution times for data collection issues from days to hours.
-\SubBulletItem
-Built and maintained internal dashboards using Plotly Dash to monitor and debug data collection campaigns and experiments.
+%\SubBulletItem
+%Built and maintained internal dashboards using Plotly Dash to monitor and debug data collection campaigns and experiments.
 
 \BigGap
 
@@ -108,16 +108,6 @@ Trained Bayesian neural networks to model cooling tower dynamics for model-based
 \SubBulletItem
 Processed educational demographic datasets at the undergraduate, Phd, and faculty level to create publication quality figures to support the research of a graduate student in the Sociology Department. Iterated on the visualizations with the graduate student to aid in the investigation of racial trends in the data.
 
-\Section
-{Education}
-{Education}
-{PDF:Education}
-
-\Entry
-\textbf{Brown University},
-M.S. Data Science
-\hfill
-\DatestampYMD{2020}{09}{01} -- \DatestampYMD{2021}{10}{01}
 
 %\Gap
 %\begin{Detail}
@@ -125,30 +115,36 @@ M.S. Data Science
 %Relevant Coursework: Machine Learning, Statistical Learning, Deep Learning, Data Engineering
 %end{Detail}
 
-\BigGap
-\Entry
-\textbf{Georgia Institute of Technology},
-B.S. Aerospace Engineering
-\hfill
-\DatestampYMD{2016}{08}{19} -- \DatestampYMD{2020}{05}{01}
-
-\Gap
-\begin{Detail}
-\BulletItem
-Minor in Scientific \& Engineering Computing
-\end{Detail}
-
 \Section
 {Skills}
 {Skills}
 {PDF:Skills}
 
 \Entry
-\textbf{Languages}: Python (FastAPI, Pandas, Polars, Scikit-Learn, Tensorflow, etc.), Rust, JavaScript (React)
+\textbf{Python 5+ years}: Prefect, FastAPI, Pandas, Polars, Scikit-Learn, Tensorflow, ...
+\Entry 
+\textbf{Other Languages}: Rust, JavaScript (React)
 \Entry
-\textbf{Technologies}: SQL, Git, AWS, GCP, Docker, Kubernetes
+\textbf{Tools \& Technologies}: SQL, Git, AWS, GCP, Docker, Kubernetes
 \Entry
 \textbf{Practices}: Data engineering, Backend development, Data science
+
+\Section
+{Education}
+{Education}
+{PDF:Education}
+
+\Entry \textbf{Brown University}
+\hfill
+\DatestampYMD{2020}{09}{01} -- \DatestampYMD{2021}{10}{01}
+\BulletItem M.S. Data Science
+
+\Entry \textbf{Georgia Institute of Technology}
+\hfill
+\DatestampYMD{2016}{08}{19} -- \DatestampYMD{2020}{05}{01}
+\BulletItem B.S. Aerospace Engineering
+\BulletItem
+Minor in Scientific \& Engineering Computing
 
 %\Section
 %{Research Experience}
