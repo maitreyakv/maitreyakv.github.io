@@ -4,35 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Maitreya</title>
-    <link data-trunk rel="css" href="style.css">
+    <link data-trunk rel="css" href="main.css">
+    <link data-trunk rel="tailwind-css" href="tailwind.css">
 </head>
-<body>
-      <div id="slider__about" class="slider slider-out-left">
-        <div id="card__about" class="card">
-          <p>about me!</p>
+<body class="h-screen">
+  <section id="section__about" class="h-[33vw] p-8 translate-x-2/3 transition duration-500 ease-in-out">
+    <div class="h-full bg-emerald-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+      <p>about me!</p>
+    </div>
+  </section>
+  <section id="section__python" class="h-[33vw] p-8 -translate-x-2/3 transition duration-500 ease-in-out">
+    <div class="h-full bg-blue-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+      <div class="h-full p-6 flex items-center grid grid-cols-3">
+        <div class="px-8 col-span-2">
+          <p>Python has been my bread and butter since high shool. I've used it in a variety of applications, from scientific and engineering problems, to machine learning and data analysis, to backend engineering and application development.</p>
+          <p>I'm comfortable working with large parts of the Python ecosystem, including data engineering libraries (e.g. Pandas, Polars, SQLAlchemy, FastAPI, ...) and data science libraries (e.g. Numpy, Scikit-Learn, Tensorflow, ...).</p>
+        </div>
+        <div class="flex justify-center items-center col-span-1">
+          <img src="https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg" alt="Python logo"/>
         </div>
       </div>
-    </section>
-    <section>
-      <div id="slider__python" class="slider slider-out-right">
-        <div id="card__python" class="card">
-          <p>python content!</p>
-        </div>
-      </div>
-    </section>
-    <section>
-      <div id="slider__rust" class="slider slider-out-left">
-        <div id="card__rust" class="card">
-          <p>rust content!</p>
-        </div>
-      </div>
-    </section>
-    <section>
-      <div id="slider__yarn-hoard" class="slider slider-out-right">
-        <div id="card__yarn-hoard" class="card">
-          <p>yarn-hoard content!</p>
-        </div>
-      </div>
-    </section>
+    </div>
+  </section>
+  <section id="section__rust" class="h-[33vw] p-8 translate-x-2/3 transition duration-500 ease-in-out">
+    <div class="h-full bg-orange-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+      <p>rust content!</p>
+    </div>
+  </section>
+  <section id="section__yarn-hoard" class="h-[33vw] p-8 -translate-x-2/3 transition duration-500 ease-in-out">
+    <div class="h-full bg-violet-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+      <p>yarn-hoard content!</p>
+    </div>
+  </section>
 </body>
 </html>
