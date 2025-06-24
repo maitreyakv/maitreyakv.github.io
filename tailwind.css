@@ -2,20 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply 
+    h-screen w-screen /*Body takes up the entire viewport*/
+}
+
 h1 {
-  @apply font-public font-bold text-sm
+  @apply 
+    font-public font-bold text-sm /*Font setting for headings*/
+}
+
+a {
+  @apply underline 
 }
 
 p, li {
-  @apply font-public font-medium text-xs
+  @apply 
+    font-public font-medium text-xs /*Font settings for regular text*/
 }
 
 section {
-  @apply p-4 transition duration-500 ease-in-out 
+  @apply
+    ml-4 mr-6 my-6 /*Spacing between each section*/
+    transition duration-500 ease-in-out /*Animation setting for when sections slide on and off the page*/
 }
 
 @layer components {
   .card {
-    @apply h-full p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] flex items-center
+    @apply 
+      flex items-center /*Layout for content*/
+      p-4 /*Interior padding for content*/
+      border-2 border-black rounded-2xl /*Neo-brutalism style border*/
+      shadow-[8px_8px_0px_rgba(0,0,0,1)] /*Neo-brutalism style shadow*/
   }
 }

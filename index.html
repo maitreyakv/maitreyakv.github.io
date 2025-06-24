@@ -3,40 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Maitreya</title>
-    
+    <title>@maitreyakv</title>
+
     <!--Trunk assets-->
     <link data-trunk rel="css" href="main.css">
     <link data-trunk rel="tailwind-css" href="tailwind.css">
     <link data-trunk rel="copy-dir" href="assets">
+    <link data-trunk rel="icon" type="image/ico" href="/assets/favicon.ico">
 
     <!--Google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
-<body class="h-screen">
-
-  <section id="section__about" class="-translate-x-2/3">
+<body>
+  <!--About me section-->
+  <section id="section__about" class="-translate-x-full">
     <div class="card bg-emerald-400 grid grid-cols-3">
       <div class="h-full col-span-2 flex flex-col justify-around">
         <h1>@maitreyakv</h1>
-        <p>Howdy! I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston.</p>
+        <p>Howdy, I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston. Learn about my career and interests below!</p>
       </div>
       <div class="flex justify-center items-center col-span-1">
         <img class="w-[100px] border-2 border-black rounded-full" src="assets/face.jpeg" alt="Python logo"/>
       </div>
     </div>
   </section>
-  
-  <section id="section__python" class="translate-x-2/3">
+  <!--Python section -->
+  <section id="section__python" class="translate-x-full">
     <div class="card bg-blue-400 grid grid-cols-3 gap-x-4">
       <div class="flex justify-center items-center col-span-1">
         <img class="w-[100px]" src="assets/python.svg" alt="Python logo"/>
       </div>
       <div class="h-full col-span-2 flex flex-col justify-around">
         <h1>Python, my bread &amp; butter</h1>
-        <p>I've been programming in Python since high school, for both software development and as an scientific tool.</p>
+        <p>I've been programming in Python since high school, for both software development and as an scientific and engineering tool.</p>
       <!--  <p>I've used Python in various applications from scientific and engineering problems, to machine learning and data analysis, to backend engineering and application development.</p>-->
       <!--  <p>I'm comfortable working with large parts of the Python ecosystem, including-->
       <!--  <ul class="list-disc list-inside">-->
@@ -47,25 +48,41 @@
       </div>
     </div>
   </section>
-  
-  <section id="section__rust" class="-translate-x-2/3">
+  <!--Rust section -->
+  <section id="section__rust" class="-translate-x-full">
     <div class="card bg-orange-400 grid grid-cols-3 gap-x-4">
       <div class="h-full col-span-2 flex flex-col justify-around">
         <h1>Rust, my new obsession</h1>
-        <p>I'm still learning the ropes on Rust, but its quickly become my favorite language, and I want to use it wherever I can!</p>
+        <p>Rust has quickly become my favorite language, and I'm looking for more opportunities to build with it, personally and professionaly!</p>
       </div>
       <div class="flex justify-center items-center col-span-1">
         <img class="w-[100px]" src="assets/rust.svg" alt="Rust logo"/>
       </div>
     </div>
   </section>
-  
-  <section id="section__yarn-hoard" class="translate-x-2/3">
-    <div class="card bg-violet-400">
-      <p>yarn-hoard content!</p>
+  <!--Yarn hoard section-->
+  <section id="section__yarn-hoard" class="translate-x-full">
+    <div class="card bg-violet-400 grid grid-cols-3 gap-x-4">
+      <div class="flex justify-center items-center col-span-1">
+        <img class="w-[100px]" src="assets/construction.svg" alt="Construction sign"/>
+      </div>
+      <div class="h-full col-span-2 flex flex-col justify-around">
+        <h1>YarnHoard, track your stash</h1>
+        <p>A full stack app for tracking your yarn inventory, for crafty people. The entire app is written in Rust! (Work in progress, coming soon)</p>
+      </div>
     </div>
   </section>
-
-
+  <!--This site section-->
+  <section id="section__meta" class="-translate-x-full">
+    <div class="card bg-cyan-300 grid grid-cols-3 gap-x-4">
+      <div class="h-full col-span-2 flex flex-col justify-around">
+        <h1>Source code for this site</h1>
+        <p>Want to see how this site works? Check out <a href="https://github.com/maitreyakv/maitreyakv">the source</a> on GitHub! Its simple HTML and Tailwind CSS, with just a pinch of Rust on WASM.</p>
+      </div>
+      <div class="flex justify-center items-center col-span-1">
+        <img class="w-[100px]" src="assets/finger.svg" alt="Finger pointing down"/>
+      </div>
+    </div>
+  </section>
 </body>
 </html>

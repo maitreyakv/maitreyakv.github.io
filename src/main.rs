@@ -21,6 +21,7 @@ fn update_page() {
     update_sliding_section("section__python", Direction::Right);
     update_sliding_section("section__rust", Direction::Left);
     update_sliding_section("section__yarn-hoard", Direction::Right);
+    update_sliding_section("section__meta", Direction::Left);
 }
 
 fn update_sliding_section(id: &str, direction: Direction) {
@@ -29,8 +30,8 @@ fn update_sliding_section(id: &str, direction: Direction) {
     let element = window.document().unwrap().get_element_by_id(id).unwrap();
     let rect = element.get_bounding_client_rect();
     let class_to_hide = match direction {
-        Direction::Left => "-translate-x-2/3",
-        Direction::Right => "translate-x-2/3",
+        Direction::Left => "-translate-x-full",
+        Direction::Right => "translate-x-full",
     };
     let hidden = rect.bottom() > viewport_height;
     element
