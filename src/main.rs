@@ -2,6 +2,8 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use web_sys::window;
 
+// TODO: Refactor to use intersection observer api
+
 fn main() {
     console_error_panic_hook::set_once();
 
