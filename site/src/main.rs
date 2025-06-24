@@ -17,20 +17,20 @@ fn main() {
 }
 
 fn update_page() {
-    update_sliding_section("section__about", SliderDirection::Left);
-    update_sliding_section("section__python", SliderDirection::Right);
-    update_sliding_section("section__rust", SliderDirection::Left);
-    update_sliding_section("section__yarn-hoard", SliderDirection::Right);
+    update_sliding_section("section__about", Direction::Left);
+    update_sliding_section("section__python", Direction::Right);
+    update_sliding_section("section__rust", Direction::Left);
+    update_sliding_section("section__yarn-hoard", Direction::Right);
 }
 
-fn update_sliding_section(id: &str, direction: SliderDirection) {
+fn update_sliding_section(id: &str, direction: Direction) {
     let window = window().unwrap();
     let viewport_height = f64::try_from(window.inner_height().unwrap()).unwrap();
     let element = window.document().unwrap().get_element_by_id(id).unwrap();
     let rect = element.get_bounding_client_rect();
     let class_to_hide = match direction {
-        SliderDirection::Left => "-translate-x-2/3",
-        SliderDirection::Right => "translate-x-2/3",
+        Direction::Left => "-translate-x-2/3",
+        Direction::Right => "translate-x-2/3",
     };
     let hidden = rect.bottom() > viewport_height;
     element
@@ -40,7 +40,7 @@ fn update_sliding_section(id: &str, direction: SliderDirection) {
 }
 
 #[derive(Clone)]
-enum SliderDirection {
+enum Direction {
     Left,
     Right,
 }
