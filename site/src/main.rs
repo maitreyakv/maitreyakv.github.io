@@ -17,13 +17,13 @@ fn main() {
 }
 
 fn update_page() {
-    update_sliding_section("section__about", SliderDirection::Right, false);
-    update_sliding_section("section__python", SliderDirection::Left, false);
-    update_sliding_section("section__rust", SliderDirection::Right, false);
-    update_sliding_section("section__yarn-hoard", SliderDirection::Left, true);
+    update_sliding_section("section__about", SliderDirection::Left);
+    update_sliding_section("section__python", SliderDirection::Right);
+    update_sliding_section("section__rust", SliderDirection::Left);
+    update_sliding_section("section__yarn-hoard", SliderDirection::Right);
 }
 
-fn update_sliding_section(id: &str, direction: SliderDirection, last: bool) {
+fn update_sliding_section(id: &str, direction: SliderDirection) {
     let window = window().unwrap();
     let viewport_height = f64::try_from(window.inner_height().unwrap()).unwrap();
     let element = window.document().unwrap().get_element_by_id(id).unwrap();
@@ -32,11 +32,7 @@ fn update_sliding_section(id: &str, direction: SliderDirection, last: bool) {
         SliderDirection::Left => "-translate-x-2/3",
         SliderDirection::Right => "translate-x-2/3",
     };
-    let hidden = if last {
-        rect.bottom() > viewport_height
-    } else {
-        0.5 * (rect.top() + rect.bottom()) > 0.6 * viewport_height
-    };
+    let hidden = rect.bottom() > viewport_height;
     element
         .class_list()
         .toggle_with_force(class_to_hide, hidden)

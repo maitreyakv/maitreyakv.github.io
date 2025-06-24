@@ -5,7 +5,11 @@ module.exports = {
   },
   darkMode: "media", // 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        public: ['"Public Sans"', "sans-serif"],
+      }
+    },
   },
   variants: {
     extend: {},

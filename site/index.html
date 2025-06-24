@@ -4,37 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Maitreya</title>
+    
+    <!--Trunk assets-->
     <link data-trunk rel="css" href="main.css">
     <link data-trunk rel="tailwind-css" href="tailwind.css">
+    <link data-trunk rel="copy-dir" href="assets">
+
+    <!--Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body class="h-screen">
-  <section id="section__about" class="h-[33vw] p-8 translate-x-2/3 transition duration-500 ease-in-out">
-    <div class="h-full bg-emerald-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-      <p>about me!</p>
-    </div>
-  </section>
-  <section id="section__python" class="h-[33vw] p-8 -translate-x-2/3 transition duration-500 ease-in-out">
-    <div class="h-full bg-blue-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-      <div class="h-full p-6 flex items-center grid grid-cols-3">
-        <div class="px-8 col-span-2">
-          <p>Python has been my bread and butter since high shool. I've used it in a variety of applications, from scientific and engineering problems, to machine learning and data analysis, to backend engineering and application development.</p>
-          <p>I'm comfortable working with large parts of the Python ecosystem, including data engineering libraries (e.g. Pandas, Polars, SQLAlchemy, FastAPI, ...) and data science libraries (e.g. Numpy, Scikit-Learn, Tensorflow, ...).</p>
-        </div>
-        <div class="flex justify-center items-center col-span-1">
-          <img src="https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg" alt="Python logo"/>
-        </div>
+
+  <section id="section__about" class="-translate-x-2/3">
+    <div class="card bg-emerald-400 grid grid-cols-3">
+      <div class="h-full col-span-2 flex flex-col justify-around">
+        <h1>@maitreyakv</h1>
+        <p>Howdy! I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston.</p>
+      </div>
+      <div class="flex justify-center items-center col-span-1">
+        <img class="w-[100px] border-2 border-black rounded-full" src="assets/face.jpeg" alt="Python logo"/>
       </div>
     </div>
   </section>
-  <section id="section__rust" class="h-[33vw] p-8 translate-x-2/3 transition duration-500 ease-in-out">
-    <div class="h-full bg-orange-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-      <p>rust content!</p>
+  
+  <section id="section__python" class="translate-x-2/3">
+    <div class="card bg-blue-400 grid grid-cols-3 gap-x-4">
+      <div class="flex justify-center items-center col-span-1">
+        <img class="w-[100px]" src="assets/python.svg" alt="Python logo"/>
+      </div>
+      <div class="h-full col-span-2 flex flex-col justify-around">
+        <h1>Python, my bread &amp; butter</h1>
+        <p>I've been programming in Python since high school, for both software development and as an scientific tool.</p>
+      <!--  <p>I've used Python in various applications from scientific and engineering problems, to machine learning and data analysis, to backend engineering and application development.</p>-->
+      <!--  <p>I'm comfortable working with large parts of the Python ecosystem, including-->
+      <!--  <ul class="list-disc list-inside">-->
+      <!--    <li>Data engineering libraries (e.g. Pandas, Polars)</li>-->
+      <!--    <li>Backend engineering libraries (e.g. SQLAlchemy, FastAPI)</li>-->
+      <!--    <li>Data science libraries (e.g. Scikit-Learn, Tensorflow)</li>-->
+      <!--  </ul>-->
+      </div>
     </div>
   </section>
-  <section id="section__yarn-hoard" class="h-[33vw] p-8 -translate-x-2/3 transition duration-500 ease-in-out">
-    <div class="h-full bg-violet-400 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+  
+  <section id="section__rust" class="-translate-x-2/3">
+    <div class="card bg-orange-400 grid grid-cols-3 gap-x-4">
+      <div class="h-full col-span-2 flex flex-col justify-around">
+        <h1>Rust, my new obsession</h1>
+        <p>I'm still learning the ropes on Rust, but its quickly become my favorite language, and I want to use it wherever I can!</p>
+      </div>
+      <div class="flex justify-center items-center col-span-1">
+        <img class="w-[100px]" src="assets/rust.svg" alt="Rust logo"/>
+      </div>
+    </div>
+  </section>
+  
+  <section id="section__yarn-hoard" class="translate-x-2/3">
+    <div class="card bg-violet-400">
       <p>yarn-hoard content!</p>
     </div>
   </section>
+
+
 </body>
 </html>
