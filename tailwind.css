@@ -2,7 +2,6 @@
 @config "./tailwind.config.js";
 
 @import "tailwindcss";
-@import "./tw-animate.css";
 
 @tailwind base;
 @tailwind components;
@@ -58,10 +57,3 @@ h1 {
 #card__meta {
   @apply bg-cyan-300 
 }
-
-section {
-  @apply
-    relative 
-    transition duration-500 ease-in-out /*Animation setting for when sections slide on and off the page*/
-}
-

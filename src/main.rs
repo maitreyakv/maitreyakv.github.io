@@ -158,9 +158,9 @@ fn CardContent(visible: MaybeDyn<bool>, #[prop(setter(into))] children: Children
         let visible = visible.clone();
         move || {
             if visible.get() {
-                "overflow-hidden transition-all animate-accordion-down"
+                "overflow-hidden transition-all duration-300 ease-in-out max-h-0"
             } else {
-                "overflow-hidden transition-all animate-accordion-up"
+                "overflow-hidden transition-all duration-300 ease-in-out max-h-screen"
             }
         }
     };
@@ -168,15 +168,9 @@ fn CardContent(visible: MaybeDyn<bool>, #[prop(setter(into))] children: Children
     view! {
         div(class="col-span-3") {
             div(class=class) {
-                (if visible.get() {
-                    view! {
-                        div(class="flex flex-col gap-y-2") {
-                            p() { "HELLO!" }
-                        }
-                    }
-                } else {
-                    view! {}
-                })
+                div(class="flex flex-col gap-y-2") {
+                    (children)
+                }
             }
         }
     }
