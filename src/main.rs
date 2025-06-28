@@ -17,13 +17,14 @@ fn main() {
             )
             Card(
                 name="python",
-                image=view! { CardImage(src="assets/python.svg", alt="The Python programming language logo", on_left=true) },
+                image=view! { CardImage(src="assets/python.svg", alt="The Python programming language logo") },
+                image_on_left=true,
                 summary=view! { CardSummary() {
                     h1() { "Python, my bread and butter" }
                     p() { "I've been programming in Python since high school, for both software development "
                           "and as an scientific and engineering tool." }
                 }},
-                content=&|visible: MaybeDyn<bool>| view! { CardContent(visible=visible) {
+                content=view! { CardContent() {
                     p() { "I've used Python in various applications from scientific and engineering problems, "
                           "to machine learning and data analysis, to backend engineering and application development." }
                     p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
@@ -52,7 +53,8 @@ fn main() {
             )
             Card(
                 name="yarn-hoard",
-                image=view!{ CardImage(src="assets/construction.svg", alt="A construction sign", on_left=true) },
+                image=view!{ CardImage(src="assets/construction.svg", alt="A construction sign") },
+                image_on_left=true,
                 summary=view! { CardSummary() {
                     h1() { "YarnHoard, track your stash" }
                     p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
@@ -83,16 +85,13 @@ fn main() {
 fn Card(
     name: &'static str,
     image: Option<View>,
+    image_on_left: Option<bool>,
     summary: Option<View>,
-    content: Option<&'static dyn Fn(MaybeDyn<bool>) -> View>,
+    content: Option<View>,
 ) -> View {
     let id = format! {"card__{name}"};
 
-    let content_is_visible = create_signal(true);
-    let content = match content {
-        Some(f) => f(content_is_visible.into()),
-        None => view! {},
-    };
+    let content_is_visible = create_signal(false);
 
     on_mount({
         let id = id.clone();
@@ -107,7 +106,7 @@ fn Card(
                 let half_viewport_height =
                     f64::try_from(window().inner_height().unwrap()).unwrap() / 2.;
                 content_is_visible
-                    .set(rect.top() > half_viewport_height || rect.bottom() < half_viewport_height);
+                    .set(rect.top() < half_viewport_height && rect.bottom() > half_viewport_height);
             }) as Box<dyn Fn()>);
             let _ = window()
                 .add_event_listener_with_callback("scroll", closure.as_ref().unchecked_ref());
@@ -117,14 +116,40 @@ fn Card(
         }
     });
 
+    let image_and_summary = if image_on_left.unwrap_or(false) {
+        view! { (image) (summary) }
+    } else {
+        view! { (summary) (image) }
+    };
+
     view! {
         div(
             id=id,
             class="flex items-center m-6 p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] grid grid-cols-3 gap-x-4 gap-y-2"
         ) {
-            (image)
-            (summary)
-            (content)
+            (image_and_summary)
+            div(class="col-span-3") {
+                Collapse(open=content_is_visible.into()) {
+                    (content)
+                }
+            }
+        }
+    }
+}
+
+#[component(inline_props)]
+fn Collapse(open: MaybeDyn<bool>, #[prop(setter(into))] children: Children) -> View {
+    let class = move || {
+        if open.get() {
+            "overflow-hidden transition-all duration-300 ease-in-out max-h-screen"
+        } else {
+            "overflow-hidden transition-all duration-300 ease-in-out max-h-0"
+        }
+    };
+
+    view! {
+        div(class=class) {
+            (children)
         }
     }
 }
@@ -139,51 +164,25 @@ fn CardSummary(#[prop(setter(into))] children: Children) -> View {
 }
 
 #[component(inline_props)]
-fn CardImage(
-    src: &'static str,
-    alt: &'static str,
-    round_border: Option<bool>,
-    on_left: Option<bool>,
-) -> View {
+fn CardImage(src: &'static str, alt: &'static str, round_border: Option<bool>) -> View {
     let image_class = if round_border.unwrap_or(false) {
         "w-[100px] border-2 border-black rounded-full"
     } else {
         "w-[100px]"
     };
 
-    let container_class = if on_left.unwrap_or(false) {
-        "flex justify-center items-center col-span-1"
-    } else {
-        "flex justify-center items-center col-span-1 order-1"
-    };
-
     view! {
-        div(class=container_class) {
+        div(class="flex justify-center items-center col-span-1") {
             img(class=image_class, src=src, alt=alt)
         }
     }
 }
 
 #[component(inline_props)]
-fn CardContent(visible: MaybeDyn<bool>, #[prop(setter(into))] children: Children) -> View {
-    let class = {
-        let visible = visible.clone();
-        move || {
-            if visible.get() {
-                "overflow-hidden transition-all duration-300 ease-in-out max-h-0"
-            } else {
-                "overflow-hidden transition-all duration-300 ease-in-out max-h-screen"
-            }
-        }
-    };
-
+fn CardContent(#[prop(setter(into))] children: Children) -> View {
     view! {
-        div(class="col-span-3") {
-            div(class=class) {
-                div(class="flex flex-col gap-y-2") {
-                    (children)
-                }
-            }
+        div(class="flex flex-col gap-y-2") {
+            (children)
         }
     }
 }

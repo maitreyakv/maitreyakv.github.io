@@ -11,8 +11,6 @@
 
 body, html {
   @apply 
-    /*h-screen w-screen */
-    /*Body takes up the entire viewport*/
     overflow-x-hidden /*Prevent horizontal scrolling when cards slide off screen*/
 }
 
