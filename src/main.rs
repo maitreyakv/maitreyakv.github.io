@@ -228,16 +228,11 @@ fn Card(
 
 #[component(inline_props)]
 fn Collapse(open: MaybeDyn<bool>, #[prop(setter(into))] children: Children) -> View {
-    let class = move || {
-        if open.get() {
-            "overflow-hidden transition-all duration-600 ease-in-out max-h-screen"
-        } else {
-            "overflow-hidden transition-all duration-600 ease-in-out max-h-0"
-        }
-    };
-
     view! {
-        div(class=class) {
+        div(
+            data-state=move || if open.get() {"open"} else {"closed"},
+            class="overflow-hidden transition-all duration-600 ease-in-out data-[state=closed]:max-h-0 data-[state=open]:max-h-screen"
+        ) {
             (children)
         }
     }
@@ -254,15 +249,14 @@ fn CardSummary(#[prop(setter(into))] children: Children) -> View {
 
 #[component(inline_props)]
 fn CardImage(src: &'static str, alt: &'static str, round_border: Option<bool>) -> View {
-    let image_class = if round_border.unwrap_or(false) {
-        "w-[100px] border-2 border-black rounded-full"
-    } else {
-        "w-[100px]"
-    };
-
     view! {
         div(class="flex justify-center items-center col-span-1") {
-            img(class=image_class, src=src, alt=alt)
+            img(
+                data-round-border=round_border.unwrap_or(false).then_some(""),
+                class="w-[100px] data-round-border:border-2 data-round-border:border-black data-round-border:rounded-full",
+                src=src,
+                alt=alt
+            )
         }
     }
 }
