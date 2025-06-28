@@ -10,26 +10,26 @@ fn main() {
         view! {
             header() { "Click each card to read more!" }
             div(class="h-10")
-            Card(name="about") {
-                CardImage(src="assets/face.jpeg", alt="A picture of my face", round_border=true)
-                CardSummary() {
+            Card(
+                name="about",
+                image=view! { CardImage(src="assets/face.jpeg", alt="A picture of my face", round_border=true) },
+                summary=view! { CardSummary() {
                     h1() { "@maitreyakv" }
-                    p() {
-                        "Howdy, I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston. Learn about my career and interests below!"
-                    }
-                }
-            }
-            Card(name="python") {
-                CardImage(src="assets/python.svg", alt="The Python programming language logo", on_left=true)
-                CardSummary() {
+                    p() { "Howdy, I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston. "
+                          "Learn about my career and interests below!" }
+                }}
+            )
+            Card(
+                name="python",
+                image=view! { CardImage(src="assets/python.svg", alt="The Python programming language logo", on_left=true) },
+                summary=view! { CardSummary() {
                     h1() { "Python, my bread and butter" }
-                    p() {
-                        "I've been programming in Python since high school, for both software development and as an scientific and engineering tool."
-                    }
-                }
-                CardContent() {
-                    p() {
-                        "I've used Python in various applications from scientific and engineering problems, to machine learning and data analysis, to backend engineering and application development." }
+                    p() { "I've been programming in Python since high school, for both software development "
+                          "and as an scientific and engineering tool." }
+                }},
+                content=view! { CardContent() {
+                    p() { "I've used Python in various applications from scientific and engineering problems, "
+                          "to machine learning and data analysis, to backend engineering and application development." }
                     p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
                     ul(class="list-none") {
                         div(class="grid grid-cols-2 gap-x-2") {
@@ -43,29 +43,32 @@ fn main() {
                             }
                         }
                     }
-                }
-            }
-            Card(name="rust") {
-                CardImage(src="assets/rust.svg", alt="The Rust programming language logo")
-                CardSummary() {
+                }}
+            )
+            Card(
+                name="rust",
+                image=view!{ CardImage(src="assets/rust.svg", alt="The Rust programming language logo") },
+                summary=view!{ CardSummary() {
                     h1() { "Rust, my new obsession" }
                     p() {
                         "Rust has quickly become my favorite language, and I'm looking for more opportunities to build with it, personally and professionally!"
                     }
-                }
-            }
-            Card(name="yarn-hoard") {
-                CardImage(src="assets/construction.svg", alt="A construction sign", on_left=true)
-                CardSummary() {
+                }}
+            )
+            Card(
+                name="yarn-hoard",
+                image=view!{ CardImage(src="assets/construction.svg", alt="A construction sign", on_left=true) },
+                summary=view! { CardSummary() {
                     h1() { "YarnHoard, track your stash" }
                     p() {
                       "A full stack app for tracking your yarn inventory, for crafty people. The entire app is written in Rust! (Work in progress, coming soon)"
                     }
-                }
-            }
-            Card(name="meta") {
-                CardImage(src="assets/finger.svg", alt="A hand with the index finger pointing up")
-                CardSummary() {
+                }}
+            )
+            Card(
+                name="meta",
+                image=view! { CardImage(src="assets/finger.svg", alt="A hand with the index finger pointing up") },
+                summary=view! { CardSummary() {
                     h1() { "Source code for this site" }
                     p() {
                         "Want to see how this site works? Check out "
@@ -74,8 +77,8 @@ fn main() {
                         }
                         ". Its made with Rust and Tailwind!"
                     }
-                }
-            }
+                }}
+            )
             footer(class="fixed z-10 left-0 right-0 flex justify-center content-center bg-red-400 border-black py-2") {
                 "Scroll to see more cards!"
             }
@@ -93,13 +96,20 @@ fn main() {
 //}
 
 #[component(inline_props)]
-fn Card(name: &'static str, #[prop(setter(into))] children: Children) -> View {
+fn Card(
+    name: &'static str,
+    image: Option<View>,
+    summary: Option<View>,
+    content: Option<View>,
+) -> View {
     view! {
         div(
             id=format!("card__{name}"),
             class="flex items-center m-6 p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] grid grid-cols-3 gap-x-4 gap-y-2"
         ) {
-            (children)
+            (image)
+            (summary)
+            (content)
         }
     }
 }
