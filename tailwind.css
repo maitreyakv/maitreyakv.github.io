@@ -20,11 +20,6 @@ footer {
     fixed z-10 left-0 bottom-0 right-0 flex justify-center content-center bg-red-400 border-black border-t-2 py-2
 }
 
-h1 {
-  @apply 
-    font-public font-bold text-sm /*Font setting for headings*/
-}
-
 a {
   @apply underline 
 }
@@ -34,19 +29,33 @@ p, li {
     font-public font-medium text-xs /*Font settings for regular text*/
 }
 
+h1 {
+  @apply font-public font-bold text-sm
+}
+
+#card__about {
+  @apply bg-emerald-400
+}
+
+#card__python {
+  @apply bg-blue-400 
+}
+
+#card__rust {
+  @apply bg-orange-400 
+}
+
+#card__yarn-hoard {
+  @apply bg-violet-400 
+}
+
+#card__meta {
+  @apply bg-cyan-300 
+}
+
 section {
   @apply
     relative 
     transition duration-500 ease-in-out /*Animation setting for when sections slide on and off the page*/
 }
 
-@layer components {
-  .card {
-    @apply 
-      flex items-center /*Layout for content*/
-      m-6 /*Spacing between each card*/
-      p-4 /*Interior padding for content*/
-      border-2 border-black rounded-2xl /*Neo-brutalism style border*/
-      shadow-[8px_8px_0px_rgba(0,0,0,1)] /*Neo-brutalism style shadow*/
-  }
-}
