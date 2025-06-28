@@ -1,3 +1,9 @@
+/*TODO: Deprecate old config and move to directives here*/
+@config "./tailwind.config.js";
+
+@import "tailwindcss";
+@import "./tw-animate.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

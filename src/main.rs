@@ -27,7 +27,7 @@ fn main() {
                     p() { "I've been programming in Python since high school, for both software development "
                           "and as an scientific and engineering tool." }
                 }},
-                content=&|visible: bool| view! { CardContent(visible=visible) {
+                content=&|visible: MaybeDyn<bool>| view! { CardContent(visible=visible) {
                     p() { "I've used Python in various applications from scientific and engineering problems, "
                           "to machine learning and data analysis, to backend engineering and application development." }
                     p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
@@ -96,14 +96,12 @@ fn Card(
     name: &'static str,
     image: Option<View>,
     summary: Option<View>,
-    content: Option<&'static dyn Fn(bool) -> View>,
+    content: Option<&'static dyn Fn(MaybeDyn<bool>) -> View>,
 ) -> View {
     let content_is_visible = create_signal(true);
-    let content = move || match content {
-        Some(f) => f(content_is_visible.get()),
-        None => {
-            view! {}
-        }
+    let content = match content {
+        Some(f) => f(content_is_visible.into()),
+        None => view! {},
     };
 
     view! {
@@ -155,18 +153,30 @@ fn CardImage(
 }
 
 #[component(inline_props)]
-fn CardContent(visible: bool, #[prop(setter(into))] children: Children) -> View {
-    let class = if visible {
-        "overflow-hidden transition-all duration-300 ease-in-out"
-    } else {
-        "overflow-hidden transition-all duration-300 ease-in-out hidden"
+fn CardContent(visible: MaybeDyn<bool>, #[prop(setter(into))] children: Children) -> View {
+    let class = {
+        let visible = visible.clone();
+        move || {
+            if visible.get() {
+                "overflow-hidden transition-all animate-accordion-down"
+            } else {
+                "overflow-hidden transition-all animate-accordion-up"
+            }
+        }
     };
+
     view! {
         div(class="col-span-3") {
             div(class=class) {
-                div(class="flex flex-col gap-y-2 ") {
-                    (children)
-                }
+                (if visible.get() {
+                    view! {
+                        div(class="flex flex-col gap-y-2") {
+                            p() { "HELLO!" }
+                        }
+                    }
+                } else {
+                    view! {}
+                })
             }
         }
     }
