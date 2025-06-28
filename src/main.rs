@@ -151,8 +151,8 @@ fn main() {
                         "The styling is done with "
                         a(href="https://tailwindcss.com") { "Tailwind CSS" }
                         " and the interactivity is implemented with the delightfully simple "
-                        a(href="https://sycamore.dev") { "Sycamore framework" }
-                        " in Rust, which is compiled to "
+                        a(href="https://sycamore.dev") { "Sycamore" }
+                        " framework in Rust, which is compiled to "
                         a(href="https://webassembly.org") { "WebAssembly" }
                         "."
                     }
