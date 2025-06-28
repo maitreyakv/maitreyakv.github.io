@@ -30,11 +30,18 @@ fn main() {
                 CardContent() {
                     p() {
                         "I've used Python in various applications from scientific and engineering problems, to machine learning and data analysis, to backend engineering and application development." }
-                    p() { "I'm comfortable working with large parts of the Python ecosystem, including" }
-                    ul(class="list-disc list-inside") {
-                        li() { "Data engineering libraries (e.g. Pandas, Polars)" }
-                        li() { "Backend engineering libraries (e.g. SQLAlchemy, FastAPI)" }
-                        li() { "Data science libraries (e.g. Scikit-Learn, Tensorflow)" }
+                    p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
+                    ul(class="list-none") {
+                        div(class="grid grid-cols-2 gap-x-2") {
+                            li() {
+                                label(class="font-bold") { "Engineering" }
+                                p() { "Pandas, Polars, SQLAlchemy, FastAPI" }
+                            }
+                            li() {
+                                label(class="font-bold") { "Data science" }
+                                p() { "Numpy, Scikit-Learn, Tensorflow" }
+                            }
+                        }
                     }
                 }
             }
@@ -90,7 +97,7 @@ fn Card(name: &'static str, #[prop(setter(into))] children: Children) -> View {
     view! {
         div(
             id=format!("card__{name}"),
-            class="flex items-center m-6 p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] grid grid-cols-3 gap-x-4"
+            class="flex items-center m-6 p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] grid grid-cols-3 gap-x-4 gap-y-2"
         ) {
             (children)
         }
@@ -135,7 +142,9 @@ fn CardImage(
 #[component(inline_props)]
 fn CardContent(#[prop(setter(into))] children: Children) -> View {
     view! {
-        (children)
+        div(class="flex flex-col col-span-3 gap-y-2") {
+            (children)
+        }
     }
 }
 
