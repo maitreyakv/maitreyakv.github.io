@@ -30,6 +30,10 @@ a {
   @apply underline 
 }
 
+label {
+  @apply font-public
+}
+
 p, li {
   @apply 
     font-public font-medium text-xs /*Font settings for regular text*/
