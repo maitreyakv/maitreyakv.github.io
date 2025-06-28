@@ -27,7 +27,7 @@ fn main() {
                     p() { "I've been programming in Python since high school, for both software development "
                           "and as an scientific and engineering tool." }
                 }},
-                content=view! { CardContent() {
+                content=&|visible: bool| view! { CardContent(visible=visible) {
                     p() { "I've used Python in various applications from scientific and engineering problems, "
                           "to machine learning and data analysis, to backend engineering and application development." }
                     p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
@@ -50,9 +50,8 @@ fn main() {
                 image=view!{ CardImage(src="assets/rust.svg", alt="The Rust programming language logo") },
                 summary=view!{ CardSummary() {
                     h1() { "Rust, my new obsession" }
-                    p() {
-                        "Rust has quickly become my favorite language, and I'm looking for more opportunities to build with it, personally and professionally!"
-                    }
+                    p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
+                          "to build with it, personally and professionally!" }
                 }}
             )
             Card(
@@ -60,9 +59,8 @@ fn main() {
                 image=view!{ CardImage(src="assets/construction.svg", alt="A construction sign", on_left=true) },
                 summary=view! { CardSummary() {
                     h1() { "YarnHoard, track your stash" }
-                    p() {
-                      "A full stack app for tracking your yarn inventory, for crafty people. The entire app is written in Rust! (Work in progress, coming soon)"
-                    }
+                    p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
+                          "is written in Rust! (Work in progress, coming soon)" }
                 }}
             )
             Card(
@@ -72,9 +70,7 @@ fn main() {
                     h1() { "Source code for this site" }
                     p() {
                         "Want to see how this site works? Check out "
-                        a(href="https://github.com/maitreyakv/maitreyakv") {
-                            "the code on GitHub"
-                        }
+                        a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
                         ". Its made with Rust and Tailwind!"
                     }
                 }}
@@ -100,10 +96,19 @@ fn Card(
     name: &'static str,
     image: Option<View>,
     summary: Option<View>,
-    content: Option<View>,
+    content: Option<&'static dyn Fn(bool) -> View>,
 ) -> View {
+    let content_is_visible = create_signal(true);
+    let content = move || match content {
+        Some(f) => f(content_is_visible.get()),
+        None => {
+            view! {}
+        }
+    };
+
     view! {
         div(
+            on:click=move |_| content_is_visible.set_fn(|val| !val),
             id=format!("card__{name}"),
             class="flex items-center m-6 p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] grid grid-cols-3 gap-x-4 gap-y-2"
         ) {
@@ -150,10 +155,19 @@ fn CardImage(
 }
 
 #[component(inline_props)]
-fn CardContent(#[prop(setter(into))] children: Children) -> View {
+fn CardContent(visible: bool, #[prop(setter(into))] children: Children) -> View {
+    let class = if visible {
+        "overflow-hidden transition-all duration-300 ease-in-out"
+    } else {
+        "overflow-hidden transition-all duration-300 ease-in-out hidden"
+    };
     view! {
-        div(class="flex flex-col col-span-3 gap-y-2") {
-            (children)
+        div(class="col-span-3") {
+            div(class=class) {
+                div(class="flex flex-col gap-y-2 ") {
+                    (children)
+                }
+            }
         }
     }
 }
