@@ -166,6 +166,12 @@ fn main() {
     });
 }
 
+fn add_event_listener_with_callback(event_type: &str, callback: impl Fn() + 'static) {
+    let closure = Closure::wrap(Box::new(callback) as Box<dyn Fn()>);
+    let _ = window().add_event_listener_with_callback(event_type, closure.as_ref().unchecked_ref());
+    closure.forget();
+}
+
 #[component(inline_props)]
 fn Card(
     name: &'static str,
@@ -178,27 +184,26 @@ fn Card(
 
     let content_is_visible = create_signal(false);
 
-    on_mount({
+    let update_visibility = {
         let id = id.clone();
         move || {
-            let closure = Closure::wrap(Box::new(move || {
-                let rect = window()
-                    .document()
-                    .unwrap()
-                    .get_element_by_id(&id)
-                    .unwrap()
-                    .get_bounding_client_rect();
-                let half_viewport_height =
-                    f64::try_from(window().inner_height().unwrap()).unwrap() / 2.;
-                content_is_visible
-                    .set(rect.top() < half_viewport_height && rect.bottom() > half_viewport_height);
-            }) as Box<dyn Fn()>);
-            let _ = window()
-                .add_event_listener_with_callback("scroll", closure.as_ref().unchecked_ref());
-            let _ = window()
-                .add_event_listener_with_callback("resize", closure.as_ref().unchecked_ref());
-            closure.forget();
+            let rect = window()
+                .document()
+                .unwrap()
+                .get_element_by_id(&id)
+                .unwrap()
+                .get_bounding_client_rect();
+            let half_viewport_height =
+                f64::try_from(window().inner_height().unwrap()).unwrap() / 2.;
+            content_is_visible
+                .set(rect.top() < half_viewport_height && rect.bottom() > half_viewport_height);
+        }
+    };
 
+    on_mount({
+        move || {
+            add_event_listener_with_callback("scroll", update_visibility.clone());
+            add_event_listener_with_callback("resize", update_visibility);
             window()
                 .dispatch_event(&Event::new("scroll").unwrap())
                 .unwrap();
