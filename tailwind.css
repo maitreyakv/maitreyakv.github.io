@@ -1,11 +1,13 @@
-/*TODO: Deprecate old config and move to directives here*/
-@config "./tailwind.config.js";
-
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@theme {
+  --font-public: "Public Sans", sans-serif;
+}
 
 body, html {
   @apply 
