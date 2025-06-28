@@ -1,15 +1,11 @@
-//use wasm_bindgen::JsCast;
-//use wasm_bindgen::prelude::*;
-//use web_sys::window;
-
-use sycamore::prelude::*;
+use sycamore::{prelude::*, web::wasm_bindgen::prelude::*};
 
 fn main() {
     console_error_panic_hook::set_once();
     sycamore::render(|| {
         view! {
-            header() { "Click each card to read more!" }
-            div(class="h-10")
+            header() { "Scroll to expand each card!" }
+            div(class="h-[40vh]")
             Card(
                 name="about",
                 image=view! { CardImage(src="assets/face.jpeg", alt="A picture of my face", round_border=true) },
@@ -75,21 +71,13 @@ fn main() {
                     }
                 }}
             )
+            div(class="h-[40vh]")
             footer(class="fixed z-10 left-0 right-0 flex justify-center content-center bg-red-400 border-black py-2") {
-                "Scroll to see more cards!"
+                "Thanks for reading!"
             }
         }
     });
 }
-
-//#[component(inline_props)]
-//fn Section() -> View {
-//    view! {
-//        section() {
-//            Card(id=format!("card__{name}"), img=img, header=header, summary=summary, direction=direction)
-//        }
-//    }
-//}
 
 #[component(inline_props)]
 fn Card(
@@ -98,16 +86,40 @@ fn Card(
     summary: Option<View>,
     content: Option<&'static dyn Fn(MaybeDyn<bool>) -> View>,
 ) -> View {
+    let id = format! {"card__{name}"};
+
     let content_is_visible = create_signal(true);
     let content = match content {
         Some(f) => f(content_is_visible.into()),
         None => view! {},
     };
 
+    on_mount({
+        let id = id.clone();
+        move || {
+            let closure = Closure::wrap(Box::new(move || {
+                let rect = window()
+                    .document()
+                    .unwrap()
+                    .get_element_by_id(&id)
+                    .unwrap()
+                    .get_bounding_client_rect();
+                let half_viewport_height =
+                    f64::try_from(window().inner_height().unwrap()).unwrap() / 2.;
+                content_is_visible
+                    .set(rect.top() > half_viewport_height || rect.bottom() < half_viewport_height);
+            }) as Box<dyn Fn()>);
+            let _ = window()
+                .add_event_listener_with_callback("scroll", closure.as_ref().unchecked_ref());
+            let _ = window()
+                .add_event_listener_with_callback("resize", closure.as_ref().unchecked_ref());
+            closure.forget();
+        }
+    });
+
     view! {
         div(
-            on:click=move |_| content_is_visible.set_fn(|val| !val),
-            id=format!("card__{name}"),
+            id=id,
             class="flex items-center m-6 p-4 border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)] grid grid-cols-3 gap-x-4 gap-y-2"
         ) {
             (image)
@@ -175,44 +187,3 @@ fn CardContent(visible: MaybeDyn<bool>, #[prop(setter(into))] children: Children
         }
     }
 }
-
-#[derive(Clone)]
-enum Direction {
-    Left,
-    Right,
-}
-
-//let window = window().unwrap();
-//
-//let closure = Closure::wrap(Box::new(update_page) as Box<dyn Fn()>);
-//let _ = window.add_event_listener_with_callback("scroll", closure.as_ref().unchecked_ref());
-//let _ = window.add_event_listener_with_callback("resize", closure.as_ref().unchecked_ref());
-//closure.forget();
-//
-//// Trigger an update immediately to stage the element positions initially
-//update_page()
-//}
-
-//fn update_page() {
-//    update_sliding_section("section__about", Direction::Left);
-//    update_sliding_section("section__python", Direction::Right);
-//    update_sliding_section("section__rust", Direction::Left);
-//    update_sliding_section("section__yarn-hoard", Direction::Right);
-//    update_sliding_section("section__meta", Direction::Left);
-//}
-//
-//fn update_sliding_section(id: &str, direction: Direction) {
-//    let window = window().unwrap();
-//    let viewport_height = f64::try_from(window.inner_height().unwrap()).unwrap();
-//    let element = window.document().unwrap().get_element_by_id(id).unwrap();
-//    let rect = element.get_bounding_client_rect();
-//    let class_to_hide = match direction {
-//        Direction::Left => "-translate-x-full",
-//        Direction::Right => "translate-x-full",
-//    };
-//    let hidden = rect.bottom() > viewport_height;
-//    element
-//        .class_list()
-//        .toggle_with_force(class_to_hide, hidden)
-//        .unwrap();
-//}
