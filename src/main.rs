@@ -11,8 +11,11 @@ fn main() {
                 div(class="max-w-[400px]") {
                     div(class="h-[30px]")
                     Cards()
-                    div(class="h-[100vh]")
+                    div(class="h-[50vh]")
                 }
+            }
+            header(class="fixed bottom-0 w-full flex justify-center content-center bg-red-400 border-black border-t-2 py-2") {
+                "Thanks for reading!"
             }
         }
     });
@@ -46,7 +49,7 @@ fn Cards() -> View {
                     a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
                     "."
                 }
-                div(class="flex flex-rows gap-x-4 justify-center align-center") {
+                div(class="mt-2 flex flex-rows gap-x-4 justify-center align-center") {
                     a(href="https://github.com/maitreyakv") {
                         img(class="w-[20px]", src="assets/github.svg", alt="The GitHub logo")
                     }
