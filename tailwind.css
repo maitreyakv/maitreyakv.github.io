@@ -10,37 +10,23 @@
 }
 
 body, html {
-  @apply 
-    overflow-x-hidden /*Prevent horizontal scrolling when cards slide off screen*/
+  @apply bg-gray-300 font-public
 }
 
 header {
-  @apply 
-    font-public font-extrabold
-    fixed z-10 left-0 top-0 right-0 flex justify-center content-center bg-red-400 border-black border-b-2 py-2
-}
-
-footer {
-  @apply 
-    font-public font-extrabold
-    fixed z-10 left-0 bottom-0 right-0 flex justify-center content-center bg-red-400 border-black border-t-2 py-2
+  @apply font-extrabold 
 }
 
 a {
   @apply underline 
 }
 
-label {
-  @apply font-public
-}
-
 p, li {
-  @apply 
-    font-public font-medium text-xs /*Font settings for regular text*/
+  @apply font-medium text-xs
 }
 
 h1 {
-  @apply font-public font-bold text-sm
+  @apply font-bold text-sm
 }
 
 #card__about {
