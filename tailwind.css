@@ -17,6 +17,10 @@ header {
   @apply font-extrabold 
 }
 
+footer {
+  @apply font-extrabold 
+}
+
 a {
   @apply underline 
 }
