@@ -1,5 +1,6 @@
 use sycamore::prelude::*;
 
+use crate::atoms::Collapse;
 use crate::molecules::*;
 
 #[component]
@@ -22,6 +23,7 @@ pub fn Footer() -> View {
 
 #[component]
 pub fn AboutCard() -> View {
+    let CarouselItemIsFocused(is_focused) = use_context();
     view! {
         Card(id="card__about") {
             CardHeader() {
@@ -39,25 +41,27 @@ pub fn AboutCard() -> View {
                 }
             }
             CardContent() {
-                p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
-                      "background and I love working on problems in those domains."}
-                p() { "I'm most experienced in data engineering and backend development, but I also dabble in "
-                      " frontend and am looking for opportunities to grow my skills there." }
-                p() {
-                    "In my free time I enjoy playing videogames, reading science fiction and fantasy, and "
-                    "playing with my dog "
-                    a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
-                    "."
-                }
-                div(class="mt-2 flex flex-rows gap-x-4 justify-center align-center") {
-                    a(href="https://github.com/maitreyakv") {
-                        img(class="w-[20px]", src="assets/github.svg", alt="The GitHub logo")
+                Collapse(open=is_focused.into()) {
+                    p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
+                          "background and I love working on problems in those domains."}
+                    p() { "I'm most experienced in data engineering and backend development, but I also dabble in "
+                          " frontend and am looking for opportunities to grow my skills there." }
+                    p() {
+                        "In my free time I enjoy playing videogames, reading science fiction and fantasy, and "
+                        "playing with my dog "
+                        a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
+                        "."
                     }
-                    a(href="https://www.linkedin.com/in/maitreyakv/") {
-                        img(class="w-[20px]", src="assets/linkedin.png", alt="The Linkedin logo")
-                    }
-                    a(href="mailto:maitreyakv@gmail.com") {
-                        img(class="w-[20px]", src="assets/email.svg", alt="An mail icon")
+                    div(class="mt-2 flex flex-rows gap-x-4 justify-center align-center") {
+                        a(href="https://github.com/maitreyakv") {
+                            img(class="w-[20px]", src="assets/github.svg", alt="The GitHub logo")
+                        }
+                        a(href="https://www.linkedin.com/in/maitreyakv/") {
+                            img(class="w-[20px]", src="assets/linkedin.png", alt="The Linkedin logo")
+                        }
+                        a(href="mailto:maitreyakv@gmail.com") {
+                            img(class="w-[20px]", src="assets/email.svg", alt="An mail icon")
+                        }
                     }
                 }
             }
@@ -67,6 +71,7 @@ pub fn AboutCard() -> View {
 
 #[component]
 pub fn PythonCard() -> View {
+    let CarouselItemIsFocused(is_focused) = use_context();
     view! {
         Card(id="card__python") {
             CardHeader() {
@@ -80,30 +85,32 @@ pub fn PythonCard() -> View {
                 }
             }
             CardContent() {
-                p() { "I've used Python in various applications from scientific and engineering problems, "
-                      "to machine learning and data analysis, to backend engineering and application development." }
-                p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
-                ul(class="list-none") {
-                    div(class="flex flex-row justify-around items-start") {
-                        li(class="flex flex-col justify-center") {
-                            label(class="font-bold text-center") { "Data" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "Pandas/Polars" }
-                                li(class="text-center") { "SQLAlchemy" }
+                Collapse(open=is_focused.into()) {
+                    p() { "I've used Python in various applications from scientific and engineering problems, "
+                          "to machine learning and data analysis, to backend engineering and application development." }
+                    p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
+                    ul(class="list-none") {
+                        div(class="flex flex-row justify-around items-start") {
+                            li(class="flex flex-col justify-center") {
+                                label(class="font-bold text-center") { "Data" }
+                                ul(class="flex flex-col align-center") {
+                                    li(class="text-center") { "Pandas/Polars" }
+                                    li(class="text-center") { "SQLAlchemy" }
+                                }
                             }
-                        }
-                        li(class="flex flex-col justify-center") {
-                            label(class="font-bold text-center") { "Engineering" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "FastAPI" }
-                                li(class="text-center") { "Prefect" }
+                            li(class="flex flex-col justify-center") {
+                                label(class="font-bold text-center") { "Engineering" }
+                                ul(class="flex flex-col align-center") {
+                                    li(class="text-center") { "FastAPI" }
+                                    li(class="text-center") { "Prefect" }
+                                }
                             }
-                        }
-                        li(class="flex flex-col justify-center") {
-                            label(class="font-bold text-center") { "Science" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "Scikit-Learn" }
-                                li(class="text-center") { "Tensorflow" }
+                            li(class="flex flex-col justify-center") {
+                                label(class="font-bold text-center") { "Science" }
+                                ul(class="flex flex-col align-center") {
+                                    li(class="text-center") { "Scikit-Learn" }
+                                    li(class="text-center") { "Tensorflow" }
+                                }
                             }
                         }
                     }
@@ -115,6 +122,7 @@ pub fn PythonCard() -> View {
 
 #[component]
 pub fn RustCard() -> View {
+    let CarouselItemIsFocused(is_focused) = use_context();
     view! {
         Card(id="card__rust") {
             CardHeader() {
@@ -128,31 +136,33 @@ pub fn RustCard() -> View {
                 }
             }
             CardContent() {
-                p() { "As a general-purpose language with an amazing feature set, I've made it my preferred "
-                      " language for most software development." }
-                p() { "While I'm not quite an expert at the language yet, I've used it in personal (like this site!) "
-                      "and professional projects using crates like" }
-                ul(class="list-none") {
-                    div(class="flex flex-row justify-around items-start") {
-                        li(class="flex flex-col justify-center") {
-                            label(class="font-bold text-center") { "General" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "Clap" }
-                                li(class="text-center") { "Tokio" }
+                Collapse(open=is_focused.into()) {
+                    p() { "As a general-purpose language with an amazing feature set, I've made it my preferred "
+                          " language for most software development." }
+                    p() { "While I'm not quite an expert at the language yet, I've used it in personal (like this site!) "
+                          "and professional projects using crates like" }
+                    ul(class="list-none") {
+                        div(class="flex flex-row justify-around items-start") {
+                            li(class="flex flex-col justify-center") {
+                                label(class="font-bold text-center") { "General" }
+                                ul(class="flex flex-col align-center") {
+                                    li(class="text-center") { "Clap" }
+                                    li(class="text-center") { "Tokio" }
+                                }
                             }
-                        }
-                        li(class="flex flex-col justify-center") {
-                            label(class="font-bold text-center") { "Backend" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "SeaORM" }
-                                li(class="text-center") { "Axum" }
+                            li(class="flex flex-col justify-center") {
+                                label(class="font-bold text-center") { "Backend" }
+                                ul(class="flex flex-col align-center") {
+                                    li(class="text-center") { "SeaORM" }
+                                    li(class="text-center") { "Axum" }
+                                }
                             }
-                        }
-                        li(class="flex flex-col justify-center") {
-                            label(class="font-bold text-center") { "Frontend" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "Sycamore" }
-                                li(class="text-center") { "web_sys" }
+                            li(class="flex flex-col justify-center") {
+                                label(class="font-bold text-center") { "Frontend" }
+                                ul(class="flex flex-col align-center") {
+                                    li(class="text-center") { "Sycamore" }
+                                    li(class="text-center") { "web_sys" }
+                                }
                             }
                         }
                     }
@@ -164,6 +174,7 @@ pub fn RustCard() -> View {
 
 #[component]
 pub fn YarnHoardCard() -> View {
+    let CarouselItemIsFocused(is_focused) = use_context();
     view! {
         Card(id="card__yarn-hoard") {
             CardHeader() {
@@ -177,10 +188,12 @@ pub fn YarnHoardCard() -> View {
                 }
             }
             CardContent() {
-                h1(class="text-center") { "Work in progress, coming soon!" }
-                p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
-                      "being allowing the user to create and manage records for their yarn inventory and record "
-                      "information about their collection." }
+                Collapse(open=is_focused.into()) {
+                    h1(class="text-center") { "Work in progress, coming soon!" }
+                    p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
+                          "being allowing the user to create and manage records for their yarn inventory and record "
+                          "information about their collection." }
+                }
             }
         }
     }
@@ -188,6 +201,7 @@ pub fn YarnHoardCard() -> View {
 
 #[component]
 pub fn MetaCard() -> View {
+    let CarouselItemIsFocused(is_focused) = use_context();
     view! {
         Card(id="card__meta") {
             CardHeader() {
@@ -204,14 +218,16 @@ pub fn MetaCard() -> View {
                 }
             }
             CardContent() {
-                p() {
-                    "The styling is done with "
-                    a(href="https://tailwindcss.com") { "Tailwind CSS" }
-                    " and the interactivity is implemented with the delightfully simple "
-                    a(href="https://sycamore.dev") { "Sycamore" }
-                    " framework in Rust, which is compiled to "
-                    a(href="https://webassembly.org") { "WebAssembly" }
-                    "."
+                Collapse(open=is_focused.into()) {
+                    p() {
+                        "The styling is done with "
+                        a(href="https://tailwindcss.com") { "Tailwind CSS" }
+                        " and the interactivity is implemented with the delightfully simple "
+                        a(href="https://sycamore.dev") { "Sycamore" }
+                        " framework in Rust, which is compiled to "
+                        a(href="https://webassembly.org") { "WebAssembly" }
+                        "."
+                    }
                 }
             }
         }
