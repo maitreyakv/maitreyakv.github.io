@@ -41,7 +41,7 @@ pub fn AboutCard() -> View {
                 }
             }
             CardContent() {
-                Collapse(open=(move || position.get() == 0).into()) {
+                Collapse(open=move || position.get() == 0) {
                     p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
                           "background and I love working on problems in those domains."}
                     p() { "I'm most experienced in data engineering and backend development, but I also dabble in "
@@ -85,7 +85,7 @@ pub fn PythonCard() -> View {
                 }
             }
             CardContent() {
-                Collapse(open=(move || position.get() == 0).into()) {
+                Collapse(open=move || position.get() == 0) {
                     p() { "I've used Python in various applications from scientific and engineering problems, "
                           "to machine learning and data analysis, to backend engineering and application development." }
                     p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
@@ -136,7 +136,7 @@ pub fn RustCard() -> View {
                 }
             }
             CardContent() {
-                Collapse(open=(move || position.get() == 0).into()) {
+                Collapse(open=move || position.get() == 0) {
                     p() { "As a general-purpose language with an amazing feature set, I've made it my preferred "
                           " language for most software development." }
                     p() { "While I'm not quite an expert at the language yet, I've used it in personal (like this site!) "
@@ -188,7 +188,7 @@ pub fn YarnHoardCard() -> View {
                 }
             }
             CardContent() {
-                Collapse(open=(move || position.get() == 0).into()) {
+                Collapse(open=move || position.get() == 0) {
                     h1(class="text-center") { "Work in progress, coming soon!" }
                     p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
                           "being allowing the user to create and manage records for their yarn inventory and record "
@@ -218,7 +218,7 @@ pub fn MetaCard() -> View {
                 }
             }
             CardContent() {
-                Collapse(open=(move || position.get() == 0).into()) {
+                Collapse(open=move || position.get() == 0) {
                     p() {
                         "The styling is done with "
                         a(href="https://tailwindcss.com") { "Tailwind CSS" }

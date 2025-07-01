@@ -1,7 +1,10 @@
 use sycamore::prelude::*;
 
 #[component(inline_props)]
-pub fn Collapse(open: MaybeDyn<bool>, #[prop(setter(into))] children: Children) -> View {
+pub fn Collapse(
+    #[prop(setter(into))] open: MaybeDyn<bool>,
+    #[prop(setter(into))] children: Children,
+) -> View {
     view! {
         div(
             data-state=move || if open.get() {"open"} else {"closed"},
