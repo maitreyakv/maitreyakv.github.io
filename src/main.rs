@@ -1,15 +1,17 @@
 use sycamore::prelude::*;
 
 use site::{
-    molecules::{Carousel, CarouselItem, CarouselItemList},
-    organisms::{AboutCard, MetaCard, PythonCard, RustCard, YarnHoardCard},
+    molecules::{Carousel, CarouselItem},
+    organisms::{AboutCard, Footer, Header, MetaCard, PythonCard, RustCard, YarnHoardCard},
 };
 
 fn main() {
     console_error_panic_hook::set_once();
     sycamore::render(|| {
         view! {
-            Site()
+            div(class="h-screen w-screen flex justify-center items-center") {
+                Site()
+            }
         }
     });
 }
@@ -17,36 +19,34 @@ fn main() {
 #[component]
 fn Site() -> View {
     view! {
+        Header()
         Carousel() {
-            div(class="h-[1100px]") {
-                CarouselItemList() {
-                    CarouselItem() {
-                        div(class="p-6") {
-                            AboutCard()
-                        }
-                    }
-                    CarouselItem() {
-                        div(class="p-6") {
-                            PythonCard()
-                        }
-                    }
-                    CarouselItem() {
-                        div(class="p-6") {
-                            RustCard()
-                        }
-                    }
-                    CarouselItem() {
-                        div(class="p-6") {
-                            YarnHoardCard()
-                        }
-                    }
-                    CarouselItem() {
-                        div(class="p-6") {
-                            MetaCard()
-                        }
-                    }
+            CarouselItem() {
+                div(class="px-6 py-2") {
+                    AboutCard()
+                }
+            }
+            CarouselItem() {
+                div(class="px-6 py-2") {
+                    PythonCard()
+                }
+            }
+            CarouselItem() {
+                div(class="px-6 py-2") {
+                    RustCard()
+                }
+            }
+            CarouselItem() {
+                div(class="px-6 py-2") {
+                    YarnHoardCard()
+                }
+            }
+            CarouselItem() {
+                div(class="px-6 py-2") {
+                    MetaCard()
                 }
             }
         }
+        Footer()
     }
 }

@@ -6,8 +6,8 @@ use crate::molecules::*;
 #[component]
 pub fn Header() -> View {
     view! {
-        header(class="fixed w-full flex justify-center content-center bg-red-400 border-black border-b-2 py-2") {
-            "Scroll to expand each card!"
+        header(class="fixed top-0 w-full flex justify-center content-center bg-red-400 border-black border-b-2 py-2") {
+            "Click to download my resume!"
         }
     }
 }
@@ -16,7 +16,7 @@ pub fn Header() -> View {
 pub fn Footer() -> View {
     view! {
         footer(class="fixed bottom-0 w-full flex justify-center content-center bg-red-400 border-black border-t-2 py-2") {
-            "Thanks for reading!"
+            "Scroll to see expand each card!"
         }
     }
 }
