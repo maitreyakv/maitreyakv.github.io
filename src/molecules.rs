@@ -52,11 +52,9 @@ pub fn CardContent(#[prop(setter(into))] children: Children) -> View {
 #[component(inline_props)]
 pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
     view! {
-        div(class=r#"
-            max-h-full h-full overflow-y-scroll flex flex-col 
-            scroll-py-8 snap-y snap-mandatory before:basis-1/2 
-            before:shrink-0 after:basis-1/2 after:shrink-0"#
-        ) {
+        div(class=r#"max-h-full h-full overflow-y-scroll flex flex-col
+                     scroll-py-8 snap-y snap-mandatory before:basis-1/2 
+                     before:shrink-0 after:basis-1/2 after:shrink-0"#) {
             (children)
         }
     }
@@ -64,8 +62,8 @@ pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
 
 #[component(inline_props)]
 pub fn CarouselItem(#[prop(setter(into))] children: Children) -> View {
-    let is_focused = create_signal(false);
-    provide_context_in_new_scope(CarouselItemIsFocused(is_focused), || {
+    let position = create_signal(-1);
+    provide_context_in_new_scope(CarouselItemPosition(position), || {
         view! {
             div(class="snap-center") {
                 (children)
@@ -75,4 +73,4 @@ pub fn CarouselItem(#[prop(setter(into))] children: Children) -> View {
 }
 
 #[derive(Clone, Copy)]
-pub struct CarouselItemIsFocused(pub Signal<bool>);
+pub struct CarouselItemPosition(pub Signal<i32>);
