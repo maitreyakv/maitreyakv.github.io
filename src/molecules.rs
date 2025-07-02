@@ -53,6 +53,8 @@ pub fn CardContent(#[prop(setter(into))] children: Children) -> View {
 pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
     let node_ref = create_node_ref();
 
+    let nodes_and_relative_positions = create_signal(Vec::new());
+
     let callback = move |_| {
         let node_ref = node_ref.get();
         let carousel = node_ref.dyn_ref::<Element>().unwrap();
@@ -79,29 +81,66 @@ pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
                 (y_mid - y_mid_element).abs() as u32
             })
             .map(|(idx, _)| idx)
-            .unwrap_or(0);
-        console_log!("{center_item_idx}");
+            .unwrap_or(0) as i32;
+
+        nodes_and_relative_positions.set(
+            items
+                .into_iter()
+                .enumerate()
+                .map(|(idx, node)| (node, idx as i32 - center_item_idx))
+                .collect(),
+        )
     };
 
-    view! {
-        div(
-            r#ref=node_ref,
-            on:scroll=callback,
-            class=r#"max-h-full h-full overflow-y-scroll flex flex-col
-                     scroll-py-8 snap-y snap-mandatory before:basis-1/2 
-                     before:shrink-0 after:basis-1/2 after:shrink-0"#
-        ) {
-            (children)
-        }
-    }
+    provide_context_in_new_scope(
+        CarouselState {
+            nodes_and_relative_positions,
+        },
+        || {
+            view! {
+                div(
+                    r#ref=node_ref,
+                    on:scroll=callback,
+                    class=r#"max-h-full h-full overflow-y-scroll flex flex-col
+                             scroll-py-8 _snap-y snap-mandatory before:basis-[calc(50vh-175px)] 
+                             before:shrink-0 after:basis-[calc(50vh-105px)] after:shrink-0"#
+                ) {
+                    (children)
+                }
+            }
+        },
+    )
+}
+
+#[derive(Clone)]
+pub struct CarouselState {
+    nodes_and_relative_positions: Signal<Vec<(Node, i32)>>,
 }
 
 #[component(inline_props)]
 pub fn CarouselItem(#[prop(setter(into))] children: Children) -> View {
+    let node_ref = create_node_ref();
+
     let position = create_signal(-1);
+
+    let CarouselState {
+        nodes_and_relative_positions,
+    } = use_context();
+
+    create_effect(move || {
+        position.set(
+            nodes_and_relative_positions
+                .get_clone()
+                .iter()
+                .find(|(node, _)| *node == node_ref.get())
+                .map(|(_, relative_index)| relative_index.to_owned())
+                .unwrap_or(-1),
+        );
+    });
+
     provide_context_in_new_scope(CarouselItemPosition(position), || {
         view! {
-            div(class="snap-center") {
+            div(r#ref=node_ref, class="snap-center") {
                 (children)
             }
         }

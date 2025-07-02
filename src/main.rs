@@ -1,7 +1,7 @@
 use sycamore::prelude::*;
 
 use site::{
-    molecules::{Carousel, CarouselItem},
+    molecules::{Carousel, CarouselItem, CarouselItemPosition},
     organisms::{AboutCard, Footer, Header, MetaCard, PythonCard, RustCard, YarnHoardCard},
 };
 
@@ -22,31 +22,61 @@ fn Site() -> View {
         Header()
         Carousel() {
             CarouselItem() {
-                div(class="px-6 py-2") {
+                Focus() {
                     AboutCard()
                 }
             }
             CarouselItem() {
-                div(class="px-6 py-2") {
+                Focus() {
                     PythonCard()
                 }
             }
             CarouselItem() {
-                div(class="px-6 py-2") {
+                Focus() {
                     RustCard()
                 }
             }
             CarouselItem() {
-                div(class="px-6 py-2") {
+                Focus() {
                     YarnHoardCard()
                 }
             }
             CarouselItem() {
-                div(class="px-6 py-2") {
+                Focus() {
                     MetaCard()
                 }
             }
         }
         Footer()
+    }
+}
+
+#[component(inline_props)]
+fn Focus(#[prop(setter(into))] children: Children) -> View {
+    let CarouselItemPosition(position) = use_context();
+
+    let data_position = move || match position.get() {
+        (i32::MIN..=-2) => "far-previous",
+        -1 => "previous",
+        0 => "center",
+        1 => "next",
+        (2..=i32::MAX) => "far-next",
+    };
+
+    view! {
+        div(
+            data-position=data_position,
+            class=r#"w-95 flex flex-col justify-center px-6 py-2
+                     data-[position=far-previous]:-translate-y-[100vh]
+                     data-[position=far-next]:translate-y-[100vh]
+                     transition-all duration-1000 ease-in-out"#
+        ) {
+            div(
+                data-position=data_position,
+                class="data-[position=center]:scale-100 scale-90 _transition-all duration-1000"
+            ) {
+                (children)
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ pub fn Collapse(
     view! {
         div(
             data-state=move || if open.get() {"open"} else {"closed"},
-            class="overflow-hidden transition-all duration-300 ease-in-out data-[state=closed]:max-h-0 data-[state=open]:max-h-screen"
+            //class="overflow-hidden _transition-all duration-100 data-[state=closed]:max-h-0 data-[state=open]:max-h-screen"
         ) {
             (children)
         }
