@@ -20,8 +20,10 @@ jobs:
           override: true
           override-file: rust-toolchain
 
-      - name: Install Trunk
-        run: cargo install trunk
+      - uses: jetli/trunk-action@v0.5.1
+        with:
+          # Optional version of trunk to install(eg. 'v0.21.14', 'latest')
+          version: 'latest'
 
       - name: Build the site
         run: make release 
