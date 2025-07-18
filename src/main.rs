@@ -66,14 +66,11 @@ fn Focus(#[prop(setter(into))] children: Children) -> View {
     view! {
         div(
             data-position=data_position,
-            class=r#"w-95 flex flex-col justify-center px-6 py-2
-                     data-[position=far-previous]:-translate-y-[100vh]
-                     data-[position=far-next]:translate-y-[100vh]
-                     transition-all duration-1000 ease-in-out"#
+            class="w-95 flex flex-col justify-center px-6 py-2"
         ) {
             div(
                 data-position=data_position,
-                class="data-[position=center]:scale-100 scale-90 _transition-all duration-1000"
+                //class="data-[position=center]:scale-100 scale-90 duration-500"
             ) {
                 (children)
             }

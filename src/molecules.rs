@@ -102,8 +102,8 @@ pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
                     r#ref=node_ref,
                     on:scroll=callback,
                     class=r#"max-h-full h-full overflow-y-scroll flex flex-col
-                             scroll-py-8 _snap-y snap-mandatory before:basis-[calc(50vh-175px)] 
-                             before:shrink-0 after:basis-[calc(50vh-105px)] after:shrink-0"#
+                             scroll-py-8 snap-y snap-mandatory before:basis-[calc(50vh)]
+                             before:shrink-0 after:basis-[calc(50vh)] after:shrink-0"#
                 ) {
                     (children)
                 }
