@@ -214,7 +214,7 @@ pub fn MetaCard() -> View {
                     h1() { "Source code for this site" }
                     p() {
                         "Want to see how this site works? Check out "
-                        a(href="https://github.com/maitreyakv/maitreyakv.github.io") { "the code on GitHub" }
+                        a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
                         ". Its made with Rust and Tailwind!"
                     }
                 }
