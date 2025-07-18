@@ -40,8 +40,8 @@ pub fn AboutCard() -> View {
                           "Learn about my career and interests below!" }
                 }
             }
-            CardContent() {
-                Collapse(open=move || position.get() == 0) {
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
                     p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
                           "background and I love working on problems in those domains."}
                     p() { "I'm most experienced in data engineering and backend development, but I also dabble in "
@@ -84,8 +84,8 @@ pub fn PythonCard() -> View {
                           "and as an scientific and engineering tool." }
                 }
             }
-            CardContent() {
-                Collapse(open=move || position.get() == 0) {
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
                     p() { "I've used Python in various applications from scientific and engineering problems, "
                           "to machine learning and data analysis, to backend engineering and application development." }
                     p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
@@ -135,8 +135,8 @@ pub fn RustCard() -> View {
                           "to build with it, personally and professionally!" }
                 }
             }
-            CardContent() {
-                Collapse(open=move || position.get() == 0) {
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
                     p() { "As a general-purpose language with an amazing feature set, I've made it my preferred "
                           " language for most software development." }
                     p() { "While I'm not quite an expert at the language yet, I've used it in personal (like this site!) "
@@ -187,8 +187,8 @@ pub fn YarnHoardCard() -> View {
                           "is written in Rust!" }
                 }
             }
-            CardContent() {
-                Collapse(open=move || position.get() == 0) {
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
                     h1(class="text-center") { "Work in progress, coming soon!" }
                     p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
                           "being allowing the user to create and manage records for their yarn inventory and record "
@@ -217,8 +217,8 @@ pub fn MetaCard() -> View {
                     }
                 }
             }
-            CardContent() {
-                Collapse(open=move || position.get() == 0) {
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
                     p() {
                         "The styling is done with "
                         a(href="https://tailwindcss.com") { "Tailwind CSS" }
