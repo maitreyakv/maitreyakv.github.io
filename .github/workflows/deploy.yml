@@ -20,10 +20,11 @@ jobs:
           override: true
           override-file: rust-toolchain
 
-      - uses: jetli/trunk-action@v0.5.1
-        with:
-          # Optional version of trunk to install(eg. 'v0.21.14', 'latest')
-          version: 'latest'
+      - name: Add WASM target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Set up Trunk
+        uses: jetli/trunk-action@v0.5.1
 
       - name: Build the site
         run: make release 
