@@ -7,7 +7,9 @@ use crate::molecules::*;
 pub fn Header() -> View {
     view! {
         header(class="z-20 fixed top-0 w-full flex justify-center content-center bg-red-400 border-black border-b-2 py-2") {
-            "Click to download my resume!"
+            a(href="/maitreyakv-resume.pdf", download="maitreyakv-resume.pdf", on:click=|_| {}) {
+                "Click to download my resume!"
+            }
         }
     }
 }
