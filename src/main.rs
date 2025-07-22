@@ -21,28 +21,45 @@ fn main() {
 
 #[component]
 fn Site() -> View {
-    let items = vec![
-        view! { AboutCard() },
-        view! { JobCard() },
-        view! { SchoolCard() },
-        view! { PythonCard() },
-        view! { RustCard() },
-        view! { MetaCard() },
-        view! { YarnHoardCard() },
-    ]
-    .into_iter()
-    .map(|v| {
-        view! {
-            CarouselItem() {
-                Focus() { (v) }
-            }
-        }
-    })
-    .collect::<Vec<View>>();
-
     view! {
         Header()
-        Carousel() { (items) }
+        Carousel() {
+            CarouselItem() {
+                Focus() {
+                    AboutCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    JobCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    SchoolCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    PythonCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    RustCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    MetaCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    YarnHoardCard()
+                }
+            }
+        }
         Footer()
     }
 }
