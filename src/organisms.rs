@@ -54,15 +54,15 @@ pub fn AboutCard() -> View {
                         a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
                         "."
                     }
-                    div(class="mt-2 flex flex-rows gap-x-4 justify-center align-center") {
+                    div(class="mt-2 flex flex-rows gap-x-6 justify-center align-center") {
                         a(href="https://github.com/maitreyakv") {
-                            img(class="w-[20px]", src="assets/github.svg", alt="The GitHub logo")
+                            img(class="w-[30px]", src="assets/github.svg", alt="The GitHub logo")
                         }
                         a(href="https://www.linkedin.com/in/maitreyakv/") {
-                            img(class="w-[20px]", src="assets/linkedin.png", alt="The Linkedin logo")
+                            img(class="w-[30px]", src="assets/linkedin.png", alt="The Linkedin logo")
                         }
                         a(href="mailto:maitreyakv@gmail.com") {
-                            img(class="w-[20px]", src="assets/email.svg", alt="An mail icon")
+                            img(class="w-[30px]", src="assets/email.svg", alt="An mail icon")
                         }
                     }
                 }
@@ -90,14 +90,40 @@ pub fn JobCard() -> View {
                     h2() { "Titan Advanced Energy Solutions" }
                     p() { "I first worked as a Data Scientist at Titan, where I developed ML models to "
                           "inspect and monitor lithium batteries both in production and operation using ultrasound inspection." }
-                    p() { "I also engineered a lot of the infrastructure to support the data collection experiments and "
-                          "signal processing techniques." }
+                    p() { "I also engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
+                          "collection experiments and signal processing techniques." }
                     h2() { "Day Zero Diagnostics (now bioMérieux )" }
                     p() { "I currently work for Day Zero as a Data/Software Engineer." }
-                    p() { "I contributed to development of Keynome, our cloud platform (in Python on GCP) for bacterial species ID "
+                    p() { "I contribute to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
                           "and AMR profiling from genomic data." }
-                    p() { "I participated in development of the web client to the platform (in React), and led development "
-                          "of our CLI client (in Rust) for interfacing with the platform" }
+                    p() { "I participate in development of the web client to the platform (React), and lead development "
+                          "of our CLI client (Rust) for interfacing with the platform" }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+pub fn SchoolCard() -> View {
+    let CarouselItemPosition(position) = use_context();
+    view! {
+        Card(id="card__school") {
+            CardHeader() {
+                CardImage() {
+                    img(class="w-[100px]", src="assets/cap.svg", alt="A graduation cap")
+                }
+                CardSummary() {
+                    h1() { "My academic background" }
+                    p() { "An engineering and data science background have been very helpful in working on software "
+                          "in a variety of domains"}
+                }
+            }
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
+                    p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
+                    p() { "I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
+                    p() { "I have a M.S. Data Science from Brown University as well." }
                 }
             }
         }

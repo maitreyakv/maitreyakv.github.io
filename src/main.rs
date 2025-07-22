@@ -3,7 +3,8 @@ use sycamore::prelude::*;
 use site::{
     molecules::{Carousel, CarouselItem, CarouselItemPosition},
     organisms::{
-        AboutCard, Footer, Header, JobCard, MetaCard, PythonCard, RustCard, YarnHoardCard,
+        AboutCard, Footer, Header, JobCard, MetaCard, PythonCard, RustCard, SchoolCard,
+        YarnHoardCard,
     },
 };
 
@@ -31,6 +32,11 @@ fn Site() -> View {
             CarouselItem() {
                 Focus() {
                     JobCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
+                    SchoolCard()
                 }
             }
             CarouselItem() {
