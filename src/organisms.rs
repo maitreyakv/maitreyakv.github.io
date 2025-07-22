@@ -26,6 +26,7 @@ pub fn Footer() -> View {
 #[component]
 pub fn AboutCard() -> View {
     let CarouselItemPosition(position) = use_context();
+
     view! {
         Card(id="card__about") {
             CardHeader() {
