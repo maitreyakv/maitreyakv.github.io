@@ -82,23 +82,32 @@ pub fn JobCard() -> View {
                     img(class="w-[100px]", src="assets/road.svg", alt="A winding path")
                 }
                 CardSummary() {
-                    h2() { "My path to software engineer" }
+                    h2() { "My path to Software Engineer" }
                     p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
                 }
             }
             Collapse(open=move || position.get() == 0) {
                 CardContent() {
-                    h3() { "Titan Advanced Energy Solutions" }
+                    h3() {
+                        a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
+                    }
                     p() { "I first worked as a Data Scientist at Titan, where I developed ML models to "
-                          "inspect and monitor lithium batteries both in production and operation using ultrasound inspection." }
+                          "inspect and monitor lithium batteries using ultrasound technology." }
                     p() { "I also engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
                           "collection experiments and signal processing techniques." }
-                    h3() { "Day Zero Diagnostics (now bioMérieux )" }
+                    h3() {
+                        a(href="https://www.dayzerodiagnostics.com") { "Day Zero Diagnostics" }
+                        " (now "
+                        a(href="https://www.biomerieux.com/corp/en/journalists/press-releases/NGS-sequencing-acquisition-day-zero-diagnostics.html") {
+                            "bioMérieux"
+                        }
+                        ")"
+                    }
                     p() { "I currently work for Day Zero as a Data/Software Engineer." }
                     p() { "I contribute to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
                           "and AMR profiling from genomic data." }
                     p() { "I participate in development of the web client to the platform (React), and lead development "
-                          "of our CLI client (Rust) for interfacing with the platform" }
+                          "of our CLI client (Rust) for interfacing with the platform." }
                 }
             }
         }
@@ -115,9 +124,9 @@ pub fn SchoolCard() -> View {
                     img(class="w-[100px]", src="assets/cap.svg", alt="A graduation cap")
                 }
                 CardSummary() {
-                    h2() { "My academic background" }
+                    h2() { "What I studied in school" }
                     p() { "An engineering and data science background have been very helpful in working on software "
-                          "in a variety of domains"}
+                          "in a variety of domains."}
                 }
             }
             Collapse(open=move || position.get() == 0) {
