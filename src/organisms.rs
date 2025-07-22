@@ -133,7 +133,7 @@ pub fn SchoolCard() -> View {
                 CardContent() {
                     p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
                     p() { "I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
-                    p() { "I have a M.S. Data Science from Brown University as well." }
+                    p() { "I have a M.S. in Data Science from Brown University as well." }
                 }
             }
         }

@@ -18,11 +18,11 @@ body {
 }
 
 header {
-  @apply font-extrabold 
+  @apply font-extrabold text-xl
 }
 
 footer {
-  @apply font-extrabold 
+  @apply font-extrabold  text-xl
 }
 
 a {
