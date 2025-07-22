@@ -2,7 +2,9 @@ use sycamore::prelude::*;
 
 use site::{
     molecules::{Carousel, CarouselItem, CarouselItemPosition},
-    organisms::{AboutCard, Footer, Header, MetaCard, PythonCard, RustCard, YarnHoardCard},
+    organisms::{
+        AboutCard, Footer, Header, JobCard, MetaCard, PythonCard, RustCard, YarnHoardCard,
+    },
 };
 
 fn main() {
@@ -28,6 +30,11 @@ fn Site() -> View {
             }
             CarouselItem() {
                 Focus() {
+                    JobCard()
+                }
+            }
+            CarouselItem() {
+                Focus() {
                     PythonCard()
                 }
             }
@@ -38,12 +45,12 @@ fn Site() -> View {
             }
             CarouselItem() {
                 Focus() {
-                    YarnHoardCard()
+                    MetaCard()
                 }
             }
             CarouselItem() {
                 Focus() {
-                    MetaCard()
+                    YarnHoardCard()
                 }
             }
         }
@@ -70,8 +77,7 @@ fn Focus(#[prop(setter(into))] children: Children) -> View {
         ) {
             div(
                 data-position=data_position,
-                //class="data-[position=center]:scale-100 scale-90 duration-500"
-                class="w-95"
+                class="w-110 data-[position=center]:scale-100 scale-90 duration-500"
             ) {
                 (children)
             }

@@ -72,6 +72,39 @@ pub fn AboutCard() -> View {
 }
 
 #[component]
+pub fn JobCard() -> View {
+    let CarouselItemPosition(position) = use_context();
+    view! {
+        Card(id="card__job") {
+            CardHeader() {
+                CardImage() {
+                    img(class="w-[100px]", src="assets/road.svg", alt="A winding path")
+                }
+                CardSummary() {
+                    h1() { "My path to software engineer" }
+                    p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
+                }
+            }
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
+                    h2() { "Titan Advanced Energy Solutions" }
+                    p() { "I first worked as a Data Scientist at Titan, where I developed ML models to "
+                          "inspect and monitor lithium batteries both in production and operation using ultrasound inspection." }
+                    p() { "I also engineered a lot of the infrastructure to support the data collection experiments and "
+                          "signal processing techniques." }
+                    h2() { "Day Zero Diagnostics (now bioMérieux )" }
+                    p() { "I currently work for Day Zero as a Data/Software Engineer." }
+                    p() { "I contributed to development of Keynome, our cloud platform (in Python on GCP) for bacterial species ID "
+                          "and AMR profiling from genomic data." }
+                    p() { "I participated in development of the web client to the platform (in React), and led development "
+                          "of our CLI client (in Rust) for interfacing with the platform" }
+                }
+            }
+        }
+    }
+}
+
+#[component]
 pub fn PythonCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
@@ -175,33 +208,6 @@ pub fn RustCard() -> View {
 }
 
 #[component]
-pub fn YarnHoardCard() -> View {
-    let CarouselItemPosition(position) = use_context();
-    view! {
-        Card(id="card__yarn-hoard") {
-            CardHeader() {
-                CardImage() {
-                    img(class="w-[100px]", src="assets/construction.svg", alt="A construction sign")
-                }
-                CardSummary() {
-                    h1() { "YarnHoard, track your stash" }
-                    p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
-                          "is written in Rust!" }
-                }
-            }
-            Collapse(open=move || position.get() == 0) {
-                CardContent() {
-                    h1(class="text-center") { "Work in progress, coming soon!" }
-                    p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
-                          "being allowing the user to create and manage records for their yarn inventory and record "
-                          "information about their collection." }
-                }
-            }
-        }
-    }
-}
-
-#[component]
 pub fn MetaCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
@@ -230,6 +236,38 @@ pub fn MetaCard() -> View {
                         a(href="https://webassembly.org") { "WebAssembly" }
                         "."
                     }
+                    p() {
+                        "If you find a bug with this site, please don't hesitate to "
+                        a(href="https://github.com/maitreyakv/maitreyakv.github.io/issues") { "open an issue" }
+                        " in the repository."
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+pub fn YarnHoardCard() -> View {
+    let CarouselItemPosition(position) = use_context();
+    view! {
+        Card(id="card__yarn-hoard") {
+            CardHeader() {
+                CardImage() {
+                    img(class="w-[100px]", src="assets/construction.svg", alt="A construction sign")
+                }
+                CardSummary() {
+                    h1() { "YarnHoard, track your stash" }
+                    p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
+                          "is written in Rust!" }
+                }
+            }
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
+                    h1(class="text-center") { "Work in progress, coming soon!" }
+                    p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
+                          "being allowing the user to create and manage records for their yarn inventory and record "
+                          "information about their collection." }
                 }
             }
         }

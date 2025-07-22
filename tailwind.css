@@ -30,15 +30,23 @@ a {
 }
 
 p, li {
-  @apply font-medium text-xs
+  @apply font-medium text-sm
 }
 
 h1 {
-  @apply font-bold text-sm
+  @apply font-bold text-lg
+}
+
+h2 {
+  @apply font-bold text-base
 }
 
 #card__about {
   @apply bg-emerald-400
+}
+
+#card__job {
+  @apply bg-yellow-400
 }
 
 #card__python {
