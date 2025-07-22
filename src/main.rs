@@ -65,22 +65,11 @@ fn main() {
 fn Focus(#[prop(setter(into))] children: Children) -> View {
     let CarouselItemPosition(position) = use_context();
 
-    let data_position = move || match position.get() {
-        (i32::MIN..=-2) => "far-previous",
-        -1 => "previous",
-        0 => "center",
-        1 => "next",
-        (2..=i32::MAX) => "far-next",
-    };
-
     view! {
-        div(
-            data-position=data_position,
-            class="flex justify-center px-6 py-2"
-        ) {
+        div(class="flex justify-center px-6 py-2") {
             div(
-                data-position=data_position,
-                class="w-110 data-[position=center]:scale-100 scale-90 duration-500"
+                data-focus=move || (position.get() == 0).to_string(),
+                class="w-110 data-[focus=true]:scale-100 scale-90 duration-500"
             ) {
                 (children)
             }
