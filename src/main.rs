@@ -13,55 +13,52 @@ fn main() {
     sycamore::render(|| {
         view! {
             div(class="h-screen w-screen flex justify-center items-center") {
-                Site()
+                Header()
+                Carousel() {
+                    h1(class="text-center") { "Howdy!" }
+                    CarouselItem() {
+                        Focus() {
+                            AboutCard()
+                        }
+                    }
+                    h1(class="text-center") { "Experience" }
+                    CarouselItem() {
+                        Focus() {
+                            JobCard()
+                        }
+                    }
+                    CarouselItem() {
+                        Focus() {
+                            SchoolCard()
+                        }
+                    }
+                    h1(class="text-center") { "Skills" }
+                    CarouselItem() {
+                        Focus() {
+                            PythonCard()
+                        }
+                    }
+                    CarouselItem() {
+                        Focus() {
+                            RustCard()
+                        }
+                    }
+                    h1(class="text-center") { "Personal Projects" }
+                    CarouselItem() {
+                        Focus() {
+                            MetaCard()
+                        }
+                    }
+                    CarouselItem() {
+                        Focus() {
+                            YarnHoardCard()
+                        }
+                    }
+                }
+                Footer()
             }
         }
     });
-}
-
-#[component]
-fn Site() -> View {
-    view! {
-        Header()
-        Carousel() {
-            CarouselItem() {
-                Focus() {
-                    AboutCard()
-                }
-            }
-            CarouselItem() {
-                Focus() {
-                    JobCard()
-                }
-            }
-            CarouselItem() {
-                Focus() {
-                    SchoolCard()
-                }
-            }
-            CarouselItem() {
-                Focus() {
-                    PythonCard()
-                }
-            }
-            CarouselItem() {
-                Focus() {
-                    RustCard()
-                }
-            }
-            CarouselItem() {
-                Focus() {
-                    MetaCard()
-                }
-            }
-            CarouselItem() {
-                Focus() {
-                    YarnHoardCard()
-                }
-            }
-        }
-        Footer()
-    }
 }
 
 #[component(inline_props)]

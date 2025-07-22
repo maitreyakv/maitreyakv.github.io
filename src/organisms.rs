@@ -38,8 +38,8 @@ pub fn AboutCard() -> View {
                     )
                 }
                 CardSummary() {
-                    h1() { "@maitreyakv" }
-                    p() { "Howdy, I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston. "
+                    h2() { "@maitreyakv" }
+                    p() { "I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston. "
                           "Learn about my career and interests below!" }
                 }
             }
@@ -82,18 +82,18 @@ pub fn JobCard() -> View {
                     img(class="w-[100px]", src="assets/road.svg", alt="A winding path")
                 }
                 CardSummary() {
-                    h1() { "My path to software engineer" }
+                    h2() { "My path to software engineer" }
                     p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
                 }
             }
             Collapse(open=move || position.get() == 0) {
                 CardContent() {
-                    h2() { "Titan Advanced Energy Solutions" }
+                    h3() { "Titan Advanced Energy Solutions" }
                     p() { "I first worked as a Data Scientist at Titan, where I developed ML models to "
                           "inspect and monitor lithium batteries both in production and operation using ultrasound inspection." }
                     p() { "I also engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
                           "collection experiments and signal processing techniques." }
-                    h2() { "Day Zero Diagnostics (now bioMérieux )" }
+                    h3() { "Day Zero Diagnostics (now bioMérieux )" }
                     p() { "I currently work for Day Zero as a Data/Software Engineer." }
                     p() { "I contribute to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
                           "and AMR profiling from genomic data." }
@@ -115,7 +115,7 @@ pub fn SchoolCard() -> View {
                     img(class="w-[100px]", src="assets/cap.svg", alt="A graduation cap")
                 }
                 CardSummary() {
-                    h1() { "My academic background" }
+                    h2() { "My academic background" }
                     p() { "An engineering and data science background have been very helpful in working on software "
                           "in a variety of domains"}
                 }
@@ -141,7 +141,7 @@ pub fn PythonCard() -> View {
                     img(class="w-[100px]", src="assets/python.svg", alt="The Python programming language logo")
                 }
                 CardSummary() {
-                    h1() { "Python, my bread and butter" }
+                    h2() { "Python, my bread and butter" }
                     p() { "I've been programming in Python since high school, for both software development "
                           "and as an scientific and engineering tool." }
                 }
@@ -192,7 +192,7 @@ pub fn RustCard() -> View {
                     img(class="w-[100px]", src="assets/rust.svg", alt="The Rust programming language logo")
                 }
                 CardSummary() {
-                    h1() { "Rust, my new obsession" }
+                    h2() { "Rust, my new obsession" }
                     p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
                           "to build with it, personally and professionally!" }
                 }
@@ -244,7 +244,7 @@ pub fn MetaCard() -> View {
                     img(class="w-[100px]", src="assets/finger.svg", alt="A hand with the index finger pointing up")
                 }
                 CardSummary() {
-                    h1() { "Source code for this site" }
+                    h2() { "Source code for this site" }
                     p() {
                         "Want to see how this site works? Check out "
                         a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
@@ -284,14 +284,14 @@ pub fn YarnHoardCard() -> View {
                     img(class="w-[100px]", src="assets/construction.svg", alt="A construction sign")
                 }
                 CardSummary() {
-                    h1() { "YarnHoard, track your stash" }
+                    h2() { "YarnHoard, track your stash" }
                     p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
                           "is written in Rust!" }
                 }
             }
             Collapse(open=move || position.get() == 0) {
                 CardContent() {
-                    h1(class="text-center") { "Work in progress, coming soon!" }
+                    h2(class="text-center") { "Work in progress, coming soon!" }
                     p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
                           "being allowing the user to create and manage records for their yarn inventory and record "
                           "information about their collection." }
