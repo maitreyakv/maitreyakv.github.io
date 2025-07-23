@@ -152,14 +152,19 @@ pub fn SkillsCard() -> View {
                 }
                 CardSummary() {
                     h2() { "Other software skills" }
-                    p() { "I have a variety of software engineering skills covering backend development, data engineering, frontend engineering." }
+                    p() { "I have a variety of technical skills covering backend development, data engineering, and frontend engineering." }
                 }
             }
             Collapse(open=move || position.get() == 0) {
                 CardContent() {
-                    p() { "Most of my database experience is with Postgres and Snowflake, and I've used Prefect regularly for orchestration." }
-                    p() { "I've done cloud engineering work in both GCP and AWS, and I'm comfortable working with tools like Docker and Kubernetes." }
-                    p() { "In addition to Python and Rust, I also have some Javascript experience for frontend development, primarily in React." }
+                    p() { "Most of my database experience is with " b() { "Postgres " } "and " b() { "Snowflake" }
+                          ", and I've used " b() { "Prefect" } " regularly for orchestration." }
+                    p() { "I've done cloud engineering work in both " b() { "GCP" } " and " b() { "AWS" } ", and I'm comfortable "
+                          "working with " b() { "Docker" } " and " b() { "Kubernetes"} "." }
+                    p() { "In addition to " b() { "Python" } " and " b() { "Rust" } ", I also have some " b() { "Javascript" }
+                          " experience for frontend development, primarily in " b() { "React" } "." }
+                    p() { "Additionally, I have experience with tasks like gathering requirements for software systems "
+                          "and translating scientific R&D algorithms and pipelines into production software." }
                 }
             }
         }
@@ -234,9 +239,9 @@ pub fn RustCard() -> View {
             }
             Collapse(open=move || position.get() == 0) {
                 CardContent() {
-                    p() { "As a general-purpose language with an amazing feature set, I've made it my preferred "
+                    p() { "As a general-purpose language with some amazing features, I've made it my preferred "
                           " language for most software development." }
-                    p() { "While I'm not quite an expert at the language yet, I've used it in personal (like this site!) "
+                    p() { "While I'm not quite an expert at the language yet, I've used it in personal projects (like this site!) "
                           "and professional projects using crates like" }
                     ul(class="list-none") {
                         div(class="flex flex-row justify-around items-start") {
