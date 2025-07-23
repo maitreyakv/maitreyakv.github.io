@@ -3,7 +3,7 @@ use sycamore::prelude::*;
 use site::{
     molecules::{Carousel, CarouselItem, CarouselItemPosition},
     organisms::{
-        AboutCard, Footer, Header, JobCard, MetaCard, PythonCard, RustCard, SchoolCard,
+        AboutCard, Footer, Header, JobCard, MetaCard, PythonCard, RustCard, SchoolCard, SkillsCard,
         YarnHoardCard,
     },
 };
@@ -21,17 +21,6 @@ fn main() {
                             AboutCard()
                         }
                     }
-                    h1(class="text-center") { "Experience" }
-                    CarouselItem() {
-                        Focus() {
-                            JobCard()
-                        }
-                    }
-                    CarouselItem() {
-                        Focus() {
-                            SchoolCard()
-                        }
-                    }
                     h1(class="text-center") { "Skills" }
                     CarouselItem() {
                         Focus() {
@@ -41,6 +30,22 @@ fn main() {
                     CarouselItem() {
                         Focus() {
                             RustCard()
+                        }
+                    }
+                    CarouselItem() {
+                        Focus() {
+                            SkillsCard()
+                        }
+                    }
+                    h1(class="text-center") { "Experience" }
+                    CarouselItem() {
+                        Focus() {
+                            JobCard()
+                        }
+                    }
+                    CarouselItem() {
+                        Focus() {
+                            SchoolCard()
                         }
                     }
                     h1(class="text-center") { "Personal Projects" }

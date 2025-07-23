@@ -91,9 +91,9 @@ pub fn JobCard() -> View {
                     h3() {
                         a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
                     }
-                    p() { "I first worked as a Data Scientist at Titan, where I developed ML models to "
-                          "inspect and monitor lithium batteries using ultrasound technology." }
-                    p() { "I also engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
+                    p() { "I first worked as a Data Scientist at Titan, where I developed machine learning models to "
+                          "inspect and monitor lithium-ion batteries using ultrasound technology." }
+                    p() { "I engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
                           "collection experiments and signal processing techniques." }
                     h3() {
                         a(href="https://www.dayzerodiagnostics.com") { "Day Zero Diagnostics" }
@@ -106,8 +106,9 @@ pub fn JobCard() -> View {
                     p() { "I currently work for Day Zero as a Data/Software Engineer." }
                     p() { "I contribute to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
                           "and AMR profiling from genomic data." }
-                    p() { "I participate in development of the web client to the platform (React), and lead development "
-                          "of our CLI client (Rust) for interfacing with the platform." }
+                    p() { "I lead development of our platforms's CLI client (Rust), and  participate in development "
+                          "of the web client (React)." }
+
                 }
             }
         }
@@ -125,15 +126,40 @@ pub fn SchoolCard() -> View {
                 }
                 CardSummary() {
                     h2() { "What I studied in school" }
-                    p() { "An engineering and data science background have been very helpful in working on software "
-                          "in a variety of domains."}
+                    p() { "My engineering and data science backgrounds have been helpful for building software "
+                          "in various domains."}
                 }
             }
             Collapse(open=move || position.get() == 0) {
                 CardContent() {
                     p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
-                    p() { "I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
+                    p() { "While I was there I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
                     p() { "I have a M.S. in Data Science from Brown University as well." }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+pub fn SkillsCard() -> View {
+    let CarouselItemPosition(position) = use_context();
+    view! {
+        Card(id="card__skills", focused=move || position.get() == 0) {
+            CardHeader() {
+                CardImage() {
+                    img(class="w-[100px]", src="assets/wrench.svg", alt="A wrench")
+                }
+                CardSummary() {
+                    h2() { "Other software skills" }
+                    p() { "I have a variety of software engineering skills covering backend development, data engineering, frontend engineering." }
+                }
+            }
+            Collapse(open=move || position.get() == 0) {
+                CardContent() {
+                    p() { "Most of my database experience is with Postgres and Snowflake, and I've used Prefect regularly for orchestration." }
+                    p() { "I've done cloud engineering work in both GCP and AWS, and I'm comfortable working with tools like Docker and Kubernetes." }
+                    p() { "In addition to Python and Rust, I also have some Javascript experience for frontend development, primarily in React." }
                 }
             }
         }

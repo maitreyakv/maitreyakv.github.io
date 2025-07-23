@@ -57,6 +57,10 @@ h3 {
   @apply bg-rose-400
 }
 
+#card__skills {
+  @apply bg-teal-400
+}
+
 #card__python {
   @apply bg-blue-400 
 }
