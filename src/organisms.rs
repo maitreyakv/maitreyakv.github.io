@@ -39,7 +39,7 @@ pub fn AboutCard() -> View {
                 }
                 CardSummary() {
                     h2() { "@maitreyakv" }
-                    p() { "I'm Maitreya Venkataswamy and I'm a data/software engineer based in Boston. "
+                    p() { "I'm Maitreya Venkataswamy and I'm a software engineer based in Boston. "
                           "Learn about my career and interests below!" }
                 }
             }
@@ -50,7 +50,7 @@ pub fn AboutCard() -> View {
                     p() { "I'm most experienced in data engineering and backend development, but I also dabble in "
                           " frontend and am looking for opportunities to grow my skills there." }
                     p() {
-                        "In my free time I enjoy playing videogames, reading science fiction and fantasy, and "
+                        "In my free time I enjoy hiking, playing videogames, reading science fiction and fantasy, and "
                         "playing with my dog "
                         a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
                         "."
