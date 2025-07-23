@@ -28,7 +28,7 @@ pub fn AboutCard() -> View {
     let CarouselItemPosition(position) = use_context();
 
     view! {
-        Card(id="card__about") {
+        Card(id="card__about", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(
@@ -76,7 +76,7 @@ pub fn AboutCard() -> View {
 pub fn JobCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__job") {
+        Card(id="card__job", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/road.svg", alt="A winding path")
@@ -118,7 +118,7 @@ pub fn JobCard() -> View {
 pub fn SchoolCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__school") {
+        Card(id="card__school", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/cap.svg", alt="A graduation cap")
@@ -144,7 +144,7 @@ pub fn SchoolCard() -> View {
 pub fn PythonCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__python") {
+        Card(id="card__python", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/python.svg", alt="The Python programming language logo")
@@ -195,7 +195,7 @@ pub fn PythonCard() -> View {
 pub fn RustCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__rust") {
+        Card(id="card__rust", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/rust.svg", alt="The Rust programming language logo")
@@ -247,7 +247,7 @@ pub fn RustCard() -> View {
 pub fn MetaCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__meta") {
+        Card(id="card__meta", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/finger.svg", alt="A hand with the index finger pointing up")
@@ -287,7 +287,7 @@ pub fn MetaCard() -> View {
 pub fn YarnHoardCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__yarn-hoard") {
+        Card(id="card__yarn-hoard", focused=move || position.get() == 0) {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/construction.svg", alt="A construction sign")

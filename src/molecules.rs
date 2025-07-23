@@ -2,9 +2,25 @@ use sycamore::prelude::*;
 use web_sys::{Element, Node, wasm_bindgen::JsCast};
 
 #[component(inline_props)]
-pub fn Card(id: &'static str, #[prop(setter(into))] children: Children) -> View {
+pub fn Card(
+    id: &'static str,
+    #[prop(setter(into))] focused: Option<MaybeDyn<bool>>,
+    #[prop(setter(into))] children: Children,
+) -> View {
+    let focused = focused.unwrap_or(false.into());
+
     view! {
-        div(id=id, class="border-2 border-black rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,1)]") {
+        div(
+            id=id,
+            data-focused=move || focused.get().to_string(),
+            class=r#"border-2 border-black rounded-2xl duration-400
+                     data-[focused=false]:shadow-[6px_6px_0px_rgba(0,0,0,1)] 
+                     data-[focused=true]:shadow-[12px_12px_0px_rgba(0,0,0,1)]
+                     data-[focused=false]:translate-x-0 
+                     data-[focused=true]:-translate-x-[6px]
+                     data-[focused=false]:translate-y-0 
+                     data-[focused=true]:-translate-y-[6px]"#
+        ) {
             div(class="p-4 flex flex-col justify-center gap-y-2") {
                 (children)
             }

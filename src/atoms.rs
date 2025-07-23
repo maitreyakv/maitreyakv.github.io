@@ -9,9 +9,11 @@ pub fn Collapse(
     let node_ref = create_node_ref();
 
     on_mount(move || {
+        let element = node_ref.get().dyn_into::<HtmlElement>().unwrap();
+        // TODO: This may not work with dynamically sized children, since we're computing this once
+        let scroll_height_with_px_suffix = format!("{}px", element.scroll_height());
+
         create_effect(move || {
-            let element = node_ref.get().dyn_into::<HtmlElement>().unwrap();
-            let scroll_height_with_px_suffix = format!("{}px", element.scroll_height());
             element
                 .style()
                 .set_property(

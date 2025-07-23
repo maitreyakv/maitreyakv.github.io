@@ -69,7 +69,7 @@ fn Focus(#[prop(setter(into))] children: Children) -> View {
         div(class="flex justify-center px-6 py-2") {
             div(
                 data-focus=move || (position.get() == 0).to_string(),
-                class="w-110 data-[focus=true]:scale-100 scale-90 duration-500"
+                class="w-110"
             ) {
                 (children)
             }
