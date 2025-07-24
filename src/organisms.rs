@@ -103,10 +103,11 @@ pub fn JobCard() -> View {
                         }
                         ")"
                     }
-                    p() { "I currently work for Day Zero as a Data/Software Engineer." }
-                    p() { "I contribute to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
+                    p() { "I currently work for Day Zero as a Data/Software Engineer where I began with engineering the curation "
+                          "of MicrohmDB, our in-house database of 90k+ bacterial genomes with corresponding AMR tests." }
+                    p() { "More recently, I've contributed to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
                           "and AMR profiling from genomic data." }
-                    p() { "I lead development of our platforms's CLI client (Rust), and  participate in development "
+                    p() { "I also lead development of our platforms's CLI client (Rust), and  participate in development "
                           "of the web client (React)." }
 
                 }
