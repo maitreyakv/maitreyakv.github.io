@@ -8,18 +8,26 @@ pub fn Collapse(
 ) -> View {
     let node_ref = create_node_ref();
 
-    let mut scroll_height = 0i32;
+    let mut height = 0i32;
     on_mount(move || {
         let element = node_ref.get().dyn_into::<HtmlElement>().unwrap();
         create_effect(move || {
-            scroll_height = std::cmp::max(scroll_height, element.scroll_height());
-            let scroll_height_with_px_suffix = format!("{scroll_height}px");
+            height = {
+                let scroll_height = element.scroll_height();
+                if (scroll_height - height).abs() > 1 {
+                    scroll_height
+                } else {
+                    height
+                }
+            };
+
+            let height_with_px_suffix = format!("{height}px");
             element
                 .style()
                 .set_property(
                     "height",
                     if open.get() {
-                        &scroll_height_with_px_suffix
+                        &height_with_px_suffix
                     } else {
                         "0"
                     },
