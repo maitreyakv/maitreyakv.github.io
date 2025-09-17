@@ -6,19 +6,10 @@ use crate::molecules::*;
 #[component]
 pub fn Header() -> View {
     view! {
-        header(class="z-20 fixed top-0 w-full flex justify-center content-center bg-red-400 border-black border-b-2 py-2") {
+        header(class="z-2 fixed top-0 w-full flex justify-center content-center py-2") {
             a(href="/maitreyakv-resume.pdf", download="maitreyakv-resume.pdf", on:click=|_| {}) {
                 "Click to download my resume!"
             }
-        }
-    }
-}
-
-#[component]
-pub fn Footer() -> View {
-    view! {
-        footer(class="z-20 fixed bottom-0 w-full flex justify-center content-center bg-red-400 border-black border-t-2 py-2") {
-            "Scroll to see see more cards!"
         }
     }
 }
@@ -28,7 +19,7 @@ pub fn AboutCard() -> View {
     let CarouselItemPosition(position) = use_context();
 
     view! {
-        Card(id="card__about", focused=move || position.get() == 0) {
+        Card(id="card__about") {
             CardHeader() {
                 CardImage() {
                     img(
@@ -76,7 +67,7 @@ pub fn AboutCard() -> View {
 pub fn JobCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__job", focused=move || position.get() == 0) {
+        Card(id="card__job") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/road.svg", alt="A winding path")
@@ -120,7 +111,7 @@ pub fn JobCard() -> View {
 pub fn SchoolCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__school", focused=move || position.get() == 0) {
+        Card(id="card__school") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/cap.svg", alt="A graduation cap")
@@ -146,7 +137,7 @@ pub fn SchoolCard() -> View {
 pub fn SkillsCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__skills", focused=move || position.get() == 0) {
+        Card(id="card__skills") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/wrench.svg", alt="A wrench")
@@ -176,7 +167,7 @@ pub fn SkillsCard() -> View {
 pub fn PythonCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__python", focused=move || position.get() == 0) {
+        Card(id="card__python") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/python.svg", alt="The Python programming language logo")
@@ -227,7 +218,7 @@ pub fn PythonCard() -> View {
 pub fn RustCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__rust", focused=move || position.get() == 0) {
+        Card(id="card__rust") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/rust.svg", alt="The Rust programming language logo")
@@ -279,7 +270,7 @@ pub fn RustCard() -> View {
 pub fn MetaCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__meta", focused=move || position.get() == 0) {
+        Card(id="card__meta") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/finger.svg", alt="A hand with the index finger pointing up")
@@ -319,7 +310,7 @@ pub fn MetaCard() -> View {
 pub fn YarnHoardCard() -> View {
     let CarouselItemPosition(position) = use_context();
     view! {
-        Card(id="card__yarn-hoard", focused=move || position.get() == 0) {
+        Card(id="card__yarn-hoard") {
             CardHeader() {
                 CardImage() {
                     img(class="w-[100px]", src="assets/construction.svg", alt="A construction sign")

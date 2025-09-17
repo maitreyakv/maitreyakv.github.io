@@ -2,25 +2,9 @@ use sycamore::prelude::*;
 use web_sys::{Element, Node, wasm_bindgen::JsCast};
 
 #[component(inline_props)]
-pub fn Card(
-    id: &'static str,
-    #[prop(setter(into))] focused: Option<MaybeDyn<bool>>,
-    #[prop(setter(into))] children: Children,
-) -> View {
-    let focused = focused.unwrap_or(false.into());
-
+pub fn Card(id: &'static str, #[prop(setter(into))] children: Children) -> View {
     view! {
-        div(
-            id=id,
-            data-focused=move || focused.get().to_string(),
-            class=r#"border-2 border-black rounded-2xl duration-400
-                     data-[focused=false]:shadow-[6px_6px_0px_rgba(0,0,0,1)] 
-                     data-[focused=true]:shadow-[12px_12px_0px_rgba(0,0,0,1)]
-                     data-[focused=false]:translate-x-0 
-                     data-[focused=true]:-translate-x-[6px]
-                     data-[focused=false]:translate-y-0 
-                     data-[focused=true]:-translate-y-[6px]"#
-        ) {
+        div(id=id, class="rounded-2xl") {
             div(class="p-4 flex flex-col justify-center gap-y-2") {
                 (children)
             }
@@ -117,7 +101,7 @@ pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
                 div(
                     r#ref=node_ref,
                     on:scroll=callback,
-                    class=r#"max-h-full h-full w-full overflow-y-scroll flex flex-col gap-y-2
+                    class=r#"z-1 max-h-full h-full w-full overflow-y-scroll flex flex-col gap-y-2
                              scroll-py-8 snap-y snap-mandatory before:basis-[calc(50vh)]
                              before:shrink-0 after:basis-[calc(50vh)] after:shrink-0"#
                 ) {
@@ -137,22 +121,22 @@ pub struct CarouselState {
 pub fn CarouselItem(#[prop(setter(into))] children: Children) -> View {
     let node_ref = create_node_ref();
 
-    let position = create_signal(-1);
+    let position = create_signal(0);
 
-    let CarouselState {
-        nodes_and_relative_positions,
-    } = use_context();
-
-    create_effect(move || {
-        position.set(
-            nodes_and_relative_positions
-                .get_clone()
-                .iter()
-                .find(|(node, _)| *node == node_ref.get())
-                .map(|(_, relative_index)| relative_index.to_owned())
-                .unwrap_or(-1),
-        );
-    });
+    //let CarouselState {
+    //    nodes_and_relative_positions,
+    //} = use_context();
+    //
+    //create_effect(move || {
+    //    position.set(
+    //        nodes_and_relative_positions
+    //            .get_clone()
+    //            .iter()
+    //            .find(|(node, _)| *node == node_ref.get())
+    //            .map(|(_, relative_index)| relative_index.to_owned())
+    //            .unwrap_or(-1),
+    //    );
+    //});
 
     provide_context_in_new_scope(CarouselItemPosition(position), || {
         view! {

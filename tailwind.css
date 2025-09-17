@@ -10,7 +10,7 @@
 }
 
 body, html {
-  @apply bg-gray-300 font-public
+  @apply bg-black font-public
 }
 
 body {
@@ -18,11 +18,7 @@ body {
 }
 
 header {
-  @apply font-extrabold text-xl
-}
-
-footer {
-  @apply font-extrabold  text-xl
+  @apply text-white font-extrabold text-xl
 }
 
 a {
@@ -34,7 +30,7 @@ p, li {
 }
 
 h1 {
-  @apply font-bold text-2xl
+  @apply text-white font-bold text-2xl
 }
 
 h2 {
