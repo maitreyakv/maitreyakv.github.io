@@ -10,31 +10,21 @@
 }
 
 body, html {
-  @apply bg-black font-public p-0 m-0
-}
-
-header {
-  @apply text-white font-extrabold text-xl
+  @apply font-public font-bold p-0 m-0 text-gray-200
 }
 
 a {
   @apply underline 
 }
 
-p, li {
-  @apply font-semibold text-lg text-white
+a, p, li {
+  @apply text-lg 
 }
 
 h1 {
-  @apply font-bold text-3xl text-white
+  @apply text-3xl
 }
 
 h2 {
-  @apply font-bold text-2xl text-white
+  @apply text-2xl
 }
-
-h3 {
-  @apply font-bold text-base text-white
-}
-
-

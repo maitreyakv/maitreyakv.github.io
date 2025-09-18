@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::{Rng, seq::IndexedRandom};
 use sycamore::prelude::*;
 
 fn main() {
@@ -7,7 +7,7 @@ fn main() {
         view! {
             Starscape()
             div(class="z-1 overflow-scroll flex justify-center") {
-                div(class="flex flex-col gap-y-6 px-2 items-center max-w-110 text-center backdrop-blur-[4px]") {
+                div(class="flex flex-col gap-y-6 px-2 items-center max-w-150 text-center backdrop-blur-[2px]") {
                     Content()
                 }
             }
@@ -18,7 +18,7 @@ fn main() {
 #[component]
 fn Content() -> View {
     view! {
-        header(class="w-full flex justify-center content-center py-2") {
+        h1(class="w-full flex justify-center content-center py-2") {
             a(href="/maitreyakv-resume.pdf", download="maitreyakv-resume.pdf", on:click=|_| {}) {
                 "Click to download my resume!"
             }
@@ -34,7 +34,7 @@ fn Content() -> View {
               "Learn about my career and interests below!" }
         p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
               "background and I love working on problems in those domains."}
-        p() { "I'm most experienced in data engineering and backend development, but I also dabble in "
+        p() { "I'm more experienced in data engineering and backend development, but I also dabble in "
               " frontend and am looking for opportunities to grow my skills there." }
         p() {
             "In my free time I enjoy hiking, playing videogames, reading science fiction and fantasy, and "
@@ -129,7 +129,7 @@ fn Content() -> View {
         p() { "Additionally, I have experience with tasks like gathering requirements for software systems "
               "and translating scientific R&D algorithms and pipelines into production software." }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-yellow-400") { "My path to Software Engineer" }
+        h1(class="text-shadow-[2px_2px] text-shadow-yellow-400") { "Path to Software Engineer" }
         p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
         h2() {
             a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
@@ -191,17 +191,20 @@ fn Content() -> View {
     }
 }
 
+const COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
+const STAR_DENSITY: f64 = 0.001; // stars per square pixel
+
 #[component(inline_props)]
 fn Starscape() -> View {
     let mut rng = rand::rng();
 
-    let height = create_signal(0);
-    let width = create_signal(0);
+    let height = create_signal(0.0);
+    let width = create_signal(0.0);
 
     let update_window_size_callback = move || {
         let window = web_sys::window().unwrap();
-        width.set(window.inner_width().unwrap().as_f64().unwrap() as i32);
-        height.set(window.inner_height().unwrap().as_f64().unwrap() as i32);
+        width.set(window.inner_width().unwrap().as_f64().unwrap());
+        height.set(window.inner_height().unwrap().as_f64().unwrap());
     };
     let _listener = create_signal(gloo::events::EventListener::new(
         &web_sys::window().unwrap(),
@@ -211,14 +214,24 @@ fn Starscape() -> View {
 
     let stars = create_signal(Vec::new());
     create_effect(move || {
+        let n_stars = {
+            let screen_area = height.get() * width.get();
+            (STAR_DENSITY * screen_area) as i32
+        };
         stars.set(
-            (0..=400)
+            (0..=n_stars)
                 .into_iter()
                 .map(|_| {
-                    let x = rng.random_range(0..=width.get());
+                    let x = rng.random_range(0.0..=width.get());
                     let depth = rng.random_range(0.0..=1.0);
                     let delay = rng.random_range(0.0..=40.0);
-                    Star { x, depth, delay }
+                    let color = COLORS.choose(&mut rng).unwrap().to_string();
+                    Star {
+                        x,
+                        depth,
+                        delay,
+                        color,
+                    }
                 })
                 .collect::<Vec<Star>>(),
         );
@@ -227,12 +240,12 @@ fn Starscape() -> View {
     on_mount(update_window_size_callback);
 
     view! {
-        div(class="fixed") {
+        div(class="fixed bg-black") {
             svg(height="100vh", width="100vw", xmlns="http://www.w3.org/2000/svg") {
                 Indexed(
                     list=stars,
                     view=move |star| view! {
-                        circle(r=(4.0 - star.depth * 2.5).to_string(), cx=star.x.to_string(), cy="0", fill="white") {
+                        circle(r=(4.0 - star.depth * 2.5).to_string(), cx=star.x.to_string(), cy="0", fill=star.color) {
                             animate(
                                 attributeName="cy",
                                 dur=(20.0 * star.depth + 20.0).to_string(),
@@ -251,7 +264,8 @@ fn Starscape() -> View {
 
 #[derive(PartialEq, Clone)]
 struct Star {
-    x: i32,
+    x: f64,
     depth: f32,
     delay: f32,
+    color: String,
 }
