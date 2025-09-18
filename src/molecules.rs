@@ -1,14 +1,21 @@
 use sycamore::prelude::*;
-use web_sys::{Element, Node, wasm_bindgen::JsCast};
 
 #[component(inline_props)]
-pub fn Card(id: &'static str, #[prop(setter(into))] children: Children) -> View {
+pub fn Card(#[prop(setter(into))] children: Children) -> View {
     view! {
-        div(id=id, class="rounded-2xl") {
-            div(class="p-4 flex flex-col justify-center gap-y-2") {
-                (children)
-            }
+        div(class="flex flex-col justify-center gap-y-2 backdrop-blur-[2px]") {
+            (children)
         }
+    }
+}
+
+#[component(inline_props)]
+pub fn CardTitle(#[prop(setter(into))] children: Children) -> View {
+    view! {
+        div(class="flex justify-center") {
+            (children)
+        }
+
     }
 }
 
@@ -48,104 +55,3 @@ pub fn CardContent(#[prop(setter(into))] children: Children) -> View {
         }
     }
 }
-
-#[component(inline_props)]
-pub fn Carousel(#[prop(setter(into))] children: Children) -> View {
-    let node_ref = create_node_ref();
-
-    let nodes_and_relative_positions = create_signal(Vec::new());
-
-    let callback = move |_| {
-        let node_ref = node_ref.get();
-        let carousel = node_ref.dyn_ref::<Element>().unwrap();
-        let carousel_rect = carousel.get_bounding_client_rect();
-        let y_mid = (carousel_rect.top() + carousel_rect.bottom()) / 2.;
-
-        let items: Vec<Node> = node_ref
-            .child_nodes()
-            .values()
-            .into_iter()
-            .map(|v| v.unwrap().into())
-            .collect();
-
-        let center_item_idx = items
-            .iter()
-            .enumerate()
-            .min_by_key(|&(_, element)| {
-                let element_rect = element
-                    .dyn_ref::<Element>()
-                    .unwrap()
-                    .get_bounding_client_rect();
-                let y_mid_element = (element_rect.top() + element_rect.bottom()) / 2.;
-
-                (y_mid - y_mid_element).abs() as u32
-            })
-            .map(|(idx, _)| idx)
-            .unwrap_or(0) as i32;
-
-        nodes_and_relative_positions.set(
-            items
-                .into_iter()
-                .enumerate()
-                .map(|(idx, node)| (node, idx as i32 - center_item_idx))
-                .collect(),
-        )
-    };
-
-    provide_context_in_new_scope(
-        CarouselState {
-            nodes_and_relative_positions,
-        },
-        || {
-            view! {
-                div(
-                    r#ref=node_ref,
-                    on:scroll=callback,
-                    class=r#"z-1 max-h-full h-full w-full overflow-y-scroll flex flex-col gap-y-2
-                             scroll-py-8 snap-y snap-mandatory before:basis-[calc(50vh)]
-                             before:shrink-0 after:basis-[calc(50vh)] after:shrink-0"#
-                ) {
-                    (children)
-                }
-            }
-        },
-    )
-}
-
-#[derive(Clone)]
-pub struct CarouselState {
-    nodes_and_relative_positions: Signal<Vec<(Node, i32)>>,
-}
-
-#[component(inline_props)]
-pub fn CarouselItem(#[prop(setter(into))] children: Children) -> View {
-    let node_ref = create_node_ref();
-
-    let position = create_signal(0);
-
-    //let CarouselState {
-    //    nodes_and_relative_positions,
-    //} = use_context();
-    //
-    //create_effect(move || {
-    //    position.set(
-    //        nodes_and_relative_positions
-    //            .get_clone()
-    //            .iter()
-    //            .find(|(node, _)| *node == node_ref.get())
-    //            .map(|(_, relative_index)| relative_index.to_owned())
-    //            .unwrap_or(-1),
-    //    );
-    //});
-
-    provide_context_in_new_scope(CarouselItemPosition(position), || {
-        view! {
-            div(r#ref=node_ref, class="snap-center") {
-                (children)
-            }
-        }
-    })
-}
-
-#[derive(Clone, Copy)]
-pub struct CarouselItemPosition(pub Signal<i32>);

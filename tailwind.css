@@ -10,11 +10,7 @@
 }
 
 body, html {
-  @apply bg-black font-public
-}
-
-body {
-  @apply p-0 m-0
+  @apply bg-black font-public p-0 m-0
 }
 
 header {
@@ -26,49 +22,19 @@ a {
 }
 
 p, li {
-  @apply font-medium text-sm
+  @apply font-semibold text-lg text-white
 }
 
 h1 {
-  @apply text-white font-bold text-2xl
+  @apply font-bold text-3xl text-white
 }
 
 h2 {
-  @apply font-bold text-lg
+  @apply font-bold text-2xl text-white
 }
 
 h3 {
-  @apply font-bold text-base
+  @apply font-bold text-base text-white
 }
 
-#card__about {
-  @apply bg-emerald-400
-}
 
-#card__job {
-  @apply bg-yellow-400
-}
-
-#card__school {
-  @apply bg-rose-400
-}
-
-#card__skills {
-  @apply bg-teal-400
-}
-
-#card__python {
-  @apply bg-blue-400 
-}
-
-#card__rust {
-  @apply bg-orange-400 
-}
-
-#card__yarn-hoard {
-  @apply bg-violet-400 
-}
-
-#card__meta {
-  @apply bg-cyan-300 
-}
