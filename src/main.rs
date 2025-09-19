@@ -7,30 +7,67 @@ fn main() {
         view! {
             Starscape()
             div(class="z-1 overflow-scroll flex justify-center") {
-                div(class="flex flex-col gap-y-6 px-2 items-center max-w-150 text-center backdrop-blur-[2px]") {
+                div(class="flex flex-col gap-y-6 px-6 items-center max-w-150 text-center backdrop-blur-[2px]") {
                     Content()
+                    div(class="h-8")
                 }
             }
         }
     });
 }
 
+#[component(inline_props)]
+fn ExtrudedH1(
+    #[prop(setter(into))] children: Children,
+    color: &'static str,
+    depth: Option<f32>,
+    resolution: Option<f32>,
+) -> View {
+    let n_layers = (depth.unwrap_or(4.0) / resolution.unwrap_or(0.1)) as i32;
+
+    let style = (0..=n_layers)
+        .into_iter()
+        .map(|i| format!("{}px {}px {color}", 0.1 * i as f32, 0.1 * i as f32))
+        .fold(String::new(), |a, b| a + ", " + &b);
+
+    view! {
+        h1(style=format!("text-shadow: {};", style.strip_prefix(",").unwrap())) {
+            (children)
+        }
+    }
+}
+
 #[component]
 fn Content() -> View {
     view! {
-        h1(class="w-full flex justify-center content-center py-2") {
+        div(class=r#"mt-6 mb-4 md:mb-8 font-bold italic text-7xl md:text-9xl text-white
+                     text-shadow-[0.05em_0.05em_#0090bc,0.1em_0.1em_#8fb629,0.15em_0.15em_#fce60f,0.2em_0.2em_#f85d1b,0.25em_0.25em_#fd3f8f]"#
+        ) { "@maitreyakv" }
+
+        img(
+            class="w-[200px] rounded-full",
+            src="assets/face.jpeg",
+            alt="A picture of my face",
+        )
+        div(class="flex gap-x-6 justify-center align-center") {
+            a(href="https://github.com/maitreyakv") {
+                img(class="w-[40px]", src="assets/github.svg", alt="The GitHub logo")
+            }
+            a(href="https://www.linkedin.com/in/maitreyakv/") {
+                img(class="w-[40px]", src="assets/linkedin.svg", alt="The Linkedin logo")
+            }
+            a(href="mailto:maitreyakv@gmail.com") {
+                img(class="w-[50px]", src="assets/email.svg", alt="An mail icon")
+            }
+        }
+
+        ExtrudedH1(color="#00d492") { "Howdy, I'm Maitreya" }
+        h2(class="w-full flex justify-center content-center py-2") {
             a(href="/maitreyakv-resume.pdf", download="maitreyakv-resume.pdf", on:click=|_| {}) {
                 "Click to download my resume!"
             }
         }
-        img(
-            class="w-[100px] border-2 border-black rounded-full",
-            src="assets/face.jpeg",
-            alt="A picture of my face",
-        )
-
-        h1(class="text-shadow-[2px_2px] text-shadow-emerald-400") { "@maitreyakv" }
-        p() { "I'm Maitreya Venkataswamy and I'm a software engineer based in Boston. "
+        p() { "I'm Maitreya Venkataswamy, and I'm a software engineer based in Boston. "
               "Learn about my career and interests below!" }
         p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
               "background and I love working on problems in those domains."}
@@ -42,19 +79,8 @@ fn Content() -> View {
             a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
             "."
         }
-        div(class="flex gap-x-6 justify-center align-center") {
-            a(href="https://github.com/maitreyakv") {
-                img(class="w-[30px]", src="assets/github.svg", alt="The GitHub logo")
-            }
-            a(href="https://www.linkedin.com/in/maitreyakv/") {
-                img(class="w-[30px]", src="assets/linkedin.svg", alt="The Linkedin logo")
-            }
-            a(href="mailto:maitreyakv@gmail.com") {
-                img(class="w-[40px]", src="assets/email.svg", alt="An mail icon")
-            }
-        }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-blue-400") { "Python, my bread and butter" }
+        ExtrudedH1(color="#51a2ff") { "Python, my bread and butter" }
         p() { "I've been programming in Python since high school, for both software development "
               "and as an scientific and engineering tool." }
         p() { "I've used Python in various applications from scientific and engineering problems, "
@@ -63,21 +89,21 @@ fn Content() -> View {
         ul(class="list-none") {
             div(class="flex flex-row gap-x-8 items-start") {
                 li(class="flex flex-col justify-center") {
-                    label(class="font-bold text-center") { "Data" }
+                    //label(class="font-bold text-center") { "Data" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Pandas/Polars" }
                         li(class="text-center") { "SQLAlchemy" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    label(class="font-bold text-center") { "Engineering" }
+                    //label(class="font-bold text-center") { "Engineering" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "FastAPI" }
                         li(class="text-center") { "Prefect" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    label(class="font-bold text-center") { "Science" }
+                    //label(class="font-bold text-center") { "Science" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Scikit-Learn" }
                         li(class="text-center") { "Tensorflow" }
@@ -85,7 +111,7 @@ fn Content() -> View {
                 }
             }
         }
-        h1(class="text-shadow-[2px_2px] text-shadow-orange-400") { "Rust, my new obsession" }
+        ExtrudedH1(color="#f54900") { "Rust, my new obsession" }
         p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
               "to build with it, personally and professionally!" }
         p() { "As a general-purpose language with some amazing features, I've made it my preferred "
@@ -95,21 +121,21 @@ fn Content() -> View {
         ul(class="list-none") {
             div(class="flex flex-row gap-x-8 items-start") {
                 li(class="flex flex-col justify-center") {
-                    label(class="font-bold text-center") { "General" }
+                    //label(class="font-bold text-center") { "General" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Clap" }
                         li(class="text-center") { "Tokio" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    label(class="font-bold text-center") { "Backend" }
+                    //label(class="font-bold text-center") { "Backend" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "SeaORM" }
                         li(class="text-center") { "Axum" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    label(class="font-bold text-center") { "Frontend" }
+                    //label(class="font-bold text-center") { "Frontend" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Sycamore" }
                         li(class="text-center") { "web_sys" }
@@ -118,7 +144,7 @@ fn Content() -> View {
             }
         }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-teal-400") { "Other software skills" }
+        ExtrudedH1(color="#00d5be") { "Other software skills" }
         p() { "I have a variety of technical skills covering backend development, data engineering, and frontend engineering." }
         p() { "Most of my database experience is with " b() { "Postgres " } "and " b() { "Snowflake" }
               ", and I've used " b() { "Prefect" } " regularly for orchestration." }
@@ -129,7 +155,7 @@ fn Content() -> View {
         p() { "Additionally, I have experience with tasks like gathering requirements for software systems "
               "and translating scientific R&D algorithms and pipelines into production software." }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-yellow-400") { "Path to Software Engineer" }
+        ExtrudedH1(color="#d08700") { "Path to Software Engineer" }
         p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
         h2() {
             a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
@@ -153,14 +179,14 @@ fn Content() -> View {
         p() { "I also lead development of our platforms's CLI client (Rust), and  participate in development "
               "of the web client (React)." }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-rose-400") { "What I studied in school" }
+        ExtrudedH1(color="#ec003f") { "What I studied in school" }
         p() { "My engineering and data science backgrounds have been helpful for building software "
               "in various domains."}
         p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
         p() { "While I was there I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
         p() { "I have a M.S. in Data Science from Brown University as well." }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-cyan-300") { "Source code for this site" }
+        ExtrudedH1(color="#0092b8") { "Source code for this site" }
         p() {
             "Want to see how this site works? Check out "
             a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
@@ -181,7 +207,7 @@ fn Content() -> View {
             " in the repository."
         }
 
-        h1(class="text-shadow-[2px_2px] text-shadow-violet-400") { "YarnHoard, track your stash" }
+        ExtrudedH1(color="#7f22fe") { "YarnHoard, track your stash" }
         p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
               "is written in Rust!" }
         h2(class="text-center") { "Work in progress, coming soon!" }
@@ -192,7 +218,7 @@ fn Content() -> View {
 }
 
 const COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
-const STAR_DENSITY: f64 = 0.001; // stars per square pixel
+const STAR_DENSITY: f64 = 0.0005; // stars per square pixel
 
 #[component(inline_props)]
 fn Starscape() -> View {
