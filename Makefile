@@ -1,3 +1,5 @@
+export RUSTFLAGS=--cfg getrandom_backend="wasm_js"
+
 serve:
 	trunk serve --clear -a 0.0.0.0
 
