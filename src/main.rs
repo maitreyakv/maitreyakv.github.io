@@ -9,7 +9,7 @@ use gloo::{
     render::{AnimationFrame, request_animation_frame},
 };
 use rand::{Rng, seq::IndexedRandom};
-use site::utils::{RequestAnimateFrameLoop, WindowDims};
+use site::utils::{WindowDims, request_animation_frame_loop};
 use sycamore::prelude::*;
 use web_sys::{Element, HtmlElement, SvgCircleElement, wasm_bindgen::JsCast};
 
@@ -230,7 +230,7 @@ fn Content() -> View {
 }
 
 const STAR_COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
-const STAR_DENSITY: f64 = 0.0005; // stars per square pixel
+const STAR_DENSITY: f64 = 0.00075; // stars per square pixel
 
 #[component(inline_props)]
 fn Starscape() -> View {
@@ -240,91 +240,92 @@ fn Starscape() -> View {
             window_dims.set(WindowDims::now());
         }));
 
-    let stars = create_signal(Rc::new(Vec::new()));
-    let animation_loop_handle = create_signal(RequestAnimateFrameLoop::new(|_| {}));
-
-    create_effect(move || {
-        let window_dims = window_dims.get();
-        let mut rng = rand::rng();
-        let n_stars = (window_dims.area() * STAR_DENSITY) as i64;
-        let stars_ = Rc::new(
-            (0..n_stars)
-                .map(move |_| {
-                    let node_ref = create_node_ref();
-                    let depth = rng.random_range(0.0..=1.0);
-                    StarBuilder::default()
-                        .radius(4.0 - depth * 2.5)
-                        .speed(0.08 - depth * 0.04)
-                        .x_initial(rng.random_range(0.0..=window_dims.width))
-                        .y_initial(rng.random_range(0.0..=window_dims.height))
-                        .color(STAR_COLORS.choose(&mut rng).unwrap())
-                        .node_ref(node_ref)
-                        ._svg_circle_element(OnceCell::new())
-                        .build()
-                        .unwrap()
-                })
-                .collect::<Vec<Star>>(),
-        );
-        stars.set(stars_.clone());
-
-        animation_loop_handle.set(RequestAnimateFrameLoop::new(move |t| {
-            for star in stars_.as_ref() {
-                star.set(t, window_dims.height);
-            }
-        }));
-    });
-
     view! {
         div(class="fixed bg-black") {
             svg(height="100vh", width="100vw", xmlns="http://www.w3.org/2000/svg") {
-                (move || {
-                    stars
-                        .get_clone()
-                        .as_ref()
-                        .iter()
-                        .map(|star| star.to_view())
-                        .collect::<Vec<View>>()
-                })
+                (move || StarController::new(window_dims.get()).view())
             }
         }
     }
 }
 
-#[derive(PartialEq, Clone, Builder)]
-struct Star {
-    radius: f64,
-    speed: f64,
-    x_initial: f64,
-    y_initial: f64,
-    color: &'static str,
-    node_ref: NodeRef,
-    _svg_circle_element: OnceCell<SvgCircleElement>,
+#[derive(Clone)]
+struct StarController {
+    stars: Vec<Star>,
 }
-impl Star {
-    fn to_view(&self) -> View {
-        let self_ = self.clone();
-        view! {
-            circle(
-                r#ref=self_.node_ref,
-                r=self_.radius.to_string(),
-                cx=self_.x_initial.to_string(),
-                cy=self_.y_initial.to_string(),
-                fill=self_.color,
-            )
+impl StarController {
+    fn new(window_dims: WindowDims) -> Self {
+        let mut rng = rand::rng();
+        let n_stars = (window_dims.area() * STAR_DENSITY) as i64;
+        let stars = (0..n_stars)
+            .map(move |_| {
+                StarBuilder::default()
+                    .x_initial(rng.random_range(0.0..=window_dims.width))
+                    .y_initial(rng.random_range(0.0..=window_dims.height))
+                    .depth(rng.random_range(0.0..=1.0))
+                    .color(STAR_COLORS.choose(&mut rng).unwrap())
+                    .node_ref(create_node_ref())
+                    .window_dims(window_dims)
+                    .build()
+                    .unwrap()
+            })
+            .collect::<Vec<Star>>();
+        Self { stars }
+    }
+
+    fn animate(&self, t: f64) {
+        for star in &self.stars {
+            star.animate(t);
         }
     }
 
-    fn svg_circle_element(&self) -> &SvgCircleElement {
-        self._svg_circle_element
-            .get_or_init(|| self.node_ref.get().dyn_into().unwrap())
+    fn view(self) -> View {
+        let views = self
+            .stars
+            .iter()
+            .map(|star| star.view())
+            .collect::<Vec<View>>();
+
+        request_animation_frame_loop(move |t| {
+            self.animate(t);
+        });
+
+        view! {
+            (views)
+        }
+    }
+}
+
+#[derive(Builder, Clone)]
+struct Star {
+    x_initial: f64,
+    y_initial: f64,
+    depth: f64,
+    color: &'static str,
+    node_ref: NodeRef,
+    window_dims: WindowDims,
+}
+impl Star {
+    fn view(&self) -> View {
+        let radius = self.radius().to_string();
+        let x = self.x_initial.to_string();
+        let y = self.y_initial.to_string();
+        view! {
+            circle(r#ref=self.node_ref, r=radius, fill=self.color, cx=x, cy=y)
+        }
     }
 
-    fn set(&self, t: f64, height: f64) {
-        self.svg_circle_element()
-            .set_attribute(
-                "cy",
-                &((self.y_initial + self.speed * t) % height).to_string(),
-            )
-            .unwrap();
+    fn animate(&self, t: f64) {
+        let element = self.node_ref.get().dyn_into::<SvgCircleElement>().unwrap();
+        let y = (self.y_initial + self.speed() * t) % self.window_dims.height;
+        element.set_attribute("cy", &y.to_string()).unwrap();
+    }
+
+    fn radius(&self) -> f64 {
+        4.0 - self.depth * 2.5
+    }
+
+    fn speed(&self) -> f64 {
+        0.08 - self.depth * 0.04
     }
 }

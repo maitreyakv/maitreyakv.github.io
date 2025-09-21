@@ -1,25 +1,14 @@
-use std::{cell::RefCell, rc::Rc};
-
 use gloo::render::{AnimationFrame, request_animation_frame};
 use sycamore::prelude::{Signal, create_signal};
 use web_sys::window;
 
-pub struct RequestAnimateFrameLoop {
-    _frame: Signal<AnimationFrame>,
-}
-impl RequestAnimateFrameLoop {
-    pub fn new(f: impl Fn(f64) + 'static) -> Self {
-        let frame = create_signal(request_animation_frame(|_| panic!()));
-
-        fn helper(t: f64, frame: Signal<AnimationFrame>, f: impl Fn(f64) + 'static) {
-            f(t);
-            frame.set(request_animation_frame(move |t| helper(t, frame, f)));
-        }
-
+pub fn request_animation_frame_loop(f: impl Fn(f64) + 'static) {
+    let frame = create_signal(request_animation_frame(|_| panic!()));
+    fn helper(t: f64, frame: Signal<AnimationFrame>, f: impl Fn(f64) + 'static) {
+        f(t);
         frame.set(request_animation_frame(move |t| helper(t, frame, f)));
-
-        RequestAnimateFrameLoop { _frame: frame }
     }
+    frame.set(request_animation_frame(move |t| helper(t, frame, f)));
 }
 
 #[derive(Debug, Copy, Clone)]
