@@ -86,6 +86,7 @@ fn Home() -> View {
                 }
             }
         }
+        Footer()
     }
 }
 
@@ -118,9 +119,21 @@ fn Header() -> View {
     view! {
         header(class="w-full backdrop-blur-xs") {
             div(class="text-3xl md:text-5xl ") {
-                //PageLink(path="/", pre_navigate_hook=|| {}) {
-                //    FancyHandleText() { "<- Back Home" }
-                //}
+                div(on:click=|_event| navigate("/")) {
+                    FancyHandleText() { "<- Back Home" }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn Footer() -> View {
+    view! {
+        div(class="w-screen px-4 fixed inset-x-0 bottom-0 ") {
+            div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] border-gray-600 border-1 rounded-t-lg") {
+                div(class="h-20")
+
             }
         }
     }
