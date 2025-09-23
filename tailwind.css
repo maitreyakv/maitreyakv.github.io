@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 @import "tailwindcss";
 
 @tailwind base;
@@ -7,6 +8,7 @@
 
 @theme {
   --font-public: "Public Sans", sans-serif;
+  --font-roboto: "Roboto Mono", sans-serif;
 }
 
 :root {
@@ -23,10 +25,6 @@ body, html {
 
 a {
   @apply underline 
-}
-
-p, li {
-  @apply text-lg 
 }
 
 h1 {

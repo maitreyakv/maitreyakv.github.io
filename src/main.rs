@@ -42,51 +42,60 @@ enum AppRoutes {
 
 #[component]
 fn NotFound() -> View {
+    let slide = create_signal(SlideInOutState::Right);
+    on_mount(move || {
+        Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
+    });
+
     view! {
-        Header()
-        div(class="w-screen h-screen flex flex-col gap-y-8 justify-center items-center text-center") {
-            div(class="text-7xl md:text-9xl") {
-                FancyHandleText() { "404" }
+        div(class="w-screen h-screen flex flex-col") {
+            SlideInOut(state=*slide) {
+                Header(return_callback=move || slide.set(SlideInOutState::Right), return_delay_ms=400)
             }
-            div(class="text-4xl md:text-6xl") {
-                FancyHandleText() { "Page Not Found" }
+            div(class="grow flex flex-col gap-y-8 justify-center items-center") {
+                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
+                    div(class="text-7xl md:text-9xl") {
+                        FancyHandleText() { "404" }
+                    }
+                }
+                SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
+                    div(class="text-4xl md:text-6xl") {
+                        FancyHandleText() { "Page Not Found" }
+                    }
+                }
             }
+            Footer()
         }
     }
 }
-
-const FANCY_TEXT_SHADOW_COLORS: [&str; 5] = ["#0090bc", "#8fb629", "#fce60f", "#f85d1b", "#fd3f8f"];
 
 #[component]
 fn Home() -> View {
     let slide = create_signal(SlideInOutState::Left);
     on_mount(move || {
-        Timeout::new(0, move || slide.set(SlideInOutState::OnScreen)).forget();
+        Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
     });
 
     view! {
-        div(class="w-screen h-screen flex justify-center") {
-            div(class="flex flex-col items-center gap-y-8 md:gap-y-12") {
+        div(class="w-screen h-screen flex flex-col") {
+            div(class="grow flex flex-col justify-left items-center") {
                 SlideInOut(state=*slide) {
-                    div(class="mt-8 mb-4 md:mb-6 text-7xl md:text-9xl ") {
+                    div(class="mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {
                         FancyHandleText() { "@maitreyakv" }
                     }
                 }
-                SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
-                    div(class="flex flex-col items-center gap-y-6") {
-                        ProfilePhoto()
-                        SocialLinks()
-                    }
+                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
+                    ProfilePhoto()
                 }
-                div(class="mt-8 grow flex flex-col items-center gap-y-6 text-5xl md:text-7xl") {
-                    PageLink(slide=slide, delay_ms=200, url="/about", color="var(--color-1)") { "About" }
-                    PageLink(slide=slide, delay_ms=300, url="/skills", color="var(--color-2)") { "Skills" }
-                    PageLink(slide=slide, delay_ms=400, url="/career", color="var(--color-4)") { "Career" }
-                    PageLink(slide=slide, delay_ms=500, url="/projects", color="var(--color-5)") { "Projects" }
+                div(class="grow flex flex-col justify-center items-center gap-y-6 md:gap-y-8 text-5xl md:text-7xl") {
+                    PageLink(slide=slide, delay_ms=100, url="/about", color="var(--color-1)") { "About" }
+                    PageLink(slide=slide, delay_ms=150, url="/skills", color="var(--color-2)") { "Skills" }
+                    PageLink(slide=slide, delay_ms=200, url="/career", color="var(--color-4)") { "Career" }
+                    PageLink(slide=slide, delay_ms=250, url="/projects", color="var(--color-5)") { "Projects" }
                 }
             }
+            Footer()
         }
-        Footer()
     }
 }
 
@@ -100,7 +109,7 @@ fn PageLink(
 ) -> View {
     let navigate_after_delay = move |_event| {
         slide.set(SlideInOutState::Left);
-        Timeout::new(1000, || navigate(url)).forget();
+        Timeout::new(550, || navigate(url)).forget();
     };
     view! {
         SlideInOut(state=*slide, delay=Duration::from_millis(delay_ms)) {
@@ -114,13 +123,23 @@ fn PageLink(
     }
 }
 
-#[component]
-fn Header() -> View {
+#[component(inline_props)]
+fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static) -> View {
+    let return_delay_ms = return_delay_ms.unwrap_or(0);
     view! {
-        header(class="w-full backdrop-blur-xs") {
-            div(class="text-3xl md:text-5xl ") {
-                div(on:click=|_event| navigate("/")) {
-                    FancyHandleText() { "<- Back Home" }
+        header(class="w-screen p-4") {
+            Glass() {
+                div(class="text-3xl md:text-5xl hover:cursor-pointer") {
+                    div(
+                        on:click=move |_event| {
+                            return_callback();
+                            Timeout::new(return_delay_ms, || navigate("/")).forget();
+                        }
+                    ) {
+                        div(class="pt-4 pb-6 pl-4") {
+                            FancyHandleText() { "Home" }
+                        }
+                    }
                 }
             }
         }
@@ -130,36 +149,99 @@ fn Header() -> View {
 #[component]
 fn Footer() -> View {
     view! {
-        div(class="w-screen px-4 fixed inset-x-0 bottom-0 ") {
-            div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] border-gray-600 border-1 rounded-t-lg") {
-                div(class="h-20")
-
+        div(class="w-full p-4") {
+            Glass() {
+                div(class="p-4") {
+                    div(class="flex justify-between") {
+                        SocialLinks()
+                        a(
+                            class="font-bold text-3xl md:text-4xl",
+                            style="text-decoration: none;",
+                            href="/maitreyakv-resume.pdf",
+                            download="maitreyakv-resume.pdf",
+                            on:click=|_| {}
+                        ) { "Resume" }
+                    }
+                }
             }
+        }
+    }
+}
+
+#[component(inline_props)]
+fn Glass(#[prop(setter(into))] children: Children) -> View {
+    view! {
+        div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] border-gray-600 border-1 rounded-xl") {
+            (children)
         }
     }
 }
 
 #[component]
 fn About() -> View {
+    let slide = create_signal(SlideInOutState::Right);
+    on_mount(move || {
+        Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
+    });
+
     view! {
-        Header()
-        ExtrudedText(color="#00d492") { "Howdy, I'm Maitreya" }
-        h2(class="w-full flex justify-center content-center py-2") {
-            a(href="/maitreyakv-resume.pdf", download="maitreyakv-resume.pdf", on:click=|_| {}) {
-                "Click to download my resume!"
+        div(class="w-screen h-screen flex flex-col items-center") {
+            SlideInOut(state=*slide) {
+                Header(return_delay_ms=400, return_callback=move || slide.set(SlideInOutState::Right))
             }
+            div(class="grow flex flex-col justify-evenly items-center") {
+                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
+                    Glass() {
+                        div(class="p-6") {
+                            PersonalInfo()
+                        }
+                    }
+                }
+                SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
+                    Glass() {
+                        div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 "
+                                     font-bold text-md md:text-xl"#) {
+                            p() { "I'm pursuing a career in software development, but I come from a "
+                                  "scientific/engineering background and I love working on problems in "
+                                  "those domains."}
+                            p() { "I'm more experienced in data engineering and backend development, "
+                                  "but I also dabble in frontend and am looking for opportunities to "
+                                  "grow my skills there." }
+                            p() {
+                                "In my free time I enjoy hiking, playing videogames, reading science "
+                                "fiction and fantasy, and playing with my dog "
+                                a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
+                                "."
+                            }
+                        }
+                    }
+                }
+            }
+            Footer()
         }
-        p() { "I'm Maitreya Venkataswamy, and I'm a software engineer based in Boston. "
-              "Learn about my career and interests below!" }
-        p() { "I'm pursuing a career in software development, but I come from a scientific/engineering "
-              "background and I love working on problems in those domains."}
-        p() { "I'm more experienced in data engineering and backend development, but I also dabble in "
-              " frontend and am looking for opportunities to grow my skills there." }
-        p() {
-            "In my free time I enjoy hiking, playing videogames, reading science fiction and fantasy, and "
-            "playing with my dog "
-            a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
-            "."
+    }
+}
+
+#[component]
+fn PersonalInfo() -> View {
+    view! {
+        pre(class="font-roboto text-xl md:text-3xl") {
+            code() {
+                ExtrudedText(color="var(--color-1)") {
+r#"let maitreya = Developer::new()
+    .first_name("Maitreya")
+    .last_name("Venkataswamy")
+    .pronouns("he", "him", "his")
+    .location("Boston")
+    .hobbies(vec![
+        "Hiking",
+        "Videogames",
+        "Reading SciFi/Fantasy",
+        "Playing w/my dog",
+    ])
+    .build();"#
+                }
+            }
         }
     }
 }

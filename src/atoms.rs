@@ -15,7 +15,7 @@ pub fn SlideInOut(
         let element = node_ref.get().dyn_into::<HtmlElement>().unwrap();
         create_effect(move || {
             let style = format!(
-                "transition: transform 0.5s ease-in-out; transition-delay: {}ms; transform: {}",
+                "transition: transform 0.3s ease-in-out; transition-delay: {}ms; transform: {}",
                 delay_ms,
                 state.get().to_transform_value()
             );
