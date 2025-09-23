@@ -32,27 +32,34 @@ pub fn About() -> View {
                     }
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
-                    Glass() {
-                        div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 "
-                                     text-md md:text-xl"#) {
-                            p() { "I'm pursuing a career in software development, but I come from a "
-                                  "scientific/engineering background and I love working on problems in "
-                                  "those domains."}
-                            p() { "I'm more experienced in data engineering and backend development, "
-                                  "but I also dabble in frontend and am looking for opportunities to "
-                                  "grow my skills there." }
-                            p() {
-                                "In my free time I enjoy hiking, playing videogames, reading science "
-                                "fiction and fantasy, and playing with my dog "
-                                a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
-                                "."
-                            }
-                        }
-                    }
+                    AboutText()
                 }
             }
             Footer()
         }
+    }
+}
+
+#[component]
+fn AboutText() -> View {
+    view! {
+        Glass() {
+            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
+                p() { "I'm pursuing a career in software development, but I come from a "
+                      "scientific/engineering background and I love working on problems in "
+                      "those domains."}
+                p() { "I'm more experienced in data engineering and backend development, "
+                      "but I also dabble in frontend and am looking for opportunities to "
+                      "grow my skills there." }
+                p() {
+                    "In my free time I enjoy hiking, playing videogames, reading science "
+                    "fiction and fantasy, and playing with my dog "
+                    a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
+                    "."
+                }
+            }
+        }
+
     }
 }
 
