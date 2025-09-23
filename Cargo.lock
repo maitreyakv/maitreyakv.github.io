@@ -766,6 +766,7 @@ dependencies = [
  "gloo",
  "rand 0.9.2",
  "sycamore",
+ "sycamore-router",
  "web-sys",
 ]
 
@@ -848,6 +849,29 @@ dependencies = [
  "slotmap",
  "smallvec",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "sycamore-router"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b4355981bd97cd982ff6cdd39e7627c5ca819d7777b519ca4b711ed5f014cae8"
+dependencies = [
+ "sycamore",
+ "sycamore-router-macro",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "sycamore-router-macro"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11e346a1189c6b9add1709f713a4479655564b6284bc44f0106d90df5b940b2b"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

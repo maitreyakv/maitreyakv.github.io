@@ -1,79 +1,136 @@
-use std::{
-    cell::{OnceCell, RefCell},
-    rc::Rc,
-};
+use std::time::Duration;
 
-use derive_builder::Builder;
-use gloo::{
-    events::EventListener,
-    render::{AnimationFrame, request_animation_frame},
+use gloo::timers::callback::Timeout;
+use site::{
+    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    starscape::Starscape,
 };
-use rand::{Rng, seq::IndexedRandom};
-use site::utils::{WindowDims, request_animation_frame_loop};
 use sycamore::prelude::*;
-use web_sys::{Element, HtmlElement, SvgCircleElement, wasm_bindgen::JsCast};
+use sycamore_router::{HistoryIntegration, Route, Router, navigate};
 
 fn main() {
     console_error_panic_hook::set_once();
-    sycamore::render(|| {
-        view! {
-            Starscape()
-            div(class="z-1 overflow-scroll flex justify-center") {
-                div(class="flex flex-col gap-y-6 px-6 items-center max-w-150 text-center backdrop-blur-[2px]") {
-                    Content()
-                    div(class="h-8")
+    sycamore::render(|| App());
+}
+
+#[component]
+fn App() -> View {
+    view! {
+        Starscape()
+        Router(
+            integration=HistoryIntegration::new(),
+            view=|route| view! {
+                (match route.get_clone() {
+                    AppRoutes::Home => Home(),
+                    AppRoutes::About => About(),
+                    AppRoutes::NotFound => NotFound(),
+                })
+            }
+        )
+    }
+}
+
+#[derive(Route, Clone)]
+enum AppRoutes {
+    #[to("/")]
+    Home,
+    #[to("/about")]
+    About,
+    #[not_found]
+    NotFound,
+}
+
+#[component]
+fn NotFound() -> View {
+    view! {
+        Header()
+        div(class="w-screen h-screen flex flex-col gap-y-8 justify-center items-center text-center") {
+            div(class="text-7xl md:text-9xl") {
+                FancyHandleText() { "404" }
+            }
+            div(class="text-4xl md:text-6xl") {
+                FancyHandleText() { "Page Not Found" }
+            }
+        }
+    }
+}
+
+const FANCY_TEXT_SHADOW_COLORS: [&str; 5] = ["#0090bc", "#8fb629", "#fce60f", "#f85d1b", "#fd3f8f"];
+
+#[component]
+fn Home() -> View {
+    let slide = create_signal(SlideInOutState::Left);
+    on_mount(move || {
+        Timeout::new(0, move || slide.set(SlideInOutState::OnScreen)).forget();
+    });
+
+    view! {
+        div(class="w-screen h-screen flex justify-center") {
+            div(class="flex flex-col items-center gap-y-8 md:gap-y-12") {
+                SlideInOut(state=*slide) {
+                    div(class="mt-8 mb-4 md:mb-6 text-7xl md:text-9xl ") {
+                        FancyHandleText() { "@maitreyakv" }
+                    }
+                }
+                SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
+                    div(class="flex flex-col items-center gap-y-6") {
+                        ProfilePhoto()
+                        SocialLinks()
+                    }
+                }
+                div(class="mt-8 grow flex flex-col items-center gap-y-6 text-5xl md:text-7xl") {
+                    PageLink(slide=slide, delay_ms=200, url="/about", color="var(--color-1)") { "About" }
+                    PageLink(slide=slide, delay_ms=300, url="/skills", color="var(--color-2)") { "Skills" }
+                    PageLink(slide=slide, delay_ms=400, url="/career", color="var(--color-4)") { "Career" }
+                    PageLink(slide=slide, delay_ms=500, url="/projects", color="var(--color-5)") { "Projects" }
                 }
             }
         }
-    });
+    }
 }
 
 #[component(inline_props)]
-fn ExtrudedH1(
-    #[prop(setter(into))] children: Children,
+fn PageLink(
+    slide: Signal<SlideInOutState>,
+    delay_ms: u64,
+    url: &'static str,
     color: &'static str,
-    depth: Option<f32>,
-    resolution: Option<f32>,
+    #[prop(setter(into))] children: Children,
 ) -> View {
-    let n_layers = (depth.unwrap_or(4.0) / resolution.unwrap_or(0.1)) as i32;
-
-    let style = (0..=n_layers)
-        .into_iter()
-        .map(|i| format!("{}px {}px {color}", 0.1 * i as f32, 0.1 * i as f32))
-        .fold(String::new(), |a, b| a + ", " + &b);
-
+    let navigate_after_delay = move |_event| {
+        slide.set(SlideInOutState::Left);
+        Timeout::new(1000, || navigate(url)).forget();
+    };
     view! {
-        h1(style=format!("text-shadow: {};", style.strip_prefix(",").unwrap())) {
-            (children)
+        SlideInOut(state=*slide, delay=Duration::from_millis(delay_ms)) {
+            div(class="hover:cursor-pointer", on:click=navigate_after_delay) {
+                ExtrudedText(color=color) {
+                    (children)
+                }
+            }
+        }
+
+    }
+}
+
+#[component]
+fn Header() -> View {
+    view! {
+        header(class="w-full backdrop-blur-xs") {
+            div(class="text-3xl md:text-5xl ") {
+                //PageLink(path="/", pre_navigate_hook=|| {}) {
+                //    FancyHandleText() { "<- Back Home" }
+                //}
+            }
         }
     }
 }
 
 #[component]
-fn Content() -> View {
+fn About() -> View {
     view! {
-        div(class=r#"mt-6 mb-4 md:mb-8 font-bold italic text-7xl md:text-9xl text-white
-                     text-shadow-[0.05em_0.05em_#0090bc,0.1em_0.1em_#8fb629,0.15em_0.15em_#fce60f,0.2em_0.2em_#f85d1b,0.25em_0.25em_#fd3f8f]"#
-        ) { "@maitreyakv" }
-
-        img(
-            class="w-[200px] rounded-full",
-            src="assets/face.jpeg",
-            alt="A picture of my face",
-        )
-        div(class="flex gap-x-6 justify-center align-center") {
-            a(href="https://github.com/maitreyakv") {
-                img(class="w-[40px]", src="assets/github.svg", alt="The GitHub logo")
-            }
-            a(href="https://www.linkedin.com/in/maitreyakv/") {
-                img(class="w-[40px]", src="assets/linkedin.svg", alt="The Linkedin logo")
-            }
-            a(href="mailto:maitreyakv@gmail.com") {
-                img(class="w-[50px]", src="assets/email.svg", alt="An mail icon")
-            }
-        }
-
-        ExtrudedH1(color="#00d492") { "Howdy, I'm Maitreya" }
+        Header()
+        ExtrudedText(color="#00d492") { "Howdy, I'm Maitreya" }
         h2(class="w-full flex justify-center content-center py-2") {
             a(href="/maitreyakv-resume.pdf", download="maitreyakv-resume.pdf", on:click=|_| {}) {
                 "Click to download my resume!"
@@ -91,8 +148,61 @@ fn Content() -> View {
             a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
             "."
         }
+    }
+}
 
-        ExtrudedH1(color="#51a2ff") { "Python, my bread and butter" }
+#[component]
+fn SocialLinks() -> View {
+    view! {
+        div(class="flex gap-x-6 justify-left align-center") {
+            a(href="https://github.com/maitreyakv") {
+                img(class="w-[40px]", src="assets/github.svg", alt="The GitHub logo")
+            }
+            a(href="https://www.linkedin.com/in/maitreyakv/") {
+                img(class="w-[40px]", src="assets/linkedin.svg", alt="The Linkedin logo")
+            }
+            a(href="mailto:maitreyakv@gmail.com") {
+                img(class="w-[50px]", src="assets/email.svg", alt="An mail icon")
+            }
+        }
+    }
+}
+
+// TODO: Use rotating "conic-gradient" to give dynamic border
+#[component]
+fn ProfilePhoto() -> View {
+    view! {
+        img(
+            class="w-48 md:w-64 rounded-full",
+            src="assets/face.jpeg",
+            alt="A picture of my face",
+        )
+    }
+}
+
+#[component(inline_props)]
+fn FancyHandleText(#[prop(setter(into))] children: Children) -> View {
+    let text_shadow = (1..=5)
+        .map(|n| {
+            let offset = 0.05 * n as f32;
+            format!("{offset}em {offset}em var(--color-{})", n)
+        })
+        .reduce(|left, right| format!("{left}, {right}"))
+        .unwrap();
+
+    let style = format!("text-shadow: {text_shadow};");
+
+    view! {
+        div(class="font-bold italic text-white", style=style) {
+            (children)
+        }
+    }
+}
+
+#[component]
+fn Content() -> View {
+    view! {
+        ExtrudedText(color="#51a2ff") { "Python, my bread and butter" }
         p() { "I've been programming in Python since high school, for both software development "
               "and as an scientific and engineering tool." }
         p() { "I've used Python in various applications from scientific and engineering problems, "
@@ -123,7 +233,7 @@ fn Content() -> View {
                 }
             }
         }
-        ExtrudedH1(color="#f54900") { "Rust, my new obsession" }
+        ExtrudedText(color="#f54900") { "Rust, my new obsession" }
         p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
               "to build with it, personally and professionally!" }
         p() { "As a general-purpose language with some amazing features, I've made it my preferred "
@@ -156,7 +266,7 @@ fn Content() -> View {
             }
         }
 
-        ExtrudedH1(color="#00d5be") { "Other software skills" }
+        ExtrudedText(color="#00d5be") { "Other software skills" }
         p() { "I have a variety of technical skills covering backend development, data engineering, and frontend engineering." }
         p() { "Most of my database experience is with " b() { "Postgres " } "and " b() { "Snowflake" }
               ", and I've used " b() { "Prefect" } " regularly for orchestration." }
@@ -167,7 +277,7 @@ fn Content() -> View {
         p() { "Additionally, I have experience with tasks like gathering requirements for software systems "
               "and translating scientific R&D algorithms and pipelines into production software." }
 
-        ExtrudedH1(color="#d08700") { "Path to Software Engineer" }
+        ExtrudedText(color="#d08700") { "Path to Software Engineer" }
         p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
         h2() {
             a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
@@ -191,14 +301,14 @@ fn Content() -> View {
         p() { "I also lead development of our platforms's CLI client (Rust), and  participate in development "
               "of the web client (React)." }
 
-        ExtrudedH1(color="#ec003f") { "What I studied in school" }
+        ExtrudedText(color="#ec003f") { "What I studied in school" }
         p() { "My engineering and data science backgrounds have been helpful for building software "
               "in various domains."}
         p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
         p() { "While I was there I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
         p() { "I have a M.S. in Data Science from Brown University as well." }
 
-        ExtrudedH1(color="#0092b8") { "Source code for this site" }
+        ExtrudedText(color="#0092b8") { "Source code for this site" }
         p() {
             "Want to see how this site works? Check out "
             a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
@@ -219,113 +329,12 @@ fn Content() -> View {
             " in the repository."
         }
 
-        ExtrudedH1(color="#7f22fe") { "YarnHoard, track your stash" }
+        ExtrudedText(color="#7f22fe") { "YarnHoard, track your stash" }
         p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
               "is written in Rust!" }
         h2(class="text-center") { "Work in progress, coming soon!" }
         p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
               "being allowing the user to create and manage records for their yarn inventory and record "
               "information about their collection." }
-    }
-}
-
-const STAR_COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
-const STAR_DENSITY: f64 = 0.00075; // stars per square pixel
-
-#[component(inline_props)]
-fn Starscape() -> View {
-    let window_dims = create_signal(WindowDims::now());
-    let _resize_listener_handle =
-        create_signal(EventListener::new(&window(), "resize", move |_event| {
-            window_dims.set(WindowDims::now());
-        }));
-
-    view! {
-        div(class="fixed bg-black") {
-            svg(height="100vh", width="100vw", xmlns="http://www.w3.org/2000/svg") {
-                (move || StarController::new(window_dims.get()).view())
-            }
-        }
-    }
-}
-
-#[derive(Clone)]
-struct StarController {
-    stars: Vec<Star>,
-}
-impl StarController {
-    fn new(window_dims: WindowDims) -> Self {
-        let mut rng = rand::rng();
-        let n_stars = (window_dims.area() * STAR_DENSITY) as i64;
-        let stars = (0..n_stars)
-            .map(move |_| {
-                StarBuilder::default()
-                    .x_initial(rng.random_range(0.0..=window_dims.width))
-                    .y_initial(rng.random_range(0.0..=window_dims.height))
-                    .depth(rng.random_range(0.0..=1.0))
-                    .color(STAR_COLORS.choose(&mut rng).unwrap())
-                    .node_ref(create_node_ref())
-                    .window_dims(window_dims)
-                    .build()
-                    .unwrap()
-            })
-            .collect::<Vec<Star>>();
-        Self { stars }
-    }
-
-    fn animate(&self, t: f64) {
-        for star in &self.stars {
-            star.animate(t);
-        }
-    }
-
-    fn view(self) -> View {
-        let views = self
-            .stars
-            .iter()
-            .map(|star| star.view())
-            .collect::<Vec<View>>();
-
-        request_animation_frame_loop(move |t| {
-            self.animate(t);
-        });
-
-        view! {
-            (views)
-        }
-    }
-}
-
-#[derive(Builder, Clone)]
-struct Star {
-    x_initial: f64,
-    y_initial: f64,
-    depth: f64,
-    color: &'static str,
-    node_ref: NodeRef,
-    window_dims: WindowDims,
-}
-impl Star {
-    fn view(&self) -> View {
-        let radius = self.radius().to_string();
-        let x = self.x_initial.to_string();
-        let y = self.y_initial.to_string();
-        view! {
-            circle(r#ref=self.node_ref, r=radius, fill=self.color, cx=x, cy=y)
-        }
-    }
-
-    fn animate(&self, t: f64) {
-        let element = self.node_ref.get().dyn_into::<SvgCircleElement>().unwrap();
-        let y = (self.y_initial + self.speed() * t) % self.window_dims.height;
-        element.set_attribute("cy", &y.to_string()).unwrap();
-    }
-
-    fn radius(&self) -> f64 {
-        4.0 - self.depth * 2.5
-    }
-
-    fn speed(&self) -> f64 {
-        0.08 - self.depth * 0.04
     }
 }

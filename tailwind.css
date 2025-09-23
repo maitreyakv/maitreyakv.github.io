@@ -9,6 +9,14 @@
   --font-public: "Public Sans", sans-serif;
 }
 
+:root {
+  --color-1: #0090bc;
+  --color-2: #8fb629;
+  --color-3: #fce60f;
+  --color-4: #f85d1b;
+  --color-5: #fd3f8f;
+}
+
 body, html {
   @apply font-public font-bold p-0 m-0 text-gray-200
 }
