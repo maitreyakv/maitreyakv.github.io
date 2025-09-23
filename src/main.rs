@@ -1,12 +1,11 @@
-use std::time::Duration;
+use sycamore::prelude::*;
+use sycamore_router::{HistoryIntegration, Route, Router};
 
-use gloo::timers::callback::Timeout;
 use site::{
-    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    atoms::ExtrudedText,
+    pages::{About, Home, NotFound},
     starscape::Starscape,
 };
-use sycamore::prelude::*;
-use sycamore_router::{HistoryIntegration, Route, Router, navigate};
 
 fn main() {
     console_error_panic_hook::set_once();
@@ -41,261 +40,7 @@ enum AppRoutes {
 }
 
 #[component]
-fn NotFound() -> View {
-    let slide = create_signal(SlideInOutState::Right);
-    on_mount(move || {
-        Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
-    });
-
-    view! {
-        div(class="w-screen h-screen flex flex-col") {
-            SlideInOut(state=*slide) {
-                Header(return_callback=move || slide.set(SlideInOutState::Right), return_delay_ms=400)
-            }
-            div(class="grow flex flex-col gap-y-8 justify-center items-center") {
-                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    div(class="text-7xl md:text-9xl") {
-                        FancyHandleText() { "404" }
-                    }
-                }
-                SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
-                    div(class="text-4xl md:text-6xl") {
-                        FancyHandleText() { "Page Not Found" }
-                    }
-                }
-            }
-            Footer()
-        }
-    }
-}
-
-#[component]
-fn Home() -> View {
-    let slide = create_signal(SlideInOutState::Left);
-    on_mount(move || {
-        Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
-    });
-
-    view! {
-        div(class="w-screen h-screen flex flex-col") {
-            div(class="grow flex flex-col justify-left items-center") {
-                SlideInOut(state=*slide) {
-                    div(class="mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {
-                        FancyHandleText() { "@maitreyakv" }
-                    }
-                }
-                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    ProfilePhoto()
-                }
-                div(class="grow flex flex-col justify-center items-center gap-y-6 md:gap-y-8 text-5xl md:text-7xl") {
-                    PageLink(slide=slide, delay_ms=100, url="/about", color="var(--color-1)") { "About" }
-                    PageLink(slide=slide, delay_ms=150, url="/skills", color="var(--color-2)") { "Skills" }
-                    PageLink(slide=slide, delay_ms=200, url="/career", color="var(--color-4)") { "Career" }
-                    PageLink(slide=slide, delay_ms=250, url="/projects", color="var(--color-5)") { "Projects" }
-                }
-            }
-            Footer()
-        }
-    }
-}
-
-#[component(inline_props)]
-fn PageLink(
-    slide: Signal<SlideInOutState>,
-    delay_ms: u64,
-    url: &'static str,
-    color: &'static str,
-    #[prop(setter(into))] children: Children,
-) -> View {
-    let navigate_after_delay = move |_event| {
-        slide.set(SlideInOutState::Left);
-        Timeout::new(550, || navigate(url)).forget();
-    };
-    view! {
-        SlideInOut(state=*slide, delay=Duration::from_millis(delay_ms)) {
-            div(class="hover:cursor-pointer", on:click=navigate_after_delay) {
-                ExtrudedText(color=color) {
-                    (children)
-                }
-            }
-        }
-
-    }
-}
-
-#[component(inline_props)]
-fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static) -> View {
-    let return_delay_ms = return_delay_ms.unwrap_or(0);
-    view! {
-        header(class="w-screen p-4") {
-            Glass() {
-                div(class="text-3xl md:text-5xl hover:cursor-pointer") {
-                    div(
-                        on:click=move |_event| {
-                            return_callback();
-                            Timeout::new(return_delay_ms, || navigate("/")).forget();
-                        }
-                    ) {
-                        div(class="pt-4 pb-6 pl-4") {
-                            FancyHandleText() { "Home" }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn Footer() -> View {
-    view! {
-        div(class="w-full p-4") {
-            Glass() {
-                div(class="p-4") {
-                    div(class="flex justify-between") {
-                        SocialLinks()
-                        a(
-                            class="font-bold text-3xl md:text-4xl",
-                            style="text-decoration: none;",
-                            href="/maitreyakv-resume.pdf",
-                            download="maitreyakv-resume.pdf",
-                            on:click=|_| {}
-                        ) { "Resume" }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[component(inline_props)]
-fn Glass(#[prop(setter(into))] children: Children) -> View {
-    view! {
-        div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] border-gray-600 border-1 rounded-xl") {
-            (children)
-        }
-    }
-}
-
-#[component]
-fn About() -> View {
-    let slide = create_signal(SlideInOutState::Right);
-    on_mount(move || {
-        Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
-    });
-
-    view! {
-        div(class="w-screen h-screen flex flex-col items-center") {
-            SlideInOut(state=*slide) {
-                Header(return_delay_ms=400, return_callback=move || slide.set(SlideInOutState::Right))
-            }
-            div(class="grow flex flex-col justify-evenly items-center") {
-                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    Glass() {
-                        div(class="p-6") {
-                            PersonalInfo()
-                        }
-                    }
-                }
-                SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
-                    Glass() {
-                        div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 "
-                                     font-bold text-md md:text-xl"#) {
-                            p() { "I'm pursuing a career in software development, but I come from a "
-                                  "scientific/engineering background and I love working on problems in "
-                                  "those domains."}
-                            p() { "I'm more experienced in data engineering and backend development, "
-                                  "but I also dabble in frontend and am looking for opportunities to "
-                                  "grow my skills there." }
-                            p() {
-                                "In my free time I enjoy hiking, playing videogames, reading science "
-                                "fiction and fantasy, and playing with my dog "
-                                a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
-                                "."
-                            }
-                        }
-                    }
-                }
-            }
-            Footer()
-        }
-    }
-}
-
-#[component]
-fn PersonalInfo() -> View {
-    view! {
-        pre(class="font-roboto text-xl md:text-3xl") {
-            code() {
-                ExtrudedText(color="var(--color-1)") {
-r#"let maitreya = Developer::new()
-    .first_name("Maitreya")
-    .last_name("Venkataswamy")
-    .pronouns("he", "him", "his")
-    .location("Boston")
-    .hobbies(vec![
-        "Hiking",
-        "Videogames",
-        "Reading SciFi/Fantasy",
-        "Playing w/my dog",
-    ])
-    .build();"#
-                }
-            }
-        }
-    }
-}
-
-#[component]
-fn SocialLinks() -> View {
-    view! {
-        div(class="flex gap-x-6 justify-left align-center") {
-            a(href="https://github.com/maitreyakv") {
-                img(class="w-[40px]", src="assets/github.svg", alt="The GitHub logo")
-            }
-            a(href="https://www.linkedin.com/in/maitreyakv/") {
-                img(class="w-[40px]", src="assets/linkedin.svg", alt="The Linkedin logo")
-            }
-            a(href="mailto:maitreyakv@gmail.com") {
-                img(class="w-[50px]", src="assets/email.svg", alt="An mail icon")
-            }
-        }
-    }
-}
-
-// TODO: Use rotating "conic-gradient" to give dynamic border
-#[component]
-fn ProfilePhoto() -> View {
-    view! {
-        img(
-            class="w-48 md:w-64 rounded-full",
-            src="assets/face.jpeg",
-            alt="A picture of my face",
-        )
-    }
-}
-
-#[component(inline_props)]
-fn FancyHandleText(#[prop(setter(into))] children: Children) -> View {
-    let text_shadow = (1..=5)
-        .map(|n| {
-            let offset = 0.05 * n as f32;
-            format!("{offset}em {offset}em var(--color-{})", n)
-        })
-        .reduce(|left, right| format!("{left}, {right}"))
-        .unwrap();
-
-    let style = format!("text-shadow: {text_shadow};");
-
-    view! {
-        div(class="font-bold italic text-white", style=style) {
-            (children)
-        }
-    }
-}
-
-#[component]
-fn Content() -> View {
+fn _Content() -> View {
     view! {
         ExtrudedText(color="#51a2ff") { "Python, my bread and butter" }
         p() { "I've been programming in Python since high school, for both software development "
@@ -306,21 +51,21 @@ fn Content() -> View {
         ul(class="list-none") {
             div(class="flex flex-row gap-x-8 items-start") {
                 li(class="flex flex-col justify-center") {
-                    //label(class="font-bold text-center") { "Data" }
+                    //label(class="text-center") { "Data" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Pandas/Polars" }
                         li(class="text-center") { "SQLAlchemy" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    //label(class="font-bold text-center") { "Engineering" }
+                    //label(class="text-center") { "Engineering" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "FastAPI" }
                         li(class="text-center") { "Prefect" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    //label(class="font-bold text-center") { "Science" }
+                    //label(class="text-center") { "Science" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Scikit-Learn" }
                         li(class="text-center") { "Tensorflow" }
@@ -338,21 +83,21 @@ fn Content() -> View {
         ul(class="list-none") {
             div(class="flex flex-row gap-x-8 items-start") {
                 li(class="flex flex-col justify-center") {
-                    //label(class="font-bold text-center") { "General" }
+                    //label(class="text-center") { "General" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Clap" }
                         li(class="text-center") { "Tokio" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    //label(class="font-bold text-center") { "Backend" }
+                    //label(class="text-center") { "Backend" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "SeaORM" }
                         li(class="text-center") { "Axum" }
                     }
                 }
                 li(class="flex flex-col justify-center") {
-                    //label(class="font-bold text-center") { "Frontend" }
+                    //label(class="text-center") { "Frontend" }
                     ul(class="flex flex-col align-center") {
                         li(class="text-center") { "Sycamore" }
                         li(class="text-center") { "web_sys" }
