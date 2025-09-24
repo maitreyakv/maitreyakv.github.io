@@ -20,6 +20,7 @@ fn App() -> View {
             view=|route| view! {
                 (match route.get_clone() {
                     AppRoutes::Home => Home(),
+                    AppRoutes::Resume => Home(),
                     AppRoutes::About => About(),
                     AppRoutes::Skills => Skills(),
                     AppRoutes::Career => Career(),
@@ -35,6 +36,8 @@ fn App() -> View {
 enum AppRoutes {
     #[to("/")]
     Home,
+    #[to("/maitreyakv-resume.pdf")]
+    Resume,
     #[to("/about")]
     About,
     #[to("/skills")]

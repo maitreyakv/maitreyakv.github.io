@@ -17,7 +17,7 @@ pub fn Home() -> View {
     });
 
     view! {
-        div(class="w-screen h-screen flex flex-col") {
+        div(class="w-screen h-screen flex flex-col items-center") {
             div(class="grow flex flex-col justify-left items-center") {
                 SlideInOut(state=*slide) {
                     div(class="mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {

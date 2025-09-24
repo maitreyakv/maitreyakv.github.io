@@ -27,7 +27,7 @@ pub fn FancyHandleText(#[prop(setter(into))] children: Children) -> View {
 pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static) -> View {
     let return_delay_ms = return_delay_ms.unwrap_or(0);
     view! {
-        header(class="w-screen p-4") {
+        header(class="w-screen max-w-300 p-4") {
             Glass() {
                 div(class="text-3xl md:text-5xl hover:cursor-pointer") {
                     div(
@@ -49,7 +49,7 @@ pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static
 #[component]
 pub fn Footer() -> View {
     view! {
-        div(class="w-full p-4") {
+        div(class="w-full max-w-300 p-4") {
             Glass() {
                 div(class="p-4") {
                     div(class="flex justify-between") {
