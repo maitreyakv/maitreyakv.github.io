@@ -46,8 +46,3 @@ enum AppRoutes {
     #[not_found]
     NotFound,
 }
-
-#[component]
-fn _Content() -> View {
-    view! {}
-}

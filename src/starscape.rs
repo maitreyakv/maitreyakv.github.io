@@ -63,9 +63,10 @@ impl StarController {
             .map(|star| star.view())
             .collect::<Vec<View>>();
 
-        request_animation_frame_loop(move |t| {
-            self.animate(t);
-        });
+        // TEMP: Using SVG animations instead of manual animation
+        //request_animation_frame_loop(move |t| {
+        //    self.animate(t);
+        //});
 
         view! {
             (views)
@@ -87,8 +88,22 @@ impl Star {
         let radius = self.radius().to_string();
         let x = self.x_initial.to_string();
         let y = self.y_initial.to_string();
+        let window_height = self.window_dims.height;
+        let speed = self.speed();
+        let duration = (0.001 * window_height / speed).to_string();
+        let start = (-0.001 * (self.y_initial / speed)).to_string();
         view! {
-            circle(r#ref=self.node_ref, r=radius, fill=self.color, cx=x, cy=y)
+            circle(r#ref=self.node_ref, r=radius, fill=self.color, cx=x, cy=y) {
+                // TEMP: Using SVG animations instead of manual animation
+                animate(
+                    attributeName="cy",
+                    from="0",
+                    to=window_height.to_string(),
+                    dur=duration,
+                    repeatCount="indefinite",
+                    begin=format!("{start}s"),
+                )
+            }
         }
     }
 
