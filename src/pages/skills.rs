@@ -6,13 +6,15 @@ use sycamore::prelude::*;
 use crate::{
     atoms::{ExtrudedText, Glass, SlideInOut, SlideInOutState},
     molecules::{Footer, Header},
+    starscape::State,
 };
 
-#[component]
-pub fn Skills() -> View {
+#[component(inline_props)]
+pub fn Skills(state: Signal<State>) -> View {
     let slide = create_signal(SlideInOutState::Right);
     on_mount(move || {
         Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
+        Timeout::new(300, move || state.set(State::Down)).forget();
     });
 
     view! {
@@ -20,7 +22,10 @@ pub fn Skills() -> View {
             SlideInOut(state=*slide) {
                 Header(
                     return_delay_ms=450,
-                    return_callback=move || slide.set(SlideInOutState::Right)
+                    return_callback=move || {
+                        slide.set(SlideInOutState::Right);
+                        state.set(State::Right);
+                    }
                 )
             }
             div(class="grow flex flex-col gap-y-8 items-center") {

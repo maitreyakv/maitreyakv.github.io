@@ -4,7 +4,7 @@ check:
 	cargo check && cargo clippy
 
 serve:
-	trunk serve --clear -a 0.0.0.0
+	trunk serve --clear -a 0.0.0.0 --release
 
 release:
 	trunk build --release

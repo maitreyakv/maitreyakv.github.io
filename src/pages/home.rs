@@ -7,13 +7,15 @@ use sycamore_router::navigate;
 use crate::{
     atoms::{ExtrudedText, SlideInOut, SlideInOutState},
     molecules::{FancyHandleText, Footer},
+    starscape::State,
 };
 
-#[component]
-pub fn Home() -> View {
+#[component(inline_props)]
+pub fn Home(state: Signal<State>) -> View {
     let slide = create_signal(SlideInOutState::Left);
     on_mount(move || {
         Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
+        Timeout::new(300, move || state.set(State::Down)).forget();
     });
 
     view! {
@@ -30,24 +32,28 @@ pub fn Home() -> View {
                 div(class="grow flex flex-col justify-center items-center gap-y-6 md:gap-y-8 text-5xl md:text-7xl") {
                     PageLink(
                         slide=slide,
+                        state=state,
                         delay_ms=100,
                         url="/about",
                         color="var(--color-1)"
                     ) { "About" }
                     PageLink(
                         slide=slide,
+                        state=state,
                         delay_ms=150,
                         url="/skills",
                         color="var(--color-2)"
                     ) { "Skills" }
                     PageLink(
                         slide=slide,
+                        state=state,
                         delay_ms=200,
                         url="/career",
                         color="var(--color-4)"
                     ) { "Career" }
                     PageLink(
                         slide=slide,
+                        state=state,
                         delay_ms=250,
                         url="/projects",
                         color="var(--color-5)"
@@ -62,6 +68,7 @@ pub fn Home() -> View {
 #[component(inline_props)]
 fn PageLink(
     slide: Signal<SlideInOutState>,
+    state: Signal<State>,
     delay_ms: u64,
     url: &'static str,
     color: &'static str,
@@ -69,6 +76,7 @@ fn PageLink(
 ) -> View {
     let navigate_after_delay = move |_event| {
         slide.set(SlideInOutState::Left);
+        state.set(State::Left);
         Timeout::new(550, || navigate(url)).forget();
     };
     view! {

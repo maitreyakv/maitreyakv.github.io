@@ -5,20 +5,25 @@ use sycamore::prelude::*;
 
 use crate::atoms::{SlideInOut, SlideInOutState};
 use crate::molecules::{FancyHandleText, Footer, Header};
+use crate::starscape::State;
 
-#[component]
-pub fn NotFound() -> View {
+#[component(inline_props)]
+pub fn NotFound(state: Signal<State>) -> View {
     let slide = create_signal(SlideInOutState::Right);
     on_mount(move || {
         Timeout::new(10, move || slide.set(SlideInOutState::OnScreen)).forget();
+        Timeout::new(300, move || state.set(State::Down)).forget();
     });
 
     view! {
         div(class="w-screen h-screen flex flex-col") {
             SlideInOut(state=*slide) {
                 Header(
-                    return_callback=move || slide.set(SlideInOutState::Right),
-                    return_delay_ms=400
+                    return_delay_ms=400,
+                    return_callback=move || {
+                        slide.set(SlideInOutState::Right);
+                        state.set(State::Right);
+                    },
                 )
             }
             div(class="grow flex flex-col gap-y-8 justify-center items-center") {

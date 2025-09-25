@@ -13,19 +13,20 @@ fn main() {
 
 #[component]
 fn App() -> View {
+    let state = create_signal(site::starscape::State::Down);
     view! {
-        Starscape()
+        Starscape(state=*state)
         Router(
             integration=HistoryIntegration::new(),
-            view=|route| view! {
+            view=move |route| view! {
                 (match route.get_clone() {
-                    AppRoutes::Home => Home(),
-                    AppRoutes::Resume => Home(),
-                    AppRoutes::About => About(),
-                    AppRoutes::Skills => Skills(),
-                    AppRoutes::Career => Career(),
-                    AppRoutes::Projects => Projects(),
-                    AppRoutes::NotFound => NotFound(),
+                    AppRoutes::Home => view! { Home(state=state) },
+                    AppRoutes::Resume => view! { Home(state=state) },
+                    AppRoutes::About => view! { About(state=state) },
+                    AppRoutes::Skills => view! { Skills(state=state) },
+                    AppRoutes::Career => view! { Career(state=state) },
+                    AppRoutes::Projects => view! { Projects(state=state) } ,
+                    AppRoutes::NotFound => view! { NotFound(state=state) },
                 })
             }
         )
