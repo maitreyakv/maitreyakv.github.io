@@ -5,7 +5,8 @@ use sycamore::prelude::*;
 
 use crate::{
     atoms::{ExtrudedText, Glass, SlideInOut, SlideInOutState},
-    molecules::{Footer, Header},
+    molecules::Header,
+    pages::Page,
     starscape::State,
 };
 
@@ -18,15 +19,17 @@ pub fn About(state: Signal<State>) -> View {
     });
 
     view! {
-        div(class="w-screen h-screen flex flex-col items-center") {
-            SlideInOut(state=*slide) {
-                Header(
-                    return_delay_ms=400,
-                    return_callback=move || {
-                        slide.set(SlideInOutState::Right);
-                        state.set(State::Right);
-                    }
-                )
+        Page() {
+            div(class="z-1 sticky top-0") {
+                SlideInOut(state=*slide) {
+                    Header(
+                        return_delay_ms=400,
+                        return_callback=move || {
+                            slide.set(SlideInOutState::Right);
+                            state.set(State::Right);
+                        }
+                    )
+                }
             }
             div(class="grow flex flex-col justify-evenly items-center") {
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
@@ -40,7 +43,6 @@ pub fn About(state: Signal<State>) -> View {
                     AboutText()
                 }
             }
-            Footer()
         }
     }
 }

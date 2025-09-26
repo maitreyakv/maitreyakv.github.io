@@ -4,7 +4,8 @@ use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 
 use crate::atoms::{SlideInOut, SlideInOutState};
-use crate::molecules::{FancyHandleText, Footer, Header};
+use crate::molecules::{FancyHandleText, Header};
+use crate::pages::Page;
 use crate::starscape::State;
 
 #[component(inline_props)]
@@ -16,15 +17,17 @@ pub fn NotFound(state: Signal<State>) -> View {
     });
 
     view! {
-        div(class="w-screen h-screen flex flex-col") {
-            SlideInOut(state=*slide) {
-                Header(
-                    return_delay_ms=400,
-                    return_callback=move || {
-                        slide.set(SlideInOutState::Right);
-                        state.set(State::Right);
-                    },
-                )
+        Page() {
+            div(class="z-1 sticky top-0") {
+                SlideInOut(state=*slide) {
+                    Header(
+                        return_delay_ms=400,
+                        return_callback=move || {
+                            slide.set(SlideInOutState::Right);
+                            state.set(State::Right);
+                        },
+                    )
+                }
             }
             div(class="grow flex flex-col gap-y-8 justify-center items-center") {
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
@@ -38,7 +41,6 @@ pub fn NotFound(state: Signal<State>) -> View {
                     }
                 }
             }
-            Footer()
         }
     }
 }

@@ -15,7 +15,9 @@ fn main() {
 fn App() -> View {
     let state = create_signal(site::starscape::State::Down);
     view! {
-        Starscape(state=*state)
+        div(class="-z-1") {
+            Starscape(state=*state)
+        }
         Router(
             integration=HistoryIntegration::new(),
             view=move |route| view! {

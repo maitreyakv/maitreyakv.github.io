@@ -1,19 +1,14 @@
 use std::{
     cell::OnceCell,
-    path::Path,
     rc::Rc,
     sync::{Arc, Mutex},
 };
 
 use derive_builder::Builder;
-use gloo::{
-    events::EventListener,
-    render::{AnimationFrame, request_animation_frame},
-    timers::callback::Interval,
-};
+use gloo::{events::EventListener, render::request_animation_frame};
 use rand::{Rng, SeedableRng, seq::IndexedRandom};
-use sycamore::{prelude::*, web::tags::SvgAnimate};
-use web_sys::{Element, HtmlElement, SvgAnimateElement, SvgCircleElement, wasm_bindgen::JsCast};
+use sycamore::prelude::*;
+use web_sys::{Element, wasm_bindgen::JsCast};
 
 use crate::utils::WindowDims;
 
@@ -28,20 +23,8 @@ pub fn Starscape(state: ReadSignal<State>) -> View {
             window_dims.set(WindowDims::now());
         }));
 
-    // TEMP: For testing
-    //let state = create_signal(State::Down);
-    //create_signal(Interval::new(2_000, move || {
-    //    state.update(|val| {
-    //        *val = match val {
-    //            State::Down => State::Left,
-    //            State::Right => State::Down,
-    //            State::Left => State::Down,
-    //        }
-    //    });
-    //}));
-
     view! {
-        div(class="fixed bg-black -z-999") {
+        div(class="fixed bg-black") {
             svg(height="100vh", width="100vw", xmlns="http://www.w3.org/2000/svg") {
                 (move || StarController::new(window_dims.get()).view(state))
             }
@@ -138,68 +121,73 @@ impl Star {
     }
 
     fn update_position(&mut self) {
-        (self.x, self.y) = self.get_position();
+        let element = self.node_ref.get().dyn_into::<Element>().unwrap();
+        let rect = element.get_bounding_client_rect();
+        self.x = 0.5 * (rect.left() + rect.right());
+        self.y = 0.5 * (rect.top() + rect.bottom());
     }
 
     fn set(&self, t: f64, state: &State) {
-        let element = self.get_element();
-        let element2_orig = element.first_child().unwrap();
-        let element2 = element2_orig
+        let circle = self.node_ref.get().dyn_into::<Element>().unwrap();
+        let animate = circle.first_child().unwrap();
+        let animate_new = animate
             .clone_node_with_deep(false)
             .unwrap()
             .dyn_into::<Element>()
             .unwrap();
         let base_speed = self.speed();
         match state {
-            State::Down => {
-                element.set_attribute("cx", &self.x.to_string()).unwrap();
-                element2.set_attribute("from", "0%").unwrap();
-                element2.set_attribute("to", "100%").unwrap();
-                element2.set_attribute("attributeName", "cy").unwrap();
-                let dur = 0.001 * self.window_dims.height / base_speed;
-                element2.set_attribute("dur", &dur.to_string()).unwrap();
-                let mut start = -1.0 * self.y / base_speed;
-                start = 0.001 * (start + t);
-                element2.set_attribute("begin", &start.to_string()).unwrap();
-            }
-            State::Right => {
-                element.set_attribute("cy", &self.y.to_string()).unwrap();
-                element2.set_attribute("from", "0%").unwrap();
-                element2.set_attribute("to", "100%").unwrap();
-                element2.set_attribute("attributeName", "cx").unwrap();
-                let speed = 10. * base_speed;
-                let dur = 0.001 * self.window_dims.width / speed;
-                element2.set_attribute("dur", &dur.to_string()).unwrap();
-                let mut start = -1.0 * self.x / speed;
-                start = 0.001 * (start + t);
-                element2.set_attribute("begin", &start.to_string()).unwrap();
-            }
             State::Left => {
-                element.set_attribute("cy", &self.y.to_string()).unwrap();
-                element2.set_attribute("from", "100%").unwrap();
-                element2.set_attribute("to", "0%").unwrap();
-                element2.set_attribute("attributeName", "cx").unwrap();
-                let speed = 10. * base_speed;
-                let dur = 0.001 * self.window_dims.width / speed;
-                element2.set_attribute("dur", &dur.to_string()).unwrap();
-                let mut start = -1.0 * (self.window_dims.width - self.x) / speed;
-                start = 0.001 * (start + t);
-                element2.set_attribute("begin", &start.to_string()).unwrap();
+                animate_new.set_attribute("from", "100%").unwrap();
+                animate_new.set_attribute("to", "0%").unwrap();
+            }
+            State::Right | State::Down => {
+                animate_new.set_attribute("from", "0%").unwrap();
+                animate_new.set_attribute("to", "100%").unwrap();
+            }
+        };
+        match state {
+            State::Right | State::Left => {
+                circle.set_attribute("cy", &self.y.to_string()).unwrap();
+                animate_new.set_attribute("attributeName", "cx").unwrap();
+            }
+            State::Down => {
+                circle.set_attribute("cx", &self.x.to_string()).unwrap();
+                animate_new.set_attribute("attributeName", "cy").unwrap();
             }
         }
-        element.replace_child(&element2, &element2_orig).unwrap();
-    }
-
-    fn get_element(&self) -> SvgCircleElement {
-        self.node_ref.get().dyn_into().unwrap()
-    }
-
-    fn get_position(&self) -> (f64, f64) {
-        let element = self.node_ref.get().dyn_into::<Element>().unwrap();
-        let rect = element.get_bounding_client_rect();
-        let x = 0.5 * (rect.left() + rect.right());
-        let y = 0.5 * (rect.top() + rect.bottom());
-        (x, y)
+        match state {
+            State::Down => {
+                let dur = 0.001 * self.window_dims.height / base_speed;
+                animate_new.set_attribute("dur", &dur.to_string()).unwrap();
+                let mut start = -1.0 * self.y / base_speed;
+                start = 0.001 * (start + t);
+                animate_new
+                    .set_attribute("begin", &start.to_string())
+                    .unwrap();
+            }
+            State::Right => {
+                let speed = 10. * base_speed;
+                let dur = 0.001 * self.window_dims.width / speed;
+                animate_new.set_attribute("dur", &dur.to_string()).unwrap();
+                let mut start = -1.0 * self.x / speed;
+                start = 0.001 * (start + t);
+                animate_new
+                    .set_attribute("begin", &start.to_string())
+                    .unwrap();
+            }
+            State::Left => {
+                let speed = 10. * base_speed;
+                let dur = 0.001 * self.window_dims.width / speed;
+                animate_new.set_attribute("dur", &dur.to_string()).unwrap();
+                let mut start = -1.0 * (self.window_dims.width - self.x) / speed;
+                start = 0.001 * (start + t);
+                animate_new
+                    .set_attribute("begin", &start.to_string())
+                    .unwrap();
+            }
+        }
+        circle.replace_child(&animate_new, &animate).unwrap();
     }
 
     fn radius(&self) -> f64 {

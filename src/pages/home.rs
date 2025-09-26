@@ -6,7 +6,8 @@ use sycamore_router::navigate;
 
 use crate::{
     atoms::{ExtrudedText, SlideInOut, SlideInOutState},
-    molecules::{FancyHandleText, Footer},
+    molecules::FancyHandleText,
+    pages::Page,
     starscape::State,
 };
 
@@ -19,7 +20,7 @@ pub fn Home(state: Signal<State>) -> View {
     });
 
     view! {
-        div(class="w-screen h-screen flex flex-col items-center") {
+        Page() {
             div(class="grow flex flex-col justify-left items-center") {
                 SlideInOut(state=*slide) {
                     div(class="mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {
@@ -60,7 +61,6 @@ pub fn Home(state: Signal<State>) -> View {
                     ) { "Projects" }
                 }
             }
-            Footer()
         }
     }
 }
@@ -96,7 +96,7 @@ fn ProfilePhoto() -> View {
     view! {
         div(class="flex justify-center items-center") {
             img(
-                class="z-10 absolute w-48 md:w-64 rounded-full",
+                class="z-1 absolute w-48 md:w-64 rounded-full",
                 src="assets/face.jpeg",
                 alt="A picture of my face",
             )
