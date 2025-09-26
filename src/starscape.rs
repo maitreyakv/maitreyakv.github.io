@@ -1,8 +1,4 @@
-use std::{
-    cell::OnceCell,
-    rc::Rc,
-    sync::{Arc, Mutex},
-};
+use std::sync::{Arc, Mutex, OnceLock};
 
 use derive_builder::Builder;
 use gloo::{events::EventListener, render::request_animation_frame};
@@ -14,6 +10,7 @@ use crate::utils::WindowDims;
 
 const STAR_COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
 const STAR_DENSITY: f64 = 0.00075; // stars per square pixel
+const HORIZONTAL_SPEED_MULT: f64 = 10.0;
 
 #[component(inline_props)]
 pub fn Starscape(state: ReadSignal<State>) -> View {
@@ -38,6 +35,8 @@ pub enum State {
     Right,
     Left,
 }
+
+static SVG_ANIMATION_START_TIME: OnceLock<f64> = OnceLock::new();
 
 #[derive(Clone)]
 struct StarController {
@@ -76,18 +75,18 @@ impl StarController {
 
         let frame = create_signal(request_animation_frame(|_| {}));
         on_mount(move || {
-            let t_start = Rc::new(OnceCell::new());
             create_effect(move || {
                 let state = state.get();
                 let stars = self.stars.clone();
-                let t_start = t_start.clone();
-                frame.set(request_animation_frame(move |t| {
-                    for star in stars.lock().unwrap().iter_mut() {
-                        star.update_position();
-                    }
-                    let t_start = t_start.get_or_init(|| t);
-                    for star in stars.lock().unwrap().iter() {
-                        star.set(t - t_start, &state);
+                frame.set(request_animation_frame({
+                    move |t| {
+                        for star in stars.lock().unwrap().iter_mut() {
+                            star.update_position();
+                        }
+                        for star in stars.lock().unwrap().iter() {
+                            let t_corrected = t - SVG_ANIMATION_START_TIME.get_or_init(|| t);
+                            star.set(t_corrected, &state);
+                        }
                     }
                 }))
             })
@@ -167,21 +166,21 @@ impl Star {
                     .unwrap();
             }
             State::Right => {
-                let speed = 10. * base_speed;
+                let speed = HORIZONTAL_SPEED_MULT * base_speed;
                 let dur = 0.001 * self.window_dims.width / speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
                 let mut start = -1.0 * self.x / speed;
-                start = 0.001 * (start + t);
+                start = 0.001 * (start + t - 100.);
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
             }
             State::Left => {
-                let speed = 10. * base_speed;
+                let speed = HORIZONTAL_SPEED_MULT * base_speed;
                 let dur = 0.001 * self.window_dims.width / speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
                 let mut start = -1.0 * (self.window_dims.width - self.x) / speed;
-                start = 0.001 * (start + t);
+                start = 0.001 * (start + t - 100.);
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();

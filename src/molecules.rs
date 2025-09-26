@@ -47,6 +47,7 @@ pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static
     }
 }
 
+// TODO: Add copyright statement
 #[component]
 pub fn Footer() -> View {
     view! {
