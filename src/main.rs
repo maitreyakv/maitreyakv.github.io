@@ -14,7 +14,6 @@ fn main() {
 #[component]
 fn App() -> View {
     let state = create_signal(site::starscape::State::Down);
-
     view! {
         div(class="-z-1") {
             Starscape(state=*state)

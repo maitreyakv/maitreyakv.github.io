@@ -23,7 +23,7 @@ pub fn Home(state: Signal<State>) -> View {
         Page() {
             div(class="grow flex flex-col justify-left items-center") {
                 SlideInOut(state=*slide) {
-                    div(class="mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {
+                    div(class="mt-10 md:mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {
                         FancyHandleText() { "@maitreyakv" }
                     }
                 }

@@ -10,7 +10,8 @@ use crate::utils::WindowDims;
 
 const STAR_COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
 const STAR_DENSITY: f64 = 0.00075; // stars per square pixel
-const HORIZONTAL_SPEED_MULT: f64 = 10.0;
+const HORIZONTAL_SPEED_MULT: f64 = 7.5;
+const TRANSITION_HEAD_START: f64 = 100.; // milliseconds
 
 #[component(inline_props)]
 pub fn Starscape(state: ReadSignal<State>) -> View {
@@ -113,7 +114,14 @@ impl Star {
         let x = self.x.to_string();
         let y = self.y.to_string();
         view! {
-            circle(r#ref=self.node_ref, r=radius, fill=self.color, cx=x, cy=y) {
+            circle(
+                r#ref=self.node_ref,
+                r=radius,
+                fill=self.color,
+                cx=x,
+                cy=y,
+                transformOrigin="center"
+            ) {
                 animate(repeatCount="indefinite")
             }
         }
@@ -160,7 +168,7 @@ impl Star {
                 let dur = 0.001 * self.window_dims.height / base_speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
                 let mut start = -1.0 * self.y / base_speed;
-                start = 0.001 * (start + t);
+                start = 0.001 * (start + t - TRANSITION_HEAD_START);
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
@@ -170,7 +178,7 @@ impl Star {
                 let dur = 0.001 * self.window_dims.width / speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
                 let mut start = -1.0 * self.x / speed;
-                start = 0.001 * (start + t - 100.);
+                start = 0.001 * (start + t - TRANSITION_HEAD_START);
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
@@ -180,7 +188,7 @@ impl Star {
                 let dur = 0.001 * self.window_dims.width / speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
                 let mut start = -1.0 * (self.window_dims.width - self.x) / speed;
-                start = 0.001 * (start + t - 100.);
+                start = 0.001 * (start + t - TRANSITION_HEAD_START);
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
