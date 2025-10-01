@@ -146,7 +146,7 @@ fn OtherSkillsText() -> View {
                       ", and I've used " b() { "Prefect" } " regularly for orchestration." }
                 p() { "I've done cloud engineering work in both " b() { "GCP" } " and " b() { "AWS" } ", and I'm comfortable "
                       "working with " b() { "Docker" } " and " b() { "Kubernetes"} "." }
-                p() { "In addition to " b() { "Python" } " and " b() { "Rust" } ", I also have some " b() { "Javascript" }
+                p() { "In addition to " b() { "Python" } " and " b() { "Rust" } ", I also have " b() { "Javascript" }
                       " experience for frontend development, primarily in " b() { "React" } "." }
                 p() { "Additionally, I have experience with tasks like gathering requirements for software systems "
                       "and translating scientific R&D algorithms and pipelines into production software." }
