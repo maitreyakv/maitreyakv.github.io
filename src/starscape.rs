@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex, OnceLock};
+use std::sync::{Arc, Mutex};
 
 use derive_builder::Builder;
 use gloo::{events::EventListener, render::request_animation_frame};
@@ -10,8 +10,7 @@ use crate::utils::WindowDims;
 
 const STAR_COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
 const STAR_DENSITY: f64 = 0.00075; // stars per square pixel
-const HORIZONTAL_SPEED_MULT: f64 = 7.5;
-const TRANSITION_HEAD_START: f64 = 100.; // milliseconds
+const HORIZONTAL_SPEED_MULT: f64 = 50.;
 
 #[component(inline_props)]
 pub fn Starscape(state: ReadSignal<State>) -> View {
@@ -36,8 +35,6 @@ pub enum State {
     Right,
     Left,
 }
-
-static SVG_ANIMATION_START_TIME: OnceLock<f64> = OnceLock::new();
 
 #[derive(Clone)]
 struct StarController {
@@ -80,13 +77,9 @@ impl StarController {
                 let state = state.get();
                 let stars = self.stars.clone();
                 frame.set(request_animation_frame({
-                    move |t| {
-                        for star in stars.lock().unwrap().iter_mut() {
-                            star.update_position();
-                        }
+                    move |_t| {
                         for star in stars.lock().unwrap().iter() {
-                            let t_corrected = t - SVG_ANIMATION_START_TIME.get_or_init(|| t);
-                            star.set(t_corrected, &state);
+                            star.set(&state);
                         }
                     }
                 }))
@@ -110,13 +103,15 @@ struct Star {
 }
 impl Star {
     fn view(&self) -> View {
-        let radius = self.radius().to_string();
+        let rx = self.radius().to_string();
+        let ry = self.radius().to_string();
         let x = self.x.to_string();
         let y = self.y.to_string();
         view! {
-            circle(
+            ellipse(
                 r#ref=self.node_ref,
-                r=radius,
+                rx=rx,
+                ry=ry,
                 fill=self.color,
                 cx=x,
                 cy=y,
@@ -127,16 +122,9 @@ impl Star {
         }
     }
 
-    fn update_position(&mut self) {
-        let element = self.node_ref.get().dyn_into::<Element>().unwrap();
-        let rect = element.get_bounding_client_rect();
-        self.x = 0.5 * (rect.left() + rect.right());
-        self.y = 0.5 * (rect.top() + rect.bottom());
-    }
-
-    fn set(&self, t: f64, state: &State) {
-        let circle = self.node_ref.get().dyn_into::<Element>().unwrap();
-        let animate = circle.first_child().unwrap();
+    fn set(&self, state: &State) {
+        let ellipse = self.node_ref.get().dyn_into::<Element>().unwrap();
+        let animate = ellipse.first_child().unwrap();
         let animate_new = animate
             .clone_node_with_deep(false)
             .unwrap()
@@ -155,20 +143,29 @@ impl Star {
         };
         match state {
             State::Right | State::Left => {
-                circle.set_attribute("cy", &self.y.to_string()).unwrap();
                 animate_new.set_attribute("attributeName", "cx").unwrap();
+                ellipse
+                    .set_attribute("rx", &(20.0 * self.radius()).to_string())
+                    .unwrap();
+                ellipse
+                    .set_attribute("ry", &(0.5 * self.radius()).to_string())
+                    .unwrap();
             }
             State::Down => {
-                circle.set_attribute("cx", &self.x.to_string()).unwrap();
                 animate_new.set_attribute("attributeName", "cy").unwrap();
+                ellipse
+                    .set_attribute("rx", &self.radius().to_string())
+                    .unwrap();
+                ellipse
+                    .set_attribute("ry", &self.radius().to_string())
+                    .unwrap();
             }
         }
         match state {
             State::Down => {
                 let dur = 0.001 * self.window_dims.height / base_speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
-                let mut start = -1.0 * self.y / base_speed;
-                start = 0.001 * (start + t - TRANSITION_HEAD_START);
+                let start = -0.001 * self.y / base_speed;
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
@@ -177,8 +174,7 @@ impl Star {
                 let speed = HORIZONTAL_SPEED_MULT * base_speed;
                 let dur = 0.001 * self.window_dims.width / speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
-                let mut start = -1.0 * self.x / speed;
-                start = 0.001 * (start + t - TRANSITION_HEAD_START);
+                let start = -0.001 * self.x / speed;
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
@@ -187,14 +183,13 @@ impl Star {
                 let speed = HORIZONTAL_SPEED_MULT * base_speed;
                 let dur = 0.001 * self.window_dims.width / speed;
                 animate_new.set_attribute("dur", &dur.to_string()).unwrap();
-                let mut start = -1.0 * (self.window_dims.width - self.x) / speed;
-                start = 0.001 * (start + t - TRANSITION_HEAD_START);
+                let start = -0.001 * (self.window_dims.width - self.x) / speed;
                 animate_new
                     .set_attribute("begin", &start.to_string())
                     .unwrap();
             }
         }
-        circle.replace_child(&animate_new, &animate).unwrap();
+        ellipse.replace_child(&animate_new, &animate).unwrap();
     }
 
     fn radius(&self) -> f64 {
