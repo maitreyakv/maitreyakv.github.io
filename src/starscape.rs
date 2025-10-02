@@ -1,6 +1,5 @@
 use std::sync::{Arc, Mutex};
 
-use derive_builder::Builder;
 use gloo::{events::EventListener, render::request_animation_frame};
 use rand::{Rng, SeedableRng, seq::IndexedRandom};
 use sycamore::prelude::*;
@@ -17,10 +16,12 @@ const HORIZONTAL_SPEED_MULT: f64 = 15.;
 #[component(inline_props)]
 pub fn Starscape(state: ReadSignal<State>) -> View {
     let window_dims = create_signal(WindowDims::now());
-    let _resize_listener_handle =
-        create_signal(EventListener::new(&window(), "resize", move |_event| {
-            window_dims.set(WindowDims::now());
-        }));
+    let listener = EventListener::new(&window(), "resize", move |_event| {
+        window_dims.set(WindowDims::now());
+    });
+    on_cleanup(|| {
+        drop(listener);
+    });
 
     let star_controller =
         create_memo(move || Arc::new(Mutex::new(StarController::new(window_dims.get()))));
@@ -80,14 +81,11 @@ impl StarController {
         let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
         let n_stars = (window_dims.area() * STAR_DENSITY) as i64;
         let stars = (0..n_stars)
-            .map(move |_| {
-                StarBuilder::default()
-                    .x(rng.random_range(0.0..=window_dims.width))
-                    .y(rng.random_range(0.0..=window_dims.height))
-                    .depth(rng.random_range(0.0..=1.0))
-                    .color(STAR_COLORS.choose(&mut rng).unwrap())
-                    .build()
-                    .unwrap()
+            .map(move |_| Star {
+                x: rng.random_range(0.0..=window_dims.width),
+                y: rng.random_range(0.0..=window_dims.height),
+                depth: rng.random_range(0.0..=1.0),
+                color: STAR_COLORS.choose(&mut rng).unwrap(),
             })
             .collect::<Vec<Star>>();
         Self { stars, window_dims }
@@ -120,7 +118,7 @@ impl StarController {
     }
 }
 
-#[derive(Builder, Clone, Debug)]
+#[derive(Clone, Debug)]
 struct Star {
     x: f64,
     y: f64,
