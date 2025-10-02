@@ -129,9 +129,12 @@ fn AboutText() -> View {
                     "Howdy, I'm Maitreya Venkataswamy!"
                 }
                 div(class="md:text-xl") {
-                    "I'm pursuing a career in software development, but I come from a "
-                    "scientific/engineering background and I love working on problems in "
-                    "those kinds of domains."
+                    "I'm a software developer based in Boston, currently working in "
+                    "the biotechnology industry."
+                }
+                div(class="md:text-xl") {
+                    "I come from a scientific/engineering background and I love "
+                    "working on software problems in those kinds of domains."
                 }
                 div(class="md:text-xl") {
                     "I enjoy hiking, playing videogames, reading science "

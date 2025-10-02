@@ -23,42 +23,45 @@ pub fn Home(state: Signal<State>) -> View {
         Page() {
             div(class="grow flex flex-col justify-left items-center") {
                 SlideInOut(state=*slide) {
-                    div(class="mt-10 md:mt-16 mb-16 md:mb-20 text-7xl md:text-9xl ") {
+                    div(class="mt-4 mb-16 md:mb-20 text-7xl md:text-9xl ") {
                         FancyHandleText() { "@maitreyakv" }
                     }
                 }
-                SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    ProfilePhoto()
-                }
-                div(class="grow flex flex-col justify-center items-center gap-y-6 md:gap-y-8 text-5xl md:text-7xl") {
-                    PageLink(
-                        slide=slide,
-                        state=state,
-                        delay_ms=100,
-                        url="/about",
-                        color="var(--color-1)"
-                    ) { "About" }
-                    PageLink(
-                        slide=slide,
-                        state=state,
-                        delay_ms=150,
-                        url="/skills",
-                        color="var(--color-2)"
-                    ) { "Skills" }
-                    PageLink(
-                        slide=slide,
-                        state=state,
-                        delay_ms=200,
-                        url="/career",
-                        color="var(--color-4)"
-                    ) { "Career" }
-                    PageLink(
-                        slide=slide,
-                        state=state,
-                        delay_ms=250,
-                        url="/projects",
-                        color="var(--color-5)"
-                    ) { "Projects" }
+                div(class="w-full flex flex-col md:flex-row gap-y-12 justify-between items-center") {
+                    SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
+                        ProfilePhoto()
+                    }
+                    div(class=r#"flex flex-col justify-center text-center md:text-left
+                                 gap-y-6 text-5xl md:text-7xl"#) {
+                        PageLink(
+                            slide=slide,
+                            state=state,
+                            delay_ms=100,
+                            url="/about",
+                            color="var(--color-1)"
+                        ) { "About" }
+                        PageLink(
+                            slide=slide,
+                            state=state,
+                            delay_ms=150,
+                            url="/skills",
+                            color="var(--color-2)"
+                        ) { "Skills" }
+                        PageLink(
+                            slide=slide,
+                            state=state,
+                            delay_ms=200,
+                            url="/career",
+                            color="var(--color-4)"
+                        ) { "Career" }
+                        PageLink(
+                            slide=slide,
+                            state=state,
+                            delay_ms=250,
+                            url="/projects",
+                            color="var(--color-5)"
+                        ) { "Projects" }
+                    }
                 }
             }
         }
