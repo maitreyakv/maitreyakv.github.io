@@ -4,13 +4,15 @@ use derive_builder::Builder;
 use gloo::{events::EventListener, render::request_animation_frame};
 use rand::{Rng, SeedableRng, seq::IndexedRandom};
 use sycamore::prelude::*;
-use web_sys::{Element, wasm_bindgen::JsCast};
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, wasm_bindgen::JsCast};
 
-use crate::utils::WindowDims;
+use crate::utils::{WindowDims, request_animation_frame_loop};
+
+const TWO_PI: f64 = 2. * std::f64::consts::PI;
 
 const STAR_COLORS: [&str; 5] = ["#a4c2ff", "#cadaff", "#fff6ed", "#ffcea6", "#ffb16e"];
 const STAR_DENSITY: f64 = 0.00075; // stars per square pixel
-const HORIZONTAL_SPEED_MULT: f64 = 50.;
+const HORIZONTAL_SPEED_MULT: f64 = 15.;
 
 #[component(inline_props)]
 pub fn Starscape(state: ReadSignal<State>) -> View {
@@ -20,12 +22,44 @@ pub fn Starscape(state: ReadSignal<State>) -> View {
             window_dims.set(WindowDims::now());
         }));
 
+    let star_controller =
+        create_memo(move || Arc::new(Mutex::new(StarController::new(window_dims.get()))));
+
+    let node_ref = create_node_ref();
+    let handle = create_signal(request_animation_frame(|_| {}));
+    let t_last = create_signal(0.);
+
+    on_mount(move || {
+        let canvas_ctx = node_ref
+            .get()
+            .dyn_into::<HtmlCanvasElement>()
+            .unwrap()
+            .get_context("2d")
+            .unwrap()
+            .unwrap()
+            .dyn_into::<CanvasRenderingContext2d>()
+            .unwrap();
+        request_animation_frame_loop(
+            move |t| {
+                let star_controller = star_controller.get_clone();
+                let mut star_controller = star_controller.lock().unwrap();
+                let window_dims = window_dims.get();
+                let state = state.get();
+                canvas_ctx.clear_rect(0., 0., window_dims.width, window_dims.height);
+                star_controller.step(t - t_last.get(), &canvas_ctx, &state);
+                t_last.set(t);
+            },
+            handle,
+        );
+    });
+
     view! {
-        div(class="fixed bg-black") {
-            svg(height="100vh", width="100vw", xmlns="http://www.w3.org/2000/svg") {
-                (move || StarController::new(window_dims.get()).view(state))
-            }
-        }
+        canvas(
+            r#ref=node_ref,
+            class="fixed bg-black",
+            height=move || window_dims.get().height.to_string(),
+            width=move || window_dims.get().width.to_string()
+        )
     }
 }
 
@@ -36,9 +70,10 @@ pub enum State {
     Left,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct StarController {
-    stars: Arc<Mutex<Vec<Star>>>,
+    stars: Vec<Star>,
+    window_dims: WindowDims,
 }
 impl StarController {
     fn new(window_dims: WindowDims) -> Self {
@@ -51,145 +86,71 @@ impl StarController {
                     .y(rng.random_range(0.0..=window_dims.height))
                     .depth(rng.random_range(0.0..=1.0))
                     .color(STAR_COLORS.choose(&mut rng).unwrap())
-                    .node_ref(create_node_ref())
-                    .window_dims(window_dims)
                     .build()
                     .unwrap()
             })
             .collect::<Vec<Star>>();
-        Self {
-            stars: Arc::new(Mutex::new(stars)),
-        }
+        Self { stars, window_dims }
     }
 
-    fn view(self, state: ReadSignal<State>) -> View {
-        let views = self
-            .stars
-            .lock()
-            .unwrap()
-            .iter()
-            .map(|star| star.view())
-            .collect::<Vec<View>>();
-
-        let frame = create_signal(request_animation_frame(|_| {}));
-        on_mount(move || {
-            create_effect(move || {
-                let state = state.get();
-                let stars = self.stars.clone();
-                frame.set(request_animation_frame({
-                    move |_t| {
-                        for star in stars.lock().unwrap().iter() {
-                            star.set(&state);
-                        }
-                    }
-                }))
-            })
-        });
-
-        view! {
-            (views)
+    fn step(&mut self, dt: f64, ctx: &CanvasRenderingContext2d, state: &State) {
+        match state {
+            State::Down => {
+                for star in self.stars.iter_mut() {
+                    star.y += star.speed() * dt;
+                    star.y = star.y.rem_euclid(self.window_dims.height);
+                    star.draw_as_circle(ctx);
+                }
+            }
+            State::Left => {
+                for star in self.stars.iter_mut() {
+                    star.x -= HORIZONTAL_SPEED_MULT * star.speed() * dt;
+                    star.x = star.x.rem_euclid(self.window_dims.width);
+                    star.draw_as_ellipse(ctx);
+                }
+            }
+            State::Right => {
+                for star in self.stars.iter_mut() {
+                    star.x += HORIZONTAL_SPEED_MULT * star.speed() * dt;
+                    star.x = star.x.rem_euclid(self.window_dims.width);
+                    star.draw_as_ellipse(ctx);
+                }
+            }
         }
     }
 }
 
-#[derive(Builder, Clone)]
+#[derive(Builder, Clone, Debug)]
 struct Star {
     x: f64,
     y: f64,
     depth: f64,
     color: &'static str,
-    node_ref: NodeRef,
-    window_dims: WindowDims,
 }
 impl Star {
-    fn view(&self) -> View {
-        let rx = self.radius().to_string();
-        let ry = self.radius().to_string();
-        let x = self.x.to_string();
-        let y = self.y.to_string();
-        view! {
-            ellipse(
-                r#ref=self.node_ref,
-                rx=rx,
-                ry=ry,
-                fill=self.color,
-                cx=x,
-                cy=y,
-                transformOrigin="center"
-            ) {
-                animate(repeatCount="indefinite")
-            }
-        }
+    fn draw_as_circle(&self, ctx: &CanvasRenderingContext2d) {
+        ctx.begin_path();
+        ctx.arc(self.x, self.y, self.radius(), 0., TWO_PI).unwrap();
+        ctx.set_fill_style_str(self.color);
+        ctx.fill();
+        ctx.close_path();
     }
 
-    fn set(&self, state: &State) {
-        let ellipse = self.node_ref.get().dyn_into::<Element>().unwrap();
-        let animate = ellipse.first_child().unwrap();
-        let animate_new = animate
-            .clone_node_with_deep(false)
-            .unwrap()
-            .dyn_into::<Element>()
-            .unwrap();
-        let base_speed = self.speed();
-        match state {
-            State::Left => {
-                animate_new.set_attribute("from", "100%").unwrap();
-                animate_new.set_attribute("to", "0%").unwrap();
-            }
-            State::Right | State::Down => {
-                animate_new.set_attribute("from", "0%").unwrap();
-                animate_new.set_attribute("to", "100%").unwrap();
-            }
-        };
-        match state {
-            State::Right | State::Left => {
-                animate_new.set_attribute("attributeName", "cx").unwrap();
-                ellipse
-                    .set_attribute("rx", &(20.0 * self.radius()).to_string())
-                    .unwrap();
-                ellipse
-                    .set_attribute("ry", &(0.5 * self.radius()).to_string())
-                    .unwrap();
-            }
-            State::Down => {
-                animate_new.set_attribute("attributeName", "cy").unwrap();
-                ellipse
-                    .set_attribute("rx", &self.radius().to_string())
-                    .unwrap();
-                ellipse
-                    .set_attribute("ry", &self.radius().to_string())
-                    .unwrap();
-            }
-        }
-        match state {
-            State::Down => {
-                let dur = 0.001 * self.window_dims.height / base_speed;
-                animate_new.set_attribute("dur", &dur.to_string()).unwrap();
-                let start = -0.001 * self.y / base_speed;
-                animate_new
-                    .set_attribute("begin", &start.to_string())
-                    .unwrap();
-            }
-            State::Right => {
-                let speed = HORIZONTAL_SPEED_MULT * base_speed;
-                let dur = 0.001 * self.window_dims.width / speed;
-                animate_new.set_attribute("dur", &dur.to_string()).unwrap();
-                let start = -0.001 * self.x / speed;
-                animate_new
-                    .set_attribute("begin", &start.to_string())
-                    .unwrap();
-            }
-            State::Left => {
-                let speed = HORIZONTAL_SPEED_MULT * base_speed;
-                let dur = 0.001 * self.window_dims.width / speed;
-                animate_new.set_attribute("dur", &dur.to_string()).unwrap();
-                let start = -0.001 * (self.window_dims.width - self.x) / speed;
-                animate_new
-                    .set_attribute("begin", &start.to_string())
-                    .unwrap();
-            }
-        }
-        ellipse.replace_child(&animate_new, &animate).unwrap();
+    fn draw_as_ellipse(&self, ctx: &CanvasRenderingContext2d) {
+        ctx.begin_path();
+        ctx.ellipse(
+            self.x,
+            self.y,
+            10. * self.radius(),
+            0.2 * self.radius(),
+            0.,
+            0.,
+            TWO_PI,
+        )
+        .unwrap();
+        ctx.set_fill_style_str(self.color);
+        ctx.fill();
+        ctx.close_path();
     }
 
     fn radius(&self) -> f64 {
