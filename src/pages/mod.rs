@@ -19,11 +19,13 @@ use crate::molecules::Footer;
 #[component(inline_props)]
 fn Page(#[prop(setter(into))] children: Children) -> View {
     view! {
-        div(class="w-screen h-screen flex flex-col items-center") {
-            // TOOD: Lift Header up from pages (in children) to here
-            (children)
-            div(class="sticky bottom-0") {
-                Footer()
+        div(class="w-screen h-screen flex justify-center") {
+            div(class="w-full max-w-300 flex flex-col items-center") {
+                // TOOD: Lift Header up from pages (in children) to here
+                (children)
+                div(class="w-full sticky bottom-0 p-4") {
+                    Footer()
+                }
             }
         }
     }

@@ -141,7 +141,7 @@ impl Star {
         ctx.ellipse(
             self.x,
             self.y,
-            10. * self.radius(),
+            15. * self.radius(),
             0.2 * self.radius(),
             0.,
             0.,

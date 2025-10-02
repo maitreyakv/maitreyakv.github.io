@@ -20,7 +20,7 @@
 }
 
 body, html {
-  @apply font-public font-bold p-0 m-0 text-gray-200
+  @apply font-public m-0 text-gray-200
 }
 
 a {

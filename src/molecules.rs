@@ -1,3 +1,4 @@
+use chrono::Datelike;
 use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 use sycamore_router::navigate;
@@ -17,7 +18,7 @@ pub fn FancyHandleText(#[prop(setter(into))] children: Children) -> View {
     let style = format!("text-shadow: {text_shadow};");
 
     view! {
-        div(class="italic text-white", style=style) {
+        div(class="italic text-white font-bold", style=style) {
             (children)
         }
     }
@@ -47,23 +48,16 @@ pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static
     }
 }
 
-// TODO: Add copyright statement
 #[component]
 pub fn Footer() -> View {
     view! {
-        // TODO: Lift this up to a common Page component
-        div(class="w-screen max-w-300 p-4") {
-            Glass() {
-                div(class="p-4") {
-                    div(class="flex justify-between") {
-                        SocialLinks()
-                        a(
-                            class="text-3xl md:text-4xl",
-                            style="text-decoration: none;",
-                            href="/maitreyakv-resume.pdf",
-                            download="maitreyakv-resume.pdf",
-                            on:click=|_| {}
-                        ) { "Resume" }
+        Glass() {
+            div(class="p-4") {
+                div(class="flex flex-wrap gap-y-2 justify-between") {
+                    Socials()
+                    p() {
+                        "All rights reserved \u{00A9} Maitreya Venkataswamy "
+                        (chrono::Local::now().year().to_string())
                     }
                 }
             }
@@ -72,17 +66,49 @@ pub fn Footer() -> View {
 }
 
 #[component]
-fn SocialLinks() -> View {
+fn Socials() -> View {
     view! {
         div(class="flex gap-x-6 justify-left align-center") {
-            a(href="https://github.com/maitreyakv") {
-                img(class="w-[40px]", src="assets/github.svg", alt="The GitHub logo")
-            }
-            a(href="https://www.linkedin.com/in/maitreyakv/") {
-                img(class="w-[40px]", src="assets/linkedin.svg", alt="The Linkedin logo")
-            }
-            a(href="mailto:maitreyakv@gmail.com") {
-                img(class="w-[50px]", src="assets/email.svg", alt="An mail icon")
+            Social(
+                href="https://github.com/maitreyakv",
+                src="assets/github.svg",
+                text="GitHub"
+            )
+            Social(
+                href="https://www.linkedin.com/in/maitreyakv/",
+                src="assets/linkedin.svg",
+                text="LinkedIn"
+            )
+            Social(
+                href="mailto:maitreyakv@gmail.com",
+                src="assets/email.svg",
+                text="Email"
+            )
+            // FIXME: Need to click twice to download
+            Social(
+                href="/maitreyakv-resume.pdf",
+                src="assets/doc.svg",
+                download="maitreyakv-resume.pdf",
+                text="Resume"
+            )
+        }
+    }
+}
+
+#[component(inline_props)]
+fn Social(
+    href: &'static str,
+    src: &'static str,
+    text: &'static str,
+    download: Option<&'static str>,
+) -> View {
+    view! {
+        a(href=href, download=download) {
+            div(class="flex items-center gap-x-2") {
+                img(class="w-5", src=src)
+                p() {
+                    (text)
+                }
             }
         }
     }
