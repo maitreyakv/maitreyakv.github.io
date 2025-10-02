@@ -81,7 +81,7 @@ fn PageLink(
     };
     view! {
         SlideInOut(state=*slide, delay=Duration::from_millis(delay_ms)) {
-            div(class="hover:cursor-pointer", on:click=navigate_after_delay) {
+            div(class="hover:cursor-pointer font-bold", on:click=navigate_after_delay) {
                 ExtrudedText(color=color) {
                     (children)
                 }
