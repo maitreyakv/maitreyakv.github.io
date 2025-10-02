@@ -20,7 +20,7 @@ pub fn Skills(state: Signal<State>) -> View {
 
     view! {
         Page() {
-            div(class="z-1 sticky top-0") {
+            div(class="w-full z-1 sticky top-0") {
                 SlideInOut(state=*slide) {
                     Header(
                         return_delay_ms=450,

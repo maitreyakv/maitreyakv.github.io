@@ -32,7 +32,7 @@ pub fn SlideInOut(
         });
     });
     view! {
-        div(r#ref=node_ref) {
+        div(r#ref=node_ref, class="w-full") {
             (children)
         }
     }

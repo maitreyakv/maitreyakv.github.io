@@ -10,18 +10,16 @@ use crate::{
     starscape::State,
 };
 
-const PERSONAL_INFO_TEXT: &'static str = "let maitreya = Developer::new()
-\t.first_name(\"Maitreya\")
-\t.last_name(\"Venkataswamy\")
-\t.pronouns(\"he\", \"him\", \"his\")
-\t.location(\"Boston\")
-\t.hobbies(vec![
-\t\t\"Hiking\",
-\t\t\"Videogames\",
-\t\t\"Reading SciFi/Fantasy\",
-\t\t\"Playing w/my dog\",
-\t])
-\t.build();\n";
+const PERSONAL_INFO_TEXT: &'static str = "$ developer new \\
+\t--first-name \"Maitreya\" \\
+\t--last-name \"Venkataswamy\" \\
+\t--pronouns \"he/him/his\" \\
+\t--location \"Boston\" \\
+\t--hobby \"Hiking\" \\
+\t--hobby \"Videogames\" \\
+\t--hobby \"Reading SciFi/Fantasy\" \\
+\t--hobby \"Playing w/my dog\"
+$ ";
 
 #[component(inline_props)]
 pub fn About(state: Signal<State>) -> View {
@@ -33,7 +31,7 @@ pub fn About(state: Signal<State>) -> View {
 
     view! {
         Page() {
-            div(class="z-1 sticky top-0") {
+            div(class="w-full z-1 sticky top-0") {
                 SlideInOut(state=*slide) {
                     Header(
                         return_delay_ms=400,
@@ -44,15 +42,79 @@ pub fn About(state: Signal<State>) -> View {
                     )
                 }
             }
-            div(class="grow flex flex-col gap-y-8 items-center") {
+            div(class="w-full grow flex flex-col gap-y-8 items-center") {
                 div()
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    Terminal()
+                    Rotator()
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
-                    AboutText()
+                    div(class="flex flex-col md:flex-row md:flex-row-reverse gap-y-8 gap-x-8") {
+                        div(class="md:w-110 shrink-0") {
+                            Terminal()
+                        }
+                        AboutText()
+                    }
                 }
                 div()
+            }
+        }
+    }
+}
+
+const TEXTS: [&'static str; 4] = [
+    "Backend Development",
+    "Data Engineering",
+    "Frontend Development",
+    "Data Science",
+];
+
+const COLORS: [&'static str; 4] = [
+    "var(--color-1)",
+    "var(--color-2)",
+    "var(--color-4)",
+    "var(--color-5)",
+];
+
+#[component]
+fn Rotator() -> View {
+    let idx = create_signal(0);
+    let interval = Interval::new(2000, move || {
+        idx.update(|i| *i = (*i + 1) % TEXTS.len());
+    });
+    on_cleanup(|| drop(interval));
+
+    let views = (0..TEXTS.len())
+        .into_iter()
+        .map(|i| {
+            let pos = create_memo(move || {
+                if idx.get() == i {
+                    "current"
+                } else if (idx.get() + 1).rem_euclid(TEXTS.len()) == i {
+                    "next"
+                } else {
+                    "previous"
+                }
+            });
+
+            view! {
+                div(
+                    data-pos=pos,
+                    class=r#"absolute transition duration-500 opacity-0
+                             data-[pos=next]:translate-y-[100%]
+                             data-[pos=previous]:-translate-y-[100%]
+                             data-[pos=current]:opacity-100"#
+                ) {
+                    ExtrudedText(color=COLORS[i]) { (TEXTS[i]) }
+                }
+            }
+        })
+        .collect::<Vec<View>>();
+
+    view! {
+        div(class="flex flex-wrap gap-x-2 text-4xl md:text-5xl font-bold") {
+            "I have experience in"
+            div(class="h-10 md:h-15 w-100 md:w-140") {
+                (views)
             }
         }
     }
@@ -62,15 +124,18 @@ pub fn About(state: Signal<State>) -> View {
 fn AboutText() -> View {
     view! {
         Glass() {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
-                p() { "I'm pursuing a career in software development, but I come from a "
-                      "scientific/engineering background and I love working on problems in "
-                      "those domains."}
-                p() { "I have experience in data engineering, backend development, "
-                      "and frontend development." }
-                p() {
-                    "In my free time I enjoy hiking, playing videogames, reading science "
-                    "fiction and fantasy, and playing with my dog "
+            div(class="h-full flex flex-col justify-between gap-y-4 p-6") {
+                div(class="text-2xl font-bold") {
+                    "Howdy, I'm Maitreya Venkataswamy!"
+                }
+                div(class="md:text-xl") {
+                    "I'm pursuing a career in software development, but I come from a "
+                    "scientific/engineering background and I love working on problems in "
+                    "those kinds of domains."
+                }
+                div(class="md:text-xl") {
+                    "I enjoy hiking, playing videogames, reading science "
+                    "fiction & fantasy, and playing with my dog "
                     a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
                     "."
                 }
@@ -83,15 +148,15 @@ fn AboutText() -> View {
 #[component]
 fn Terminal() -> View {
     view! {
-        div(class="w-100 md:w-130 h-112 md:h-132 flex flex-col") {
-            div(class="w-full bg-gray-500 rounded-t-xl border-t-1 border-x-1 border-gray-600 p-2") {
-                div(class="w-full flex justify-right gap-x-2 ") {
+        div(class="flex flex-col") {
+            div(class="bg-gray-500 rounded-t-xl border-t-1 border-x-1 border-gray-600 p-2") {
+                div(class="flex gap-x-2") {
                     div(class="w-4 h-4 rounded-full bg-red-400")
                     div(class="w-4 h-4 rounded-full bg-yellow-400")
                     div(class="w-4 h-4 rounded-full bg-green-400")
                 }
             }
-            div(class="grow backdrop-blur-xs bg-[rgba(255,255,255,0.1)] rounded-b-xl border-b-1 border-x-1 border-gray-600 p-4") {
+            div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] rounded-b-xl border-b-1 border-x-1 border-gray-600 p-4") {
                 TypingCodeBlock(text=PERSONAL_INFO_TEXT)
             }
         }
@@ -101,6 +166,7 @@ fn Terminal() -> View {
 #[component(inline_props)]
 fn TypingCodeBlock(text: &'static str) -> View {
     let displayed_text = create_signal("");
+    let remaining_text = create_signal(text);
     let index = create_signal(0);
     let is_cursor_visible = create_signal(true);
 
@@ -111,6 +177,7 @@ fn TypingCodeBlock(text: &'static str) -> View {
             }
         });
         displayed_text.set(&text[0..index.get()]);
+        remaining_text.set(&text[index.get()..]);
     });
     on_cleanup(|| drop(interval));
 
@@ -122,10 +189,13 @@ fn TypingCodeBlock(text: &'static str) -> View {
     on_cleanup(|| drop(interval2));
 
     view! {
-        pre(class="font-roboto font-bold text-lg md:text-2xl") {
+        pre(class="font-roboto font-bold text-lg leading-6") {
             code() {
                 (displayed_text)
                 (if is_cursor_visible.get() {"\u{2588}"} else {" "})
+            }
+            code(class="opacity-0") {
+                (remaining_text)
             }
         }
     }

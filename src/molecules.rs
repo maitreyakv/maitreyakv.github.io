@@ -29,7 +29,7 @@ pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static
     let return_delay_ms = return_delay_ms.unwrap_or(0);
     view! {
         // TODO: Lift this up to a common Page component
-        header(class="w-screen max-w-300 p-4") {
+        header(class="w-full") {
             Glass() {
                 div(class="text-3xl md:text-5xl hover:cursor-pointer") {
                     div(
