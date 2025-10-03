@@ -9,6 +9,7 @@ use crate::{
     molecules::Header,
     pages::Page,
     starscape::State,
+    typer::{Typer, TyperStep},
 };
 
 const PERSONAL_INFO_TEXT: &'static str = "$ developer new \\
@@ -141,7 +142,7 @@ fn Terminal() -> View {
         (interval_1, interval_2)
     });
 
-    let left_string = create_memo(move || typer.get_clone().left_as_string());
+    let left_string = create_memo(move || typer.get_clone().left_as_string_with_space_for_cursor());
     let right_string = create_memo(move || typer.get_clone().right_as_string());
     view! {
         div(class="flex flex-col") {
@@ -156,6 +157,7 @@ fn Terminal() -> View {
                 pre(class="font-roboto font-bold text-lg leading-6") {
                     code() {
                         (left_string)
+                        (if typer.get_clone().is_cursor_visible() {"\u{2588}"} else {" "})
                     }
                     code(class="opacity-0") {
                         (right_string)
@@ -164,74 +166,4 @@ fn Terminal() -> View {
             }
         }
     }
-}
-
-#[derive(Debug, Clone)]
-struct Typer {
-    left: Vec<char>,
-    right: Vec<char>,
-    is_cursor_visible: bool,
-}
-impl Typer {
-    pub fn empty() -> Self {
-        Self {
-            left: Vec::new(),
-            right: Vec::new(),
-            is_cursor_visible: true,
-        }
-    }
-
-    pub fn step(self, step: TyperStep) -> Self {
-        match step {
-            TyperStep::Forward => self.step_forward(),
-            TyperStep::SetRight(text) => Self {
-                right: text.chars().rev().collect(),
-                ..self
-            },
-            TyperStep::FlipCursorVisibility => Self {
-                is_cursor_visible: !self.is_cursor_visible,
-                ..self
-            },
-        }
-    }
-
-    pub fn left_as_string(&self) -> String {
-        let mut left_string = self.left.iter().collect::<String>();
-        if !self.is_at_right_end() {
-            left_string.pop();
-        }
-        if self.is_cursor_visible {
-            left_string.push('\u{2588}');
-        };
-        left_string
-    }
-
-    pub fn right_as_string(&self) -> String {
-        self.right.iter().rev().collect()
-    }
-
-    pub fn is_at_right_end(&self) -> bool {
-        self.right.is_empty()
-    }
-
-    // TODO: Check for tail all optimization???
-    fn step_forward(mut self) -> Self {
-        match self.right.pop() {
-            None => self,
-            Some(c) if c == '\t' || c == '\n' => {
-                self.left.push(c);
-                self.step_forward()
-            }
-            Some(c) => {
-                self.left.push(c);
-                self
-            }
-        }
-    }
-}
-
-enum TyperStep {
-    Forward,
-    SetRight(String),
-    FlipCursorVisibility,
 }

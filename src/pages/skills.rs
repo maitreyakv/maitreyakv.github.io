@@ -1,6 +1,6 @@
-use std::time::Duration;
+use std::{iter, time::Duration};
 
-use gloo::timers::callback::Timeout;
+use gloo::timers::callback::{Interval, Timeout};
 use sycamore::prelude::*;
 
 use crate::{
@@ -9,6 +9,7 @@ use crate::{
     molecules::Header,
     pages::Page,
     starscape::State,
+    typer::{Typer, TyperStep},
 };
 
 #[component(inline_props)]
@@ -34,24 +35,81 @@ pub fn Skills(state: Signal<State>) -> View {
             }
             div(class="grow flex flex-col gap-y-8 items-center") {
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
+                    div(class="font-bold text-3xl md:text-5xl mb-4 md:mb-6") {
                         ExtrudedText(color="#51a2ff") { "Python, my bread and butter" }
                     }
                     (include_html!("python_text.html"))
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
-                    div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
-                        ExtrudedText(color="#f54900") { "Rust, my new obsession" }
+                    div(class="flex flex-col gap-y-4") {
+                        div(class="font-bold text-3xl md:text-5xl md:mb-2") {
+                            ExtrudedText(color="var(--color-4)") { "Rust, my new obsession" }
+                        }
+                        RustIs(start_delay=450)
+                        RustText()
                     }
-                    RustText()
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(150)) {
-                    div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
+                    div(class="font-bold text-3xl md:text-5xl mb-4 md:mb-6") {
                         ExtrudedText(color="#00d5be") { "Other software skills" }
                     }
                     OtherSkillsText()
                 }
             }
+        }
+    }
+}
+
+#[component(inline_props)]
+fn RustIs(start_delay: u32) -> View {
+    let (typer, step_typer) =
+        create_reducer(Typer::empty(), |typer, step| typer.clone().step(step));
+
+    // For each word to display...
+    let mut steps = vec![
+        "fast",
+        "reliable",
+        "expressive",
+        "secure",
+        "modern",
+        "safe",
+        "fun!",
+    ]
+    .into_iter()
+    // ...we construct a sequence of steps...
+    .map(|word| {
+        let length = word.len();
+        // ...first by configuring the Typer with the word...
+        iter::once(TyperStep::SetRight(word.to_owned()))
+            // ...then typing out the word...
+            .chain(iter::repeat_n(TyperStep::Forward, length))
+            // ...then waiting for a bit...
+            .chain(iter::repeat_n(TyperStep::NoOp, 15))
+            // ...finally removing the word.
+            .chain(iter::repeat_n(TyperStep::Backward, length))
+    })
+    // We combine the sequences for each word to form a single sequence of steps...
+    .flatten()
+    // ...and set it to repeat indefinitely over this list of words.
+    .cycle();
+
+    let typer_step_interval = create_signal(Interval::new(0, || {}));
+    on_mount(move || {
+        Timeout::new(start_delay, move || {
+            typer_step_interval.set(Interval::new(100, move || {
+                step_typer(steps.next().unwrap_or(TyperStep::NoOp))
+            }));
+        })
+        .forget();
+    });
+
+    view! {
+        div(class="font-bold text-4xl md:text-6xl") {
+            "Rust is "
+            span(class="text-[var(--color-4)]") {
+                (move || typer.get_clone().left_as_string())
+            }
+            "|"
         }
     }
 }
