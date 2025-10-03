@@ -4,15 +4,6 @@ use sycamore::prelude::*;
 use web_sys::{HtmlElement, wasm_bindgen::JsCast};
 
 #[component(inline_props)]
-pub fn Glass(#[prop(setter(into))] children: Children) -> View {
-    view! {
-        div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] border-gray-600 border-1 rounded-xl") {
-            (children)
-        }
-    }
-}
-
-#[component(inline_props)]
 pub fn SlideInOut(
     state: ReadSignal<SlideInOutState>,
     delay: Option<Duration>,

@@ -3,8 +3,6 @@ use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 use sycamore_router::navigate;
 
-use crate::atoms::Glass;
-
 #[component(inline_props)]
 pub fn FancyHandleText(#[prop(setter(into))] children: Children) -> View {
     let text_shadow = (1..=5)
@@ -29,18 +27,16 @@ pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static
     let return_delay_ms = return_delay_ms.unwrap_or(0);
     view! {
         // TODO: Lift this up to a common Page component
-        header(class="w-full") {
-            Glass() {
-                div(class="text-3xl md:text-5xl hover:cursor-pointer") {
-                    div(
-                        on:click=move |_event| {
-                            return_callback();
-                            Timeout::new(return_delay_ms, || navigate("/")).forget();
-                        }
-                    ) {
-                        div(class="pt-4 pb-6 pl-4") {
-                            FancyHandleText() { "Home" }
-                        }
+        header(class="glass glass-border w-full") {
+            div(class="text-3xl md:text-5xl hover:cursor-pointer") {
+                div(
+                    on:click=move |_event| {
+                        return_callback();
+                        Timeout::new(return_delay_ms, || navigate("/")).forget();
+                    }
+                ) {
+                    div(class="pt-4 pb-6 pl-4") {
+                        FancyHandleText() { "Home" }
                     }
                 }
             }
@@ -51,14 +47,12 @@ pub fn Header(return_delay_ms: Option<u32>, return_callback: impl Fn() + 'static
 #[component]
 pub fn Footer() -> View {
     view! {
-        Glass() {
-            div(class="p-4") {
-                div(class="flex flex-wrap gap-y-2 justify-between") {
-                    Socials()
-                    p() {
-                        "All rights reserved \u{00A9} Maitreya Venkataswamy "
-                        (chrono::Local::now().year().to_string())
-                    }
+        div(class="glass glass-border p-4") {
+            div(class="flex flex-wrap gap-y-2 justify-between") {
+                Socials()
+                p() {
+                    "All rights reserved \u{00A9} Maitreya Venkataswamy "
+                    (chrono::Local::now().year().to_string())
                 }
             }
         }

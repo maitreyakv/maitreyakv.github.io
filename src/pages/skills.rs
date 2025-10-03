@@ -4,7 +4,7 @@ use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 
 use crate::{
-    atoms::{ExtrudedText, Glass, SlideInOut, SlideInOutState},
+    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
     molecules::Header,
     pages::Page,
     starscape::State,
@@ -58,7 +58,7 @@ pub fn Skills(state: Signal<State>) -> View {
 #[component]
 fn PythonText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() { "I've been programming in Python since high school, for both software development "
                       "and as an scientific and engineering tool." }
@@ -98,7 +98,7 @@ fn PythonText() -> View {
 #[component]
 fn RustText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
                       "to build with it, personally and professionally!" }
@@ -139,7 +139,7 @@ fn RustText() -> View {
 #[component]
 fn OtherSkillsText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() { "I have a variety of technical skills covering backend development, data engineering, and frontend engineering." }
                 p() { "Most of my database experience is with " b() { "Postgres " } "and " b() { "Snowflake" }

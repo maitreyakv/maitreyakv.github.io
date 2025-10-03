@@ -4,7 +4,7 @@ use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 
 use crate::{
-    atoms::{ExtrudedText, Glass, SlideInOut, SlideInOutState},
+    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
     molecules::Header,
     pages::Page,
     starscape::State,
@@ -52,7 +52,7 @@ pub fn Career(state: Signal<State>) -> View {
 #[component]
 fn PathText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
                 h2() {
@@ -84,7 +84,7 @@ fn PathText() -> View {
 #[component]
 fn SchoolText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() { "My engineering and data science backgrounds have been helpful for building software "
                       "in various domains."}

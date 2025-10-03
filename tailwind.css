@@ -26,3 +26,11 @@ body, html {
 a {
   @apply underline 
 }
+
+.glass {
+  @apply backdrop-blur-xs bg-[rgba(255,255,255,0.1)]
+}
+
+.glass-border {
+  @apply rounded-xl border-1 border-gray-600
+}

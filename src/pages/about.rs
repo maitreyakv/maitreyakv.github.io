@@ -4,7 +4,7 @@ use gloo::timers::callback::{Interval, Timeout};
 use sycamore::prelude::*;
 
 use crate::{
-    atoms::{ExtrudedText, Glass, SlideInOut, SlideInOutState},
+    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
     molecules::Header,
     pages::Page,
     starscape::State,
@@ -123,7 +123,7 @@ fn Rotator() -> View {
 #[component]
 fn AboutText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class="h-full flex flex-col justify-between gap-y-4 p-6") {
                 div(class="text-2xl font-bold") {
                     "Howdy, I'm Maitreya Venkataswamy!"
@@ -179,7 +179,7 @@ fn Terminal() -> View {
                     div(class="w-4 h-4 rounded-full bg-green-400")
                 }
             }
-            div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] rounded-b-xl border-b-1 border-x-1 border-gray-600 p-4") {
+            div(class="glass rounded-b-xl border-b-1 border-x-1 border-gray-600 p-4") {
                 pre(class="font-roboto font-bold text-lg leading-6") {
                     code() {
                         (left_string)

@@ -4,7 +4,7 @@ use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 
 use crate::{
-    atoms::{ExtrudedText, Glass, SlideInOut, SlideInOutState},
+    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
     molecules::Header,
     pages::Page,
     starscape::State,
@@ -52,7 +52,7 @@ pub fn Projects(state: Signal<State>) -> View {
 #[component]
 fn MetaText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() {
                     "Want to see how this site works? Check out "
@@ -81,7 +81,7 @@ fn MetaText() -> View {
 #[component]
 fn YarnHoardText() -> View {
     view! {
-        Glass() {
+        div(class="glass glass-border") {
             div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
                 p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
                       "is written in Rust!" }
