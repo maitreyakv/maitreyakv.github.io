@@ -49,7 +49,7 @@ pub fn About(state: Signal<State>) -> View {
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
                     div(class="flex flex-col md:flex-row md:flex-row-reverse gap-y-8 gap-x-8") {
-                        div(class="md:w-110 shrink-0") {
+                        div(class="shrink-0") {
                             Terminal()
                         }
                         AboutText()
@@ -168,38 +168,102 @@ fn Terminal() -> View {
 
 #[component(inline_props)]
 fn TypingCodeBlock(text: &'static str) -> View {
-    let displayed_text = create_signal("");
-    let remaining_text = create_signal(text);
-    let index = create_signal(0);
+    let split_string = create_signal(SplitString::new(text.to_owned()));
     let is_cursor_visible = create_signal(true);
 
-    let interval = Interval::new(50, move || {
-        index.update(|i| {
-            if *i < text.len() {
-                *i += 1;
-            }
-        });
-        displayed_text.set(&text[0..index.get()]);
-        remaining_text.set(&text[index.get()..]);
-    });
-    on_cleanup(|| drop(interval));
+    create_signal(Interval::new(50, move || {
+        split_string.set_fn(|s| s.clone().step_forward())
+    }));
 
-    let interval2 = Interval::new(530, move || {
-        if index.get() == text.len() {
+    create_signal(Interval::new(530, move || {
+        if split_string.get_clone().is_right_empty() {
             is_cursor_visible.update(|v| *v = !*v)
         }
+    }));
+
+    let left_string = create_memo(move || {
+        let split_string = split_string.get_clone();
+        let mut left_string = split_string.left_as_string();
+        if !split_string.is_right_empty() {
+            left_string.pop();
+        }
+        left_string
     });
-    on_cleanup(|| drop(interval2));
+    let right_string = create_memo(move || split_string.get_clone().right_as_string());
 
     view! {
         pre(class="font-roboto font-bold text-lg leading-6") {
             code() {
-                (displayed_text)
+                (left_string)
                 (if is_cursor_visible.get() {"\u{2588}"} else {" "})
             }
             code(class="opacity-0") {
-                (remaining_text)
+                (right_string)
             }
         }
+    }
+}
+
+enum Typer {
+    Forward(TyperInner<Forward>),
+    Idle(TyperInner<Idle>),
+}
+impl Typer {
+    fn step(mut self) -> Self {
+        match self {
+            Self::Forward(typer) => {
+                todo!()
+            }
+            Self::Idle(_) => self,
+        }
+    }
+}
+
+struct TyperInner<S> {
+    split_string: SplitString,
+    state: S,
+}
+
+struct Forward;
+struct Idle;
+
+#[derive(Debug, Clone)]
+struct SplitString {
+    left: Vec<char>,
+    right: Vec<char>,
+}
+impl SplitString {
+    fn new(value: String) -> Self {
+        Self {
+            left: Vec::new(),
+            right: value.chars().rev().collect(),
+        }
+    }
+
+    // TODO: Check for tail all optimization???
+    fn step_forward(mut self) -> Self {
+        match self.right.pop() {
+            None => self,
+            Some(c) if c == '\t' || c == '\n' => {
+                self.left.push(c);
+                self.step_forward()
+            }
+            Some(c) => {
+                self.left.push(c);
+                self
+            }
+        }
+    }
+
+    fn left_as_string(&self) -> String {
+        self.left.iter().collect()
+    }
+
+    fn right_as_string(&self) -> String {
+        self.right.iter().rev().collect()
+    }
+
+    fn is_right_empty(&self) -> bool {
+        self.right.is_empty()
     }
 }
