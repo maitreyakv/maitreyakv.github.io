@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{rc::Rc, time::Duration};
 
 use gloo::timers::callback::{Interval, Timeout};
 use sycamore::prelude::*;
@@ -150,6 +150,26 @@ fn AboutText() -> View {
 
 #[component]
 fn Terminal() -> View {
+    let (typer, step_typer) =
+        create_reducer(Typer::empty(), |typer, step| typer.clone().step(step));
+    let step_typer = Rc::new(step_typer);
+    step_typer(TyperStep::SetRight(PERSONAL_INFO_TEXT.to_owned()));
+
+    create_signal({
+        let interval_1 = Interval::new(50, {
+            let step_typer = step_typer.clone();
+            move || step_typer(TyperStep::Forward)
+        });
+        let interval_2 = Interval::new(530, move || {
+            if typer.get_clone().is_at_right_end() {
+                step_typer(TyperStep::FlipCursorVisibility)
+            }
+        });
+        (interval_1, interval_2)
+    });
+
+    let left_string = create_memo(move || typer.get_clone().left_as_string());
+    let right_string = create_memo(move || typer.get_clone().right_as_string());
     view! {
         div(class="flex flex-col") {
             div(class="bg-gray-500 rounded-t-xl border-t-1 border-x-1 border-gray-600 p-2") {
@@ -160,84 +180,65 @@ fn Terminal() -> View {
                 }
             }
             div(class="backdrop-blur-xs bg-[rgba(255,255,255,0.1)] rounded-b-xl border-b-1 border-x-1 border-gray-600 p-4") {
-                TypingCodeBlock(text=PERSONAL_INFO_TEXT)
+                pre(class="font-roboto font-bold text-lg leading-6") {
+                    code() {
+                        (left_string)
+                    }
+                    code(class="opacity-0") {
+                        (right_string)
+                    }
+                }
             }
         }
     }
 }
-
-#[component(inline_props)]
-fn TypingCodeBlock(text: &'static str) -> View {
-    let split_string = create_signal(SplitString::new(text.to_owned()));
-    let is_cursor_visible = create_signal(true);
-
-    create_signal(Interval::new(50, move || {
-        split_string.set_fn(|s| s.clone().step_forward())
-    }));
-
-    create_signal(Interval::new(530, move || {
-        if split_string.get_clone().is_right_empty() {
-            is_cursor_visible.update(|v| *v = !*v)
-        }
-    }));
-
-    let left_string = create_memo(move || {
-        let split_string = split_string.get_clone();
-        let mut left_string = split_string.left_as_string();
-        if !split_string.is_right_empty() {
-            left_string.pop();
-        }
-        left_string
-    });
-    let right_string = create_memo(move || split_string.get_clone().right_as_string());
-
-    view! {
-        pre(class="font-roboto font-bold text-lg leading-6") {
-            code() {
-                (left_string)
-                (if is_cursor_visible.get() {"\u{2588}"} else {" "})
-            }
-            code(class="opacity-0") {
-                (right_string)
-            }
-        }
-    }
-}
-
-enum Typer {
-    Forward(TyperInner<Forward>),
-    Idle(TyperInner<Idle>),
-}
-impl Typer {
-    fn step(mut self) -> Self {
-        match self {
-            Self::Forward(typer) => {
-                todo!()
-            }
-            Self::Idle(_) => self,
-        }
-    }
-}
-
-struct TyperInner<S> {
-    split_string: SplitString,
-    state: S,
-}
-
-struct Forward;
-struct Idle;
 
 #[derive(Debug, Clone)]
-struct SplitString {
+struct Typer {
     left: Vec<char>,
     right: Vec<char>,
+    is_cursor_visible: bool,
 }
-impl SplitString {
-    fn new(value: String) -> Self {
+impl Typer {
+    pub fn empty() -> Self {
         Self {
             left: Vec::new(),
-            right: value.chars().rev().collect(),
+            right: Vec::new(),
+            is_cursor_visible: true,
         }
+    }
+
+    pub fn step(self, step: TyperStep) -> Self {
+        match step {
+            TyperStep::Forward => self.step_forward(),
+            TyperStep::SetRight(text) => Self {
+                right: text.chars().rev().collect(),
+                ..self
+            },
+            TyperStep::FlipCursorVisibility => Self {
+                is_cursor_visible: !self.is_cursor_visible,
+                ..self
+            },
+        }
+    }
+
+    pub fn left_as_string(&self) -> String {
+        let mut left_string = self.left.iter().collect::<String>();
+        if !self.is_at_right_end() {
+            left_string.pop();
+        }
+        if self.is_cursor_visible {
+            left_string.push('\u{2588}');
+        };
+        left_string
+    }
+
+    pub fn right_as_string(&self) -> String {
+        self.right.iter().rev().collect()
+    }
+
+    pub fn is_at_right_end(&self) -> bool {
+        self.right.is_empty()
     }
 
     // TODO: Check for tail all optimization???
@@ -254,16 +255,10 @@ impl SplitString {
             }
         }
     }
+}
 
-    fn left_as_string(&self) -> String {
-        self.left.iter().collect()
-    }
-
-    fn right_as_string(&self) -> String {
-        self.right.iter().rev().collect()
-    }
-
-    fn is_right_empty(&self) -> bool {
-        self.right.is_empty()
-    }
+enum TyperStep {
+    Forward,
+    SetRight(String),
+    FlipCursorVisibility,
 }
