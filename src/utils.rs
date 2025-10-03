@@ -2,6 +2,13 @@ use gloo::render::{AnimationFrame, request_animation_frame};
 use sycamore::prelude::Signal;
 use web_sys::window;
 
+#[macro_export]
+macro_rules! include_html {
+    ($path:literal) => {
+        (::sycamore::web::tags::div().dangerously_set_inner_html(include_str!($path)))
+    };
+}
+
 pub fn request_animation_frame_loop(f: impl Fn(f64) + 'static, frame: Signal<AnimationFrame>) {
     fn helper(t: f64, frame: Signal<AnimationFrame>, f: impl Fn(f64) + 'static) {
         f(t);

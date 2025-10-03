@@ -5,6 +5,7 @@ use sycamore::prelude::*;
 
 use crate::{
     atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    include_html,
     molecules::Header,
     pages::Page,
     starscape::State,
@@ -52,7 +53,7 @@ pub fn About(state: Signal<State>) -> View {
                         div(class="shrink-0") {
                             Terminal()
                         }
-                        AboutText()
+                        (include_html!("about_text.html"))
                     }
                 }
                 div()
@@ -117,34 +118,6 @@ fn Rotator() -> View {
                 (views)
             }
         }
-    }
-}
-
-#[component]
-fn AboutText() -> View {
-    view! {
-        div(class="glass glass-border") {
-            div(class="h-full flex flex-col justify-between gap-y-4 p-6") {
-                div(class="text-2xl font-bold") {
-                    "Howdy, I'm Maitreya Venkataswamy!"
-                }
-                div(class="md:text-xl") {
-                    "I'm a software developer based in Boston, currently working in "
-                    "the biotechnology industry."
-                }
-                div(class="md:text-xl") {
-                    "I come from a scientific/engineering background and I love "
-                    "working on software problems in those kinds of domains."
-                }
-                div(class="md:text-xl") {
-                    "I enjoy hiking, playing videogames, reading science "
-                    "fiction & fantasy, and playing with my dog "
-                    a(href="https://www.instagram.com/bumblebee.the.bully") { "Bumblebee" }
-                    "."
-                }
-            }
-        }
-
     }
 }
 

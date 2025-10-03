@@ -5,6 +5,7 @@ use sycamore::prelude::*;
 
 use crate::{
     atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    include_html,
     molecules::Header,
     pages::Page,
     starscape::State,
@@ -36,7 +37,7 @@ pub fn Skills(state: Signal<State>) -> View {
                     div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
                         ExtrudedText(color="#51a2ff") { "Python, my bread and butter" }
                     }
-                    PythonText()
+                    (include_html!("python_text.html"))
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
                     div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
@@ -56,46 +57,6 @@ pub fn Skills(state: Signal<State>) -> View {
 }
 
 #[component]
-fn PythonText() -> View {
-    view! {
-        div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
-                p() { "I've been programming in Python since high school, for both software development "
-                      "and as an scientific and engineering tool." }
-                p() { "I've used Python in various applications from scientific and engineering problems, "
-                      "to machine learning and data analysis, to backend engineering and application development." }
-                p() { "I'm comfortable working with large parts of the Python library ecosystem, including" }
-                ul(class="list-none") {
-                    div(class="flex flex-row gap-x-8 justify-center items-start") {
-                        li(class="flex flex-col") {
-                            //label(class="text-center") { "Data" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "Pandas/Polars" }
-                                li(class="text-center") { "SQLAlchemy" }
-                            }
-                        }
-                        li(class="flex flex-col") {
-                            //label(class="text-center") { "Engineering" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "FastAPI" }
-                                li(class="text-center") { "Prefect" }
-                            }
-                        }
-                        li(class="flex flex-col") {
-                            //label(class="text-center") { "Science" }
-                            ul(class="flex flex-col align-center") {
-                                li(class="text-center") { "Scikit-Learn" }
-                                li(class="text-center") { "Tensorflow" }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[component]
 fn RustText() -> View {
     view! {
         div(class="glass glass-border") {
@@ -107,7 +68,7 @@ fn RustText() -> View {
                 p() { "While I'm not an expert at the language yet, I've used it in personal projects (like this site!) "
                       "and professional projects using crates like" }
                 ul(class="list-none") {
-                    div(class="flex flex-row gap-x-8 justify-center items-start") {
+                    div(class="flex gap-x-8 justify-center items-start") {
                         li(class="flex flex-col") {
                             //label(class="text-center") { "General" }
                             ul(class="flex flex-col align-center") {
