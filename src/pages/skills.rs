@@ -84,7 +84,7 @@ fn RustIs(start_delay: u32) -> View {
             // ...then typing out the word...
             .chain(iter::repeat_n(TyperStep::Forward, length))
             // ...then waiting for a bit...
-            .chain(iter::repeat_n(TyperStep::NoOp, 15))
+            .chain(iter::repeat_n(TyperStep::NoOp, 18))
             // ...finally removing the word.
             .chain(iter::repeat_n(TyperStep::Backward, length))
     })
@@ -96,7 +96,7 @@ fn RustIs(start_delay: u32) -> View {
     let typer_step_interval = create_signal(Interval::new(0, || {}));
     on_mount(move || {
         Timeout::new(start_delay, move || {
-            typer_step_interval.set(Interval::new(100, move || {
+            typer_step_interval.set(Interval::new(75, move || {
                 step_typer(steps.next().unwrap_or(TyperStep::NoOp))
             }));
         })
