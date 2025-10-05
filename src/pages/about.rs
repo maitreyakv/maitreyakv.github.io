@@ -115,7 +115,7 @@ fn Rotator() -> View {
     view! {
         div(class="flex flex-wrap gap-x-2 text-4xl md:text-5xl font-bold") {
             "I have experience in"
-            div(class="h-10 md:h-15 w-100 md:w-140") {
+            div(class="h-10 md:h-15 w-100 md:w-130") {
                 (views)
             }
         }
