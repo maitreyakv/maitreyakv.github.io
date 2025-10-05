@@ -20,7 +20,7 @@ use crate::molecules::Footer;
 fn Page(#[prop(setter(into))] children: Children) -> View {
     view! {
         div(class="w-screen h-screen flex justify-center") {
-            div(class="w-full max-w-300 flex flex-col items-center p-4") {
+            div(class="w-full max-w-260 flex flex-col items-center p-4") {
                 // TOOD: Lift Header up from pages (in children) to here
                 (children)
                 div(class="w-full sticky bottom-0") {

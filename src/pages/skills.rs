@@ -33,12 +33,15 @@ pub fn Skills(state: Signal<State>) -> View {
                     )
                 }
             }
-            div(class="grow flex flex-col gap-y-8 items-center") {
+            div(class="w-full grow flex flex-col gap-y-8 items-center py-4") {
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
-                    div(class="font-bold text-3xl md:text-5xl mb-4 md:mb-6") {
-                        ExtrudedText(color="#51a2ff") { "Python, my bread and butter" }
+                    div(class="flex flex-col gap-y-4") {
+                        div(class="font-bold text-3xl md:text-5xl mb-4 md:mb-6") {
+                            ExtrudedText(color="#51a2ff") { "Python, my bread and butter" }
+                        }
+                        (include_html!("python_text.html"))
+                        PythonLibraries()
                     }
-                    (include_html!("python_text.html"))
                 }
                 SlideInOut(state=*slide, delay=Duration::from_millis(100)) {
                     div(class="flex flex-col gap-y-4") {
@@ -55,6 +58,54 @@ pub fn Skills(state: Signal<State>) -> View {
                     }
                     OtherSkillsText()
                 }
+            }
+        }
+    }
+}
+
+#[component]
+fn PythonLibraries() -> View {
+    let content_fn = || {
+        vec![
+            view! { img(src="/assets/fastapi-logo.png", class="h-12") },
+            view! { img(src="/assets/numpy-logo.svg", class="h-14") },
+            view! { img(src="/assets/plotly-logo.svg", class="h-12") },
+            view! { img(src="/assets/pandas-logo.svg", class="h-12 mt-1") },
+            view! { img(src="/assets/polars-logo.svg", class="h-8 mb-1") },
+            view! {
+                div(class="flex justify-center items-center gap-x-2") {
+                    img(src="/assets/prefect-logo-icon.png", class="h-8")
+                    img(src="/assets/prefect-logo-word.png", class="h-3")
+                }
+            },
+        ]
+        .into_iter()
+        .map(|v| {
+            view! {
+                div(class="m-2 px-4 py-2 glass glass-border flex justify-center items-center") {
+                    (v)
+                }
+            }
+        })
+        .collect()
+    };
+    view! {
+        Carousel(content_fn=content_fn)
+    }
+}
+
+#[component(inline_props)]
+fn Carousel(content_fn: impl Fn() -> Vec<View>) -> View {
+    let content_1 = content_fn();
+    let content_2 = content_fn();
+
+    view! {
+        div(class="flex border-gray-500 border-x-1 overflow-hidden") {
+            div(class="shrink-0 flex animate-[slide_10s_linear_infinite]") {
+                (content_1)
+            }
+            div( class="shrink-0 flex animate-[slide_10s_linear_infinite]") {
+                (content_2)
             }
         }
     }
@@ -118,7 +169,7 @@ fn RustIs(start_delay: u32) -> View {
 fn RustText() -> View {
     view! {
         div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
+            div(class=r#"p-6 flex flex-col gap-y-4 text-md md:text-xl"#) {
                 p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
                       "to build with it, personally and professionally!" }
                 p() { "As a general-purpose language with some amazing features, I've made it my preferred "
@@ -159,7 +210,7 @@ fn RustText() -> View {
 fn OtherSkillsText() -> View {
     view! {
         div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
+            div(class=r#"p-6 flex flex-col gap-y-4 text-md md:text-xl"#) {
                 p() { "I have a variety of technical skills covering backend development, data engineering, and frontend engineering." }
                 p() { "Most of my database experience is with " b() { "Postgres " } "and " b() { "Snowflake" }
                       ", and I've used " b() { "Prefect" } " regularly for orchestration." }

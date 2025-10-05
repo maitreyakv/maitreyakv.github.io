@@ -34,3 +34,12 @@ a {
 .glass-border {
   @apply rounded-xl border-1 border-gray-600
 }
+
+@keyframes slide {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
