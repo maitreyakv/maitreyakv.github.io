@@ -1,5 +1,7 @@
 ## Hi there 👋
 
+This is the source code for my personal website at https://maitreyakv.com, which is written in Rust! More documentation coming soon...
+
 <!--
 **maitreyakv/maitreyakv** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
