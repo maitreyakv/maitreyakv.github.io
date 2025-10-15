@@ -3,10 +3,10 @@ use std::time::Duration;
 use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 
-use crate::atoms::{SlideInOut, SlideInOutState};
-use crate::molecules::{FancyHandleText, Header};
+use crate::components::atoms::{SlideInOut, SlideInOutState};
+use crate::components::molecules::{FancyHandleText, Header};
+use crate::components::starscape::State;
 use crate::pages::Page;
-use crate::starscape::State;
 
 #[component(inline_props)]
 pub fn NotFound(state: Signal<State>) -> View {

@@ -4,10 +4,10 @@ use gloo::timers::callback::Timeout;
 use sycamore::prelude::*;
 
 use crate::{
-    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
-    molecules::Header,
+    components::atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    components::molecules::Header,
+    components::starscape::State,
     pages::Page,
-    starscape::State,
 };
 
 #[component(inline_props)]

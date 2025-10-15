@@ -14,7 +14,7 @@ pub use skills::Skills;
 
 use sycamore::prelude::*;
 
-use crate::molecules::Footer;
+use crate::components::molecules::Footer;
 
 #[component(inline_props)]
 fn Page(#[prop(setter(into))] children: Children) -> View {

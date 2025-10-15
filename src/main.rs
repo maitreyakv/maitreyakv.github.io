@@ -2,8 +2,8 @@ use sycamore::prelude::*;
 use sycamore_router::{HistoryIntegration, Route, Router};
 
 use site::{
+    components::starscape::Starscape,
     pages::{About, Career, Home, NotFound, Projects, Skills},
-    starscape::Starscape,
 };
 
 fn main() {
@@ -13,7 +13,7 @@ fn main() {
 
 #[component]
 fn App() -> View {
-    let state = create_signal(site::starscape::State::Down);
+    let state = create_signal(site::components::starscape::State::Down);
     view! {
         div(class="-z-1") {
             Starscape(state=*state)

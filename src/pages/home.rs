@@ -5,10 +5,10 @@ use sycamore::prelude::*;
 use sycamore_router::navigate;
 
 use crate::{
-    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
-    molecules::FancyHandleText,
+    components::atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    components::molecules::FancyHandleText,
+    components::starscape::State,
     pages::Page,
-    starscape::State,
 };
 
 #[component(inline_props)]

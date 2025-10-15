@@ -4,12 +4,12 @@ use gloo::timers::callback::{Interval, Timeout};
 use sycamore::prelude::*;
 
 use crate::{
-    atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    components::atoms::{ExtrudedText, SlideInOut, SlideInOutState},
+    components::molecules::Header,
+    components::starscape::State,
+    components::typer::{Typer, TyperStep},
     include_html,
-    molecules::Header,
     pages::Page,
-    starscape::State,
-    typer::{Typer, TyperStep},
 };
 
 #[component(inline_props)]
