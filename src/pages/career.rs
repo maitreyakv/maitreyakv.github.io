@@ -31,7 +31,7 @@ pub fn Career(state: Signal<State>) -> View {
                     )
                 }
             }
-            div(class="grow flex flex-col gap-y-8 items-center") {
+            div(class="grow flex flex-col gap-y-8 items-center py-4") {
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
                     div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
                         ExtrudedText(color="#d08700") { "Path to Software Engineer" }
@@ -52,31 +52,29 @@ pub fn Career(state: Signal<State>) -> View {
 #[component]
 fn PathText() -> View {
     view! {
-        div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
-                p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
-                h2() {
-                    a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
-                }
-                p() { "I first worked as a Data Scientist at Titan, where I developed machine learning models to "
-                      "inspect and monitor lithium-ion batteries using ultrasound technology." }
-                p() { "I engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
-                      "collection experiments and signal processing techniques." }
-                h2() {
-                    a(href="https://www.dayzerodiagnostics.com") { "Day Zero Diagnostics" }
-                    " (now "
-                    a(href="https://www.biomerieux.com/corp/en/journalists/press-releases/NGS-sequencing-acquisition-day-zero-diagnostics.html") {
-                        "bioMérieux"
-                    }
-                    ")"
-                }
-                p() { "I currently work for Day Zero as a Data/Software Engineer where I began with engineering the curation "
-                      "of MicrohmDB, our in-house database of 90k+ bacterial genomes with corresponding AMR tests." }
-                p() { "More recently, I've contributed to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
-                      "and AMR profiling from genomic data." }
-                p() { "I also lead development of our platforms's CLI client (Rust), and  participate in development "
-                      "of the web client (React)." }
+        div(class="glass glass-border p-6 flex flex-col gap-y-4 text-md md:text-xl") {
+            p() { "I've made the transition from a data scientist, to a data engineer, and finally now to a software engineer." }
+            h2() {
+                a(href="https://www.titanaes.com") { "Titan Advanced Energy Solutions" }
             }
+            p() { "I first worked as a Data Scientist at Titan, where I developed machine learning models to "
+                  "inspect and monitor lithium-ion batteries using ultrasound technology." }
+            p() { "I engineered a lot of the software (Python) and cloud infrastructure (AWS) to support the required data "
+                  "collection experiments and signal processing techniques." }
+            h2() {
+                a(href="https://www.dayzerodiagnostics.com") { "Day Zero Diagnostics" }
+                " (now "
+                a(href="https://www.biomerieux.com/corp/en/journalists/press-releases/NGS-sequencing-acquisition-day-zero-diagnostics.html") {
+                    "bioMérieux"
+                }
+                ")"
+            }
+            p() { "I currently work for Day Zero as a Data/Software Engineer where I began with engineering the curation "
+                  "of MicrohmDB, our in-house database of 90k+ bacterial genomes with corresponding AMR tests." }
+            p() { "More recently, I've contributed to development of Keynome, our cloud platform (Python on GCP) for bacterial species ID "
+                  "and AMR profiling from genomic data." }
+            p() { "I also lead development of our platforms's CLI client (Rust), and  participate in development "
+                  "of the web client (React)." }
         }
     }
 }
@@ -84,14 +82,12 @@ fn PathText() -> View {
 #[component]
 fn SchoolText() -> View {
     view! {
-        div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
-                p() { "My engineering and data science backgrounds have been helpful for building software "
-                      "in various domains."}
-                p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
-                p() { "While I was there I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
-                p() { "I have a M.S. in Data Science from Brown University as well." }
-            }
+        div(class="glass glass-border p-6 flex flex-col gap-y-4 text-md md:text-xl") {
+            p() { "My engineering and data science backgrounds have been helpful for building software "
+                  "in various domains."}
+            p() { "I have a B.S. in Aerospace Engineering and a minor in computer science from the Georgia Institute of Technology." }
+            p() { "While I was there I also did four years of undergraduate research part-time at the Computational Combustion Laboratory." }
+            p() { "I have a M.S. in Data Science from Brown University as well." }
         }
     }
 }

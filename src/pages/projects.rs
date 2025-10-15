@@ -31,7 +31,7 @@ pub fn Projects(state: Signal<State>) -> View {
                     )
                 }
             }
-            div(class="grow flex flex-col gap-y-8 items-center") {
+            div(class="grow flex flex-col gap-y-8 items-center py-4") {
                 SlideInOut(state=*slide, delay=Duration::from_millis(50)) {
                     div(class="text-3xl md:text-5xl mb-4 md:mb-6") {
                         ExtrudedText(color="#0092b8") { "Source code for this site" }
@@ -52,27 +52,25 @@ pub fn Projects(state: Signal<State>) -> View {
 #[component]
 fn MetaText() -> View {
     view! {
-        div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
-                p() {
-                    "Want to see how this site works? Check out "
-                    a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
-                    ". Its made with Rust and Tailwind!"
-                }
-                p() {
-                    "The styling is done with "
-                    a(href="https://tailwindcss.com") { "Tailwind CSS" }
-                    " and the interactivity is implemented with the delightfully simple "
-                    a(href="https://sycamore.dev") { "Sycamore" }
-                    " framework in Rust, which is compiled to "
-                    a(href="https://webassembly.org") { "WebAssembly" }
-                    "."
-                }
-                p() {
-                    "If you find a bug with this site, please don't hesitate to "
-                    a(href="https://github.com/maitreyakv/maitreyakv.github.io/issues") { "open an issue" }
-                    " in the repository."
-                }
+        div(class="glass glass-border p-6 flex flex-col gap-y-4 text-md md:text-xl") {
+            p() {
+                "Want to see how this site works? Check out "
+                a(href="https://github.com/maitreyakv/maitreyakv") { "the code on GitHub" }
+                ". Its made with Rust and Tailwind!"
+            }
+            p() {
+                "The styling is done with "
+                a(href="https://tailwindcss.com") { "Tailwind CSS" }
+                " and the interactivity is implemented with the delightfully simple "
+                a(href="https://sycamore.dev") { "Sycamore" }
+                " framework in Rust, which is compiled to "
+                a(href="https://webassembly.org") { "WebAssembly" }
+                "."
+            }
+            p() {
+                "If you find a bug with this site, please don't hesitate to "
+                a(href="https://github.com/maitreyakv/maitreyakv.github.io/issues") { "open an issue" }
+                " in the repository."
             }
         }
     }
@@ -81,15 +79,13 @@ fn MetaText() -> View {
 #[component]
 fn YarnHoardText() -> View {
     view! {
-        div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 max-w-100 md:max-w-180 text-md md:text-xl"#) {
-                p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
-                      "is written in Rust!" }
-                h2(class="text-center") { "Work in progress, coming soon!" }
-                p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
-                      "being allowing the user to create and manage records for their yarn inventory and record "
-                      "information about their collection." }
-            }
+        div(class="glass glass-border p-6 flex flex-col gap-y-4 text-md md:text-xl") {
+            p() { "A full stack app for tracking your yarn inventory, for crafty people. The entire app "
+                  "is written in Rust!" }
+            h2(class="text-center") { "Work in progress, coming soon!" }
+            p() { "Its a pretty straightforward CRUD app with email and password login, its main functionality "
+                  "being allowing the user to create and manage records for their yarn inventory and record "
+                  "information about their collection." }
         }
     }
 }

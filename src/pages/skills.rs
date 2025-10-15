@@ -169,12 +169,20 @@ fn RustIs(start_delay: u32) -> View {
 fn RustText() -> View {
     view! {
         div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 text-md md:text-xl"#) {
+            div(class=r#"p-6 flex flex-col gap-y-4 text-xl md:text-2xl"#) {
                 p() { "Rust has quickly become my favorite language, and I'm looking for more opportunities "
                       "to build with it, personally and professionally!" }
                 p() { "As a general-purpose language with some amazing features, I've made it my preferred "
                       " language for most software development." }
-                p() { "While I'm not an expert at the language yet, I've used it in personal projects (like this site!) "
+                p() {
+                    "I've used it in personal projects ("
+                    a(
+                        class="text-[var(--color-4)] font-bold",
+                        href="https://github.com/maitreyakv/maitreyakv.github.io"
+                    ) {
+                        "like this site!"
+                    }
+                    ") "
                       "and professional projects using crates like" }
                 ul(class="list-none") {
                     div(class="flex gap-x-8 justify-center items-start") {
@@ -210,7 +218,7 @@ fn RustText() -> View {
 fn OtherSkillsText() -> View {
     view! {
         div(class="glass glass-border") {
-            div(class=r#"p-6 flex flex-col gap-y-4 text-md md:text-xl"#) {
+            div(class=r#"p-6 flex flex-col gap-y-4 text-xl md:text-2xl"#) {
                 p() { "I have a variety of technical skills covering backend development, data engineering, and frontend engineering." }
                 p() { "Most of my database experience is with " b() { "Postgres " } "and " b() { "Snowflake" }
                       ", and I've used " b() { "Prefect" } " regularly for orchestration." }
